@@ -131,7 +131,7 @@ app.get("/api/use-cases", async (_req, res) => {
   }
 });
 
-app.post("/api/use-cases", requireAuth, async (req, res) => {
+app.post("/api/use-cases", async (req, res) => {
   const {
     title,
     category = "",
