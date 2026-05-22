@@ -53,6 +53,10 @@ async function ensureSchema() {
       id SERIAL PRIMARY KEY,
       title TEXT NOT NULL,
       category TEXT DEFAULT '',
+      area TEXT DEFAULT '',
+      technology TEXT DEFAULT '',
+      phase TEXT DEFAULT '',
+      theme TEXT DEFAULT '',
       author_name TEXT DEFAULT '',
       skill_name TEXT DEFAULT '',
       description TEXT DEFAULT '',
@@ -65,6 +69,22 @@ async function ensureSchema() {
   await pool.query(`
     ALTER TABLE use_cases
     ADD COLUMN IF NOT EXISTS image_data TEXT DEFAULT ''
+  `);
+  await pool.query(`
+    ALTER TABLE use_cases
+    ADD COLUMN IF NOT EXISTS area TEXT DEFAULT ''
+  `);
+  await pool.query(`
+    ALTER TABLE use_cases
+    ADD COLUMN IF NOT EXISTS technology TEXT DEFAULT ''
+  `);
+  await pool.query(`
+    ALTER TABLE use_cases
+    ADD COLUMN IF NOT EXISTS phase TEXT DEFAULT ''
+  `);
+  await pool.query(`
+    ALTER TABLE use_cases
+    ADD COLUMN IF NOT EXISTS theme TEXT DEFAULT ''
   `);
 }
 
@@ -106,8 +126,18 @@ app.get("/api/use-cases", async (_req, res) => {
 });
 
 app.post("/api/use-cases", requireAuth, async (req, res) => {
-  const { title, category = "", authorName = "", skillName = "", description = "", tags = [] } =
-    req.body || {};
+  const {
+    title,
+    category = "",
+    area = "",
+    technology = "",
+    phase = "",
+    theme = "",
+    authorName = "",
+    skillName = "",
+    description = "",
+    tags = [],
+  } = req.body || {};
 
   if (!toTrimmedText(title)) {
     return res.status(400).json({ error: "Titulo e obrigatorio." });
@@ -116,6 +146,10 @@ app.post("/api/use-cases", requireAuth, async (req, res) => {
   const payload = {
     title: toTrimmedText(title),
     category: toTrimmedText(category),
+    area: toTrimmedText(area),
+    technology: toTrimmedText(technology),
+    phase: toTrimmedText(phase),
+    theme: toTrimmedText(theme),
     author_name: toTrimmedText(authorName),
     skill_name: toTrimmedText(skillName),
     description: toTrimmedText(description),
@@ -138,10 +172,21 @@ app.post("/api/use-cases", requireAuth, async (req, res) => {
 
   try {
     const { rows } = await pool.query(
-      `INSERT INTO use_cases (title, category, author_name, skill_name, description, tags)
-       VALUES ($1, $2, $3, $4, $5, $6)
+      `INSERT INTO use_cases (title, category, area, technology, phase, theme, author_name, skill_name, description, tags)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
        RETURNING *`,
-      [payload.title, payload.category, payload.author_name, payload.skill_name, payload.description, payload.tags]
+      [
+        payload.title,
+        payload.category,
+        payload.area,
+        payload.technology,
+        payload.phase,
+        payload.theme,
+        payload.author_name,
+        payload.skill_name,
+        payload.description,
+        payload.tags,
+      ]
     );
     return res.status(201).json(rows[0]);
   } catch (error) {
@@ -151,8 +196,18 @@ app.post("/api/use-cases", requireAuth, async (req, res) => {
 });
 
 app.put("/api/use-cases/:id", requireAuth, async (req, res) => {
-  const { title, category = "", authorName = "", skillName = "", description = "", tags = [] } =
-    req.body || {};
+  const {
+    title,
+    category = "",
+    area = "",
+    technology = "",
+    phase = "",
+    theme = "",
+    authorName = "",
+    skillName = "",
+    description = "",
+    tags = [],
+  } = req.body || {};
   if (!toTrimmedText(title)) {
     return res.status(400).json({ error: "Titulo e obrigatorio." });
   }
@@ -163,6 +218,10 @@ app.put("/api/use-cases/:id", requireAuth, async (req, res) => {
     if (!found) return res.status(404).json({ error: "Caso nao encontrado." });
     found.title = toTrimmedText(title);
     found.category = toTrimmedText(category);
+    found.area = toTrimmedText(area);
+    found.technology = toTrimmedText(technology);
+    found.phase = toTrimmedText(phase);
+    found.theme = toTrimmedText(theme);
     found.author_name = toTrimmedText(authorName);
     found.skill_name = toTrimmedText(skillName);
     found.description = toTrimmedText(description);
@@ -175,12 +234,17 @@ app.put("/api/use-cases/:id", requireAuth, async (req, res) => {
   try {
     const { rows } = await pool.query(
       `UPDATE use_cases
-       SET title = $1, category = $2, author_name = $3, skill_name = $4, description = $5, tags = $6
-       WHERE id = $7
+       SET title = $1, category = $2, area = $3, technology = $4, phase = $5, theme = $6,
+           author_name = $7, skill_name = $8, description = $9, tags = $10
+       WHERE id = $11
        RETURNING *`,
       [
         toTrimmedText(title),
         toTrimmedText(category),
+        toTrimmedText(area),
+        toTrimmedText(technology),
+        toTrimmedText(phase),
+        toTrimmedText(theme),
         toTrimmedText(authorName),
         toTrimmedText(skillName),
         toTrimmedText(description),

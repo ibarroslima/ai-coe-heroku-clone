@@ -5,52 +5,51 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AI LATAM CoE</title>
   <style>
-    :root {
-      --bg: #edf2ff;
-      --card: #fff;
-      --line: #dce3ff;
-      --text: #0f1a46;
-      --muted: #6d79a5;
-      --primary: #3e4bff;
-    }
+    :root { --bg:#edf2ff; --card:#fff; --line:#dce3ff; --text:#0f1a46; --muted:#6d79a5; --primary:#3e4bff; }
     * { box-sizing: border-box; }
-    body { margin: 0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background: var(--bg); color: var(--text); }
-    .container { width: min(1280px, 94%); margin: 0 auto; }
-    .topbar { padding: 18px 0 10px; border-bottom: 1px solid var(--line); }
-    .row { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
-    .logo { font-weight: 800; color: #081955; font-size: 22px; }
-    .btn { border: 0; border-radius: 999px; padding: 10px 14px; font-weight: 700; cursor: pointer; background: #fff; color: var(--text); }
-    .btn-primary { background: linear-gradient(90deg, #3344ff, #4f63ff); color: #fff; }
-    .btn-danger { background: #ffe8ec; color: #b5183b; }
-    .top-actions { display: flex; gap: 8px; align-items: center; }
-    main { padding: 24px 0 36px; }
-    h1 { margin: 0; font-size: clamp(28px, 3vw, 42px); }
-    .sub { color: var(--muted); margin: 6px 0 16px; font-size: 20px; }
-    .filters { background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 14px; }
-    .search { width: 100%; border: 1px solid #e9edff; border-radius: 14px; padding: 12px 14px; }
-    .cards { margin-top: 16px; display: grid; gap: 14px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .card { background: var(--card); border: 1px solid var(--line); border-top: 4px solid #67a1ff; border-radius: 18px; padding: 16px; box-shadow: 0 8px 24px rgba(19, 41, 120, 0.07); }
-    .kicker { font-size: 11px; letter-spacing: 2px; font-weight: 800; color: #5864d6; }
-    .title { margin: 8px 0; font-size: 24px; line-height: 1.15; }
-    .meta { color: #55608f; font-size: 14px; }
-    .chips { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0; }
-    .chip { padding: 4px 10px; border-radius: 999px; background: #f4f6ff; border: 1px solid #e3e9ff; font-size: 12px; }
-    .empty { margin-top: 18px; background: #fff; border: 1px dashed #cfd8ff; border-radius: 18px; text-align: center; padding: 30px 16px; color: #6070a6; }
-    .card-image { width: 100%; border-radius: 12px; margin-bottom: 10px; border: 1px solid #e1e8ff; }
-    .card-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-    .mini { border: 1px solid #dbe3ff; border-radius: 10px; padding: 6px 9px; background: #fff; cursor: pointer; font-size: 12px; }
-    .modal-wrap { position: fixed; inset: 0; background: rgba(8, 15, 56, 0.35); display: none; align-items: center; justify-content: center; padding: 16px; z-index: 3; }
-    .modal { width: min(760px, 100%); background: #fff; border-radius: 18px; padding: 18px; border: 1px solid var(--line); }
-    .grid { display: grid; gap: 10px; grid-template-columns: 1fr 1fr; }
-    .field { display: grid; gap: 6px; margin-bottom: 10px; }
-    .field.full { grid-column: 1 / -1; }
-    label { font-size: 13px; font-weight: 700; color: #3f4f8f; }
-    input, textarea { border: 1px solid #dde5ff; border-radius: 12px; padding: 10px 12px; font: inherit; }
-    textarea { min-height: 92px; resize: vertical; }
-    .actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; }
-    .hint { font-size: 12px; color: #7786bb; }
-    @media (max-width: 1024px) { .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-    @media (max-width: 760px) { .cards, .grid { grid-template-columns: 1fr; } .sub { font-size: 16px; } }
+    body { margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; background:var(--bg); color:var(--text); }
+    .container { width:min(1280px,94%); margin:0 auto; }
+    .topbar { padding:18px 0 10px; border-bottom:1px solid var(--line); }
+    .row { display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; }
+    .logo { font-weight:800; color:#081955; font-size:22px; }
+    .btn { border:0; border-radius:999px; padding:10px 14px; font-weight:700; cursor:pointer; background:#fff; color:var(--text); }
+    .btn-primary { background:linear-gradient(90deg,#3344ff,#4f63ff); color:#fff; }
+    .top-actions { display:flex; gap:8px; align-items:center; }
+    .tabs { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:14px; }
+    .tab { text-align:center; color:#66729e; font-weight:700; padding-bottom:8px; cursor:pointer; }
+    .tab.active { color:#2f45ff; border-bottom:3px solid #2f45ff; }
+    main { padding:24px 0 36px; }
+    h1 { margin:0; font-size:clamp(28px,3vw,42px); }
+    .sub { color:var(--muted); margin:6px 0 16px; font-size:20px; }
+    .filters { background:#fff; border:1px solid var(--line); border-radius:20px; padding:14px; }
+    .search { width:100%; border:1px solid #e9edff; border-radius:14px; padding:12px 14px; }
+    .filter-row { margin-top:10px; display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:8px; }
+    .select { width:100%; border:1px solid #dde5ff; border-radius:999px; padding:9px 12px; background:#fff; color:#46568f; font-weight:600; }
+    .cards { margin-top:16px; display:grid; gap:14px; grid-template-columns:repeat(3,minmax(0,1fr)); }
+    .card { background:var(--card); border:1px solid var(--line); border-top:4px solid #67a1ff; border-radius:18px; padding:16px; box-shadow:0 8px 24px rgba(19,41,120,.07); }
+    .kicker { font-size:11px; letter-spacing:2px; font-weight:800; color:#5864d6; }
+    .title { margin:8px 0; font-size:24px; line-height:1.15; }
+    .meta { color:#55608f; font-size:14px; }
+    .chips { display:flex; gap:8px; flex-wrap:wrap; margin:8px 0; }
+    .chip { padding:4px 10px; border-radius:999px; background:#f4f6ff; border:1px solid #e3e9ff; font-size:12px; }
+    .empty { margin-top:18px; background:#fff; border:1px dashed #cfd8ff; border-radius:18px; text-align:center; padding:30px 16px; color:#6070a6; }
+    .card-image { width:100%; border-radius:12px; margin-bottom:10px; border:1px solid #e1e8ff; }
+    .card-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+    .mini { border:1px solid #dbe3ff; border-radius:10px; padding:6px 9px; background:#fff; cursor:pointer; font-size:12px; }
+    .modal-wrap { position:fixed; inset:0; background:rgba(8,15,56,.35); display:none; align-items:center; justify-content:center; padding:16px; z-index:3; }
+    .modal { width:min(760px,100%); background:#fff; border-radius:18px; padding:18px; border:1px solid var(--line); }
+    .grid { display:grid; gap:10px; grid-template-columns:1fr 1fr; }
+    .field { display:grid; gap:6px; margin-bottom:10px; }
+    .field.full { grid-column:1 / -1; }
+    label { font-size:13px; font-weight:700; color:#3f4f8f; }
+    input, textarea { border:1px solid #dde5ff; border-radius:12px; padding:10px 12px; font:inherit; }
+    textarea { min-height:92px; resize:vertical; }
+    .actions { display:flex; justify-content:flex-end; gap:8px; margin-top:12px; }
+    .hint { font-size:12px; color:#7786bb; }
+    .about { margin-top:16px; background:#fff; border:1px solid var(--line); border-radius:18px; padding:16px; color:#48578f; line-height:1.45; }
+    .hidden { display:none !important; }
+    @media (max-width:1024px) { .cards { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+    @media (max-width:760px) { .cards,.grid,.filter-row,.tabs { grid-template-columns:1fr; } .sub { font-size:16px; } }
   </style>
 </head>
 <body>
@@ -62,19 +61,33 @@
         <button id="openModal" class="btn btn-primary" style="display:none;">+ Adicionar caso</button>
       </div>
     </div>
+    <div class="container tabs">
+      <div class="tab active" data-tab="catalog">Catalogo</div>
+      <div class="tab" data-tab="favorites">Favoritos</div>
+      <div class="tab" data-tab="about">Sobre</div>
+    </div>
   </header>
   <main>
-    <div class="container">
+    <div id="catalogView" class="container">
       <h1>Catalogo de Casos de Uso</h1>
       <div id="counter" class="sub">0 casos documentados</div>
       <section class="filters">
         <input id="search" class="search" placeholder="Buscar por nome, autor, projeto..." />
+        <div class="filter-row">
+          <select id="areaFilter" class="select"><option value="">Todas as areas</option></select>
+          <select id="technologyFilter" class="select"><option value="">Todas as tecnologias</option></select>
+          <select id="phaseFilter" class="select"><option value="">Todas as fases SPM</option></select>
+          <select id="themeFilter" class="select"><option value="">Todos os temas SPM</option></select>
+          <select id="sortFilter" class="select"><option value="recent">Mais recentes</option><option value="oldest">Mais antigos</option></select>
+          <select id="favoriteFilter" class="select"><option value="all">Todos</option><option value="only">Apenas favoritos</option></select>
+        </div>
       </section>
       <section id="cards" class="cards"></section>
-      <section id="empty" class="empty">
-        <strong>Seu catalogo esta vazio</strong><br />
-        Clique em "+ Adicionar caso" para incluir o primeiro item.
-      </section>
+      <section id="empty" class="empty"><strong>Seu catalogo esta vazio</strong><br />Clique em "+ Adicionar caso" para incluir o primeiro item.</section>
+    </div>
+    <div id="aboutView" class="container hidden">
+      <h1>Sobre</h1>
+      <section class="about">Plataforma de catalogo de casos de uso com filtros por area, tecnologia, fase e tema. Entre como administrador para criar, editar, remover e enviar imagens dos casos.</section>
     </div>
   </main>
 
@@ -86,15 +99,16 @@
         <div class="grid">
           <div class="field"><label for="title">Titulo *</label><input id="title" required /></div>
           <div class="field"><label for="category">Categoria</label><input id="category" placeholder="Ex: Discovery & Backlog" /></div>
+          <div class="field"><label for="area">Area</label><input id="area" placeholder="Ex: Produto" /></div>
+          <div class="field"><label for="technology">Tecnologia</label><input id="technology" placeholder="Ex: Agentforce" /></div>
+          <div class="field"><label for="phase">Fase SPM</label><input id="phase" placeholder="Ex: Discovery" /></div>
+          <div class="field"><label for="theme">Tema SPM</label><input id="theme" placeholder="Ex: Backlog" /></div>
           <div class="field"><label for="authorName">Autor</label><input id="authorName" /></div>
           <div class="field"><label for="skillName">Skill/Projeto</label><input id="skillName" /></div>
           <div class="field full"><label for="tags">Tags (separadas por virgula)</label><input id="tags" placeholder="Design, Solution, Backlog" /></div>
           <div class="field full"><label for="description">Descricao</label><textarea id="description"></textarea></div>
         </div>
-        <div class="actions">
-          <button type="button" class="btn" id="closeModal">Cancelar</button>
-          <button type="submit" class="btn btn-primary">Salvar caso</button>
-        </div>
+        <div class="actions"><button type="button" class="btn" id="closeModal">Cancelar</button><button type="submit" class="btn btn-primary">Salvar caso</button></div>
       </form>
     </div>
   </div>
@@ -108,10 +122,7 @@
           <input id="adminPassword" type="password" required />
           <span class="hint">Defina no Heroku: ADMIN_PASSWORD</span>
         </div>
-        <div class="actions">
-          <button type="button" class="btn" id="closeAuth">Cancelar</button>
-          <button type="submit" class="btn btn-primary">Entrar</button>
-        </div>
+        <div class="actions"><button type="button" class="btn" id="closeAuth">Cancelar</button><button type="submit" class="btn btn-primary">Entrar</button></div>
       </form>
     </div>
   </div>
@@ -121,6 +132,12 @@
     const emptyEl = document.getElementById("empty");
     const counterEl = document.getElementById("counter");
     const searchEl = document.getElementById("search");
+    const areaFilterEl = document.getElementById("areaFilter");
+    const technologyFilterEl = document.getElementById("technologyFilter");
+    const phaseFilterEl = document.getElementById("phaseFilter");
+    const themeFilterEl = document.getElementById("themeFilter");
+    const sortFilterEl = document.getElementById("sortFilter");
+    const favoriteFilterEl = document.getElementById("favoriteFilter");
     const modalWrap = document.getElementById("modalWrap");
     const authWrap = document.getElementById("authWrap");
     const openModalBtn = document.getElementById("openModal");
@@ -131,6 +148,9 @@
     const authBtn = document.getElementById("authBtn");
     const authForm = document.getElementById("authForm");
     const closeAuthBtn = document.getElementById("closeAuth");
+    const tabs = Array.from(document.querySelectorAll(".tab"));
+    const catalogViewEl = document.getElementById("catalogView");
+    const aboutViewEl = document.getElementById("aboutView");
 
     let allCases = [];
     let isAuthenticated = false;
@@ -139,6 +159,10 @@
       return {
         title: document.getElementById("title").value,
         category: document.getElementById("category").value,
+        area: document.getElementById("area").value,
+        technology: document.getElementById("technology").value,
+        phase: document.getElementById("phase").value,
+        theme: document.getElementById("theme").value,
         authorName: document.getElementById("authorName").value,
         skillName: document.getElementById("skillName").value,
         description: document.getElementById("description").value,
@@ -162,6 +186,23 @@
       openModalBtn.style.display = isAuthenticated ? "inline-block" : "none";
     }
 
+    function uniqueValues(field) {
+      return Array.from(new Set(allCases.map((item) => item[field] || "").filter(Boolean))).sort();
+    }
+
+    function repopulateSelect(selectEl, values, emptyLabel) {
+      const selected = selectEl.value;
+      selectEl.innerHTML = `<option value="">${emptyLabel}</option>` + values.map((value) => `<option value="${value}">${value}</option>`).join("");
+      selectEl.value = values.includes(selected) ? selected : "";
+    }
+
+    function updateFilters() {
+      repopulateSelect(areaFilterEl, uniqueValues("area"), "Todas as areas");
+      repopulateSelect(technologyFilterEl, uniqueValues("technology"), "Todas as tecnologias");
+      repopulateSelect(phaseFilterEl, uniqueValues("phase"), "Todas as fases SPM");
+      repopulateSelect(themeFilterEl, uniqueValues("theme"), "Todos os temas SPM");
+    }
+
     function render(cases) {
       cardsEl.innerHTML = "";
       counterEl.textContent = `${cases.length} caso${cases.length === 1 ? "" : "s"} documentado${cases.length === 1 ? "" : "s"}`;
@@ -180,6 +221,7 @@
           <div class="kicker">${(item.category || "SEM CATEGORIA").toUpperCase()}</div>
           <h2 class="title">${item.title}</h2>
           <div class="meta"><strong>${item.author_name || "Sem autor"}</strong> - ${item.skill_name || "Sem projeto"}</div>
+          <div class="meta">${item.area || "Sem area"} | ${item.technology || "Sem tecnologia"} | ${item.phase || "Sem fase"} | ${item.theme || "Sem tema"}</div>
           <div class="chips">${(item.tags || []).map((tag) => `<span class="chip">${tag}</span>`).join("")}</div>
           <p>${item.description || ""}</p>
           <div class="card-actions">
@@ -196,7 +238,6 @@
           await loadCases();
         });
       });
-
       document.querySelectorAll(".edit").forEach((btn) => {
         btn.addEventListener("click", () => {
           const item = allCases.find((caseItem) => String(caseItem.id) === String(btn.dataset.id));
@@ -205,6 +246,10 @@
           caseModalTitleEl.textContent = "Editar caso de uso";
           document.getElementById("title").value = item.title || "";
           document.getElementById("category").value = item.category || "";
+          document.getElementById("area").value = item.area || "";
+          document.getElementById("technology").value = item.technology || "";
+          document.getElementById("phase").value = item.phase || "";
+          document.getElementById("theme").value = item.theme || "";
           document.getElementById("authorName").value = item.author_name || "";
           document.getElementById("skillName").value = item.skill_name || "";
           document.getElementById("description").value = item.description || "";
@@ -212,7 +257,6 @@
           modalWrap.style.display = "flex";
         });
       });
-
       document.querySelectorAll(".delete").forEach((btn) => {
         btn.addEventListener("click", async () => {
           if (!confirm("Excluir este caso de uso?")) return;
@@ -220,17 +264,13 @@
           await loadCases();
         });
       });
-
       document.querySelectorAll(".upload").forEach((input) => {
         input.addEventListener("change", async (event) => {
           const file = event.target.files[0];
           if (!file) return;
           const formData = new FormData();
           formData.append("image", file);
-          await request(`/api/use-cases/${input.dataset.id}/image`, {
-            method: "POST",
-            body: formData,
-          });
+          await request(`/api/use-cases/${input.dataset.id}/image`, { method: "POST", body: formData });
           await loadCases();
         });
       });
@@ -238,15 +278,29 @@
 
     async function loadCases() {
       allCases = await request("/api/use-cases");
+      updateFilters();
       applySearch();
     }
 
     function applySearch() {
       const term = searchEl.value.trim().toLowerCase();
-      if (!term) return render(allCases);
-      render(allCases.filter((item) =>
-        [item.title, item.author_name, item.skill_name, item.description, item.category].join(" ").toLowerCase().includes(term)
-      ));
+      let result = allCases.filter((item) =>
+        [item.title, item.author_name, item.skill_name, item.description, item.category, item.area, item.technology, item.phase, item.theme]
+          .join(" ")
+          .toLowerCase()
+          .includes(term)
+      );
+      if (areaFilterEl.value) result = result.filter((item) => item.area === areaFilterEl.value);
+      if (technologyFilterEl.value) result = result.filter((item) => item.technology === technologyFilterEl.value);
+      if (phaseFilterEl.value) result = result.filter((item) => item.phase === phaseFilterEl.value);
+      if (themeFilterEl.value) result = result.filter((item) => item.theme === themeFilterEl.value);
+      if (favoriteFilterEl.value === "only") result = result.filter((item) => item.is_favorite);
+      if (sortFilterEl.value === "oldest") {
+        result = [...result].sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+      } else {
+        result = [...result].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+      }
+      render(result);
     }
 
     function closeModal() {
@@ -260,6 +314,12 @@
     closeModalBtn.addEventListener("click", closeModal);
     modalWrap.addEventListener("click", (e) => { if (e.target === modalWrap) closeModal(); });
     searchEl.addEventListener("input", applySearch);
+    areaFilterEl.addEventListener("change", applySearch);
+    technologyFilterEl.addEventListener("change", applySearch);
+    phaseFilterEl.addEventListener("change", applySearch);
+    themeFilterEl.addEventListener("change", applySearch);
+    sortFilterEl.addEventListener("change", applySearch);
+    favoriteFilterEl.addEventListener("change", applySearch);
 
     authBtn.addEventListener("click", async () => {
       if (isAuthenticated) {
@@ -270,17 +330,8 @@
         authWrap.style.display = "flex";
       }
     });
-    closeAuthBtn.addEventListener("click", () => {
-      authWrap.style.display = "none";
-      authForm.reset();
-    });
-    authWrap.addEventListener("click", (e) => {
-      if (e.target === authWrap) {
-        authWrap.style.display = "none";
-        authForm.reset();
-      }
-    });
-
+    closeAuthBtn.addEventListener("click", () => { authWrap.style.display = "none"; authForm.reset(); });
+    authWrap.addEventListener("click", (e) => { if (e.target === authWrap) { authWrap.style.display = "none"; authForm.reset(); } });
     authForm.addEventListener("submit", async (event) => {
       event.preventDefault();
       try {
@@ -321,6 +372,23 @@
       } catch (error) {
         alert(error.message);
       }
+    });
+
+    tabs.forEach((tabEl) => {
+      tabEl.addEventListener("click", () => {
+        tabs.forEach((item) => item.classList.remove("active"));
+        tabEl.classList.add("active");
+        const tab = tabEl.dataset.tab;
+        if (tab === "about") {
+          catalogViewEl.classList.add("hidden");
+          aboutViewEl.classList.remove("hidden");
+          return;
+        }
+        catalogViewEl.classList.remove("hidden");
+        aboutViewEl.classList.add("hidden");
+        favoriteFilterEl.value = tab === "favorites" ? "only" : "all";
+        applySearch();
+      });
     });
 
     (async function bootstrap() {
