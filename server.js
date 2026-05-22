@@ -201,7 +201,7 @@ app.post("/api/use-cases", async (req, res) => {
   }
 });
 
-app.put("/api/use-cases/:id", requireAuth, async (req, res) => {
+app.put("/api/use-cases/:id", async (req, res) => {
   const {
     title,
     category = "",

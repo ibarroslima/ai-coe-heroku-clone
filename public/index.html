@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI LATAM CoE</title>
+  <title>AI CoE ProServ</title>
   <style>
     :root {
       --bg: #ebf1ff;
@@ -29,105 +29,77 @@
     .container { width: min(1280px, 94%); margin: 0 auto; }
     .topbar { padding: 18px 0 10px; border-bottom: 1px solid var(--line); }
     .row { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
-    .logo { font-size: 34px; font-weight: 900; letter-spacing: -0.8px; color: #102265; }
-    .logo small { display: block; font-size: 12px; font-weight: 700; letter-spacing: 2px; color: #6f7eb2; margin-top: -6px; }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand-text { font-size: 34px; font-weight: 900; letter-spacing: -0.8px; color: var(--text); }
+    .brand-text small { display: block; font-size: 12px; font-weight: 700; letter-spacing: 2px; color: #28a0ff; margin-top: -6px; }
+    .cloud {
+      width: 50px; height: 50px; border-radius: 50%; background: #e7f5ff; border: 1px solid #b9ddff;
+      display: grid; place-items: center; font-size: 24px; color: #0089ff;
+    }
     .top-actions { display: flex; gap: 10px; align-items: center; }
-    .lang-wrap { position: relative; }
-    .lang-btn {
-      width: 130px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 14px;
-    }
-    .lang-menu {
-      position: absolute;
-      top: 46px;
-      right: 0;
-      width: 260px;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      background: var(--surface);
-      box-shadow: var(--shadow);
-      padding: 10px;
-      display: none;
-      z-index: 5;
-    }
-    .lang-item {
-      width: 100%;
-      border: 1px solid transparent;
-      border-radius: 12px;
-      background: transparent;
-      color: var(--text);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 12px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-    .lang-item.active { background: #eef1ff; }
-    body.dark .lang-item.active { background: #2a3a79; }
-    .pill-btn {
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: #fff;
-      color: var(--text);
-      font-weight: 700;
-      padding: 10px 14px;
-      cursor: pointer;
-      transition: 0.2s ease;
-    }
+    .pill-btn { border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--text); font-weight: 700; padding: 10px 14px; cursor: pointer; transition: 0.2s ease; }
     .pill-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow); }
     .pill-btn.primary { border: none; color: #fff; background: linear-gradient(90deg, #2f44ff, #4f63ff); box-shadow: 0 8px 18px rgba(53, 76, 255, 0.28); }
     .icon-btn { width: 44px; height: 40px; padding: 0; display: grid; place-items: center; font-size: 13px; }
-    .tabs { margin-top: 18px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; align-items: center; text-align: center; }
+    .lang-wrap { position: relative; }
+    .lang-btn { width: 130px; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+    .lang-menu {
+      position: absolute; top: 46px; right: 0; width: 260px; border: 1px solid var(--line); border-radius: 16px;
+      background: var(--surface); box-shadow: var(--shadow); padding: 10px; display: none; z-index: 5;
+    }
+    .lang-item {
+      width: 100%; border: 1px solid transparent; border-radius: 12px; background: transparent; color: var(--text);
+      display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; font-weight: 700; cursor: pointer;
+    }
+    .lang-item.active { background: #eef1ff; }
+    body.dark .lang-item.active { background: #2a3a79; }
+    .tabs { margin-top: 18px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; text-align: center; }
     .tab { padding-bottom: 10px; font-weight: 700; color: #66729e; cursor: pointer; border-bottom: 3px solid transparent; }
     .tab.active { color: #2f45ff; border-bottom-color: #2f45ff; }
     main { padding: 24px 0 36px; }
     h1 { margin: 0; font-size: clamp(34px, 4vw, 52px); letter-spacing: -1px; line-height: 1.06; }
     .sub { margin: 6px 0 18px; color: var(--muted); font-size: 22px; }
-    .hero { margin-top: 10px; border: 1px solid var(--line); border-radius: 20px; background: #fff; box-shadow: var(--shadow); padding: 24px; }
-    .hero p { margin: 8px 0 18px; color: var(--muted); line-height: 1.5; max-width: 740px; }
+    .home-grid { margin-top: 14px; display: grid; gap: 12px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .metric { border: 1px solid var(--line); border-radius: 16px; background: var(--surface); box-shadow: var(--shadow); padding: 16px; }
+    .metric .value { font-size: 32px; font-weight: 900; margin-bottom: 2px; }
+    .metric .label { color: var(--muted); font-weight: 700; }
+    .explainers { margin-top: 14px; display: grid; gap: 12px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .explainer { border: 1px solid var(--line); border-radius: 16px; background: var(--surface); box-shadow: var(--shadow); padding: 16px; }
+    .explainer h3 { margin: 0 0 8px; }
+    .explainer p { margin: 0; color: var(--muted); line-height: 1.4; }
     .filters { background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 14px; box-shadow: var(--shadow); }
     .search { width: 100%; border: 1px solid #e5eaff; border-radius: 14px; padding: 13px 14px; background: #fcfdff; font-size: 15px; color: #435189; outline: none; }
-    .search:focus { border-color: #adc0ff; }
     .filter-row { margin-top: 10px; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; }
     .select { width: 100%; border: 1px solid #dde4ff; border-radius: 999px; background: #fff; color: #4b5a90; font-size: 13px; font-weight: 700; padding: 10px 12px; }
     .cards { margin-top: 16px; display: grid; gap: 14px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .card { background: var(--surface); border: 1px solid var(--line); border-top: 4px solid #63a0ff; border-radius: 18px; padding: 16px; box-shadow: var(--shadow); transition: 0.2s ease; }
-    .card:hover { transform: translateY(-2px); }
+    .card { background: var(--surface); border: 1px solid var(--line); border-top: 4px solid #63a0ff; border-radius: 18px; padding: 16px; box-shadow: var(--shadow); }
     .kicker { font-size: 11px; letter-spacing: 2px; font-weight: 800; color: #6071d8; }
-    .title { margin: 8px 0; font-size: 28px; letter-spacing: -0.4px; line-height: 1.12; }
-    .meta { color: var(--muted); font-size: 14px; margin-bottom: 4px; }
+    .title { margin: 8px 0; font-size: 24px; line-height: 1.15; }
+    .meta, .desc { color: var(--muted); }
     .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0; }
     .chip { border: 1px solid #e3e8ff; background: var(--chip); border-radius: 999px; padding: 4px 10px; font-size: 12px; font-weight: 700; color: #31418b; }
-    .desc { margin: 0; color: var(--muted); line-height: 1.42; }
     .card-image { width: 100%; border-radius: 12px; border: 1px solid #e2e8ff; margin-bottom: 10px; }
     .card-actions { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 8px; }
     .mini { border: 1px solid #dce3ff; border-radius: 10px; background: #fff; cursor: pointer; padding: 6px 10px; font-size: 12px; font-weight: 700; color: #2e3f8f; }
     .empty { margin-top: 18px; background: var(--surface); border: 1px dashed #cad6ff; border-radius: 18px; text-align: center; color: var(--muted); padding: 32px 16px; }
-    .empty.hidden, .hidden { display: none !important; }
-    .about { margin-top: 16px; border: 1px solid var(--line); border-radius: 18px; background: #fff; box-shadow: var(--shadow); padding: 18px; color: #4b5a8f; line-height: 1.5; }
+    .about { margin-top: 16px; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); box-shadow: var(--shadow); padding: 18px; color: var(--muted); line-height: 1.5; }
     .modal-wrap { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(8, 15, 56, 0.35); z-index: 4; padding: 16px; }
-    .modal { width: min(760px, 100%); background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 18px; box-shadow: var(--shadow); }
+    .modal { width: min(760px, 100%); background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 18px; box-shadow: var(--shadow); }
     .grid { display: grid; gap: 10px; grid-template-columns: 1fr 1fr; }
     .field { display: grid; gap: 6px; margin-bottom: 10px; }
     .field.full { grid-column: 1 / -1; }
-    label { font-size: 13px; font-weight: 700; color: #3f4f8f; }
+    label { font-size: 13px; font-weight: 700; color: var(--text); }
     input, textarea { border: 1px solid #dde5ff; border-radius: 12px; padding: 10px 12px; font: inherit; }
     textarea { min-height: 92px; resize: vertical; }
     .actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; }
-    .hint { font-size: 12px; color: #7786bb; }
+    .hidden { display: none !important; }
     @media (max-width: 1100px) {
-      .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .title { font-size: 24px; }
+      .cards, .home-grid, .explainers { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .filter-row { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     }
     @media (max-width: 760px) {
-      .cards, .grid, .filter-row, .tabs { grid-template-columns: 1fr; }
-      .logo { font-size: 26px; }
+      .cards, .grid, .filter-row, .tabs, .home-grid, .explainers { grid-template-columns: 1fr; }
+      .brand-text { font-size: 26px; }
       .sub { font-size: 16px; }
     }
   </style>
@@ -135,15 +107,15 @@
 <body>
   <header class="topbar">
     <div class="container row">
-      <div class="logo">AI LATAM CoE<small id="logoCaption">CATALOGO</small></div>
+      <div class="brand">
+        <div class="cloud" id="flagCloud">☁️</div>
+        <div class="brand-text">AI CoE ProServ<small id="logoCaption">LATAM</small></div>
+      </div>
       <div class="top-actions">
         <button id="authBtn" class="pill-btn">Entrar</button>
         <button id="openModal" class="pill-btn primary">+ Adicionar caso</button>
         <div class="lang-wrap">
-          <button id="langBtn" class="pill-btn lang-btn" title="Idioma">
-            <span>🌐 <strong id="langBtnCode">PT</strong></span>
-            <span>▾</span>
-          </button>
+          <button id="langBtn" class="pill-btn lang-btn" title="Idioma"><span>🌐 <strong id="langBtnCode">PT</strong></span><span>▾</span></button>
           <div id="langMenu" class="lang-menu">
             <button class="lang-item active" data-lang="pt"><span>Português (Brasil)</span><span>PT</span></button>
             <button class="lang-item" data-lang="es"><span>Español</span><span>ES</span></button>
@@ -160,16 +132,21 @@
       <div id="tabAbout" class="tab" data-tab="about">Sobre</div>
     </div>
   </header>
-
   <main>
     <div id="homeView" class="container">
-      <section class="hero">
-        <h1 id="homeTitle">AI LATAM CoE</h1>
-        <p id="homeDesc">Centralize e compartilhe casos de uso de IA com filtros por tema, tecnologia e fase. Use a aba Catalogo para explorar todos os casos.</p>
-        <button id="homeCtaBtn" class="pill-btn primary">Ir para Catalogo</button>
+      <h1 id="homeTitle">AI CoE ProServ</h1>
+      <p class="sub" id="homeDesc">Centralize e compartilhe conhecimento aplicado em IA para toda a organizacao.</p>
+      <section class="home-grid">
+        <article class="metric"><div id="metricCases" class="value">0</div><div id="metricCasesLabel" class="label">Casos documentados</div></article>
+        <article class="metric"><div id="metricTech" class="value">0</div><div id="metricTechLabel" class="label">Tecnologias cobertas</div></article>
+        <article class="metric"><div id="metricContrib" class="value">0</div><div id="metricContribLabel" class="label">Contribuidores</div></article>
+      </section>
+      <section class="explainers">
+        <article class="explainer"><h3 id="exp1Title">Busca e filtros</h3><p id="exp1Text">Encontre rapidamente casos por autor, tema, tecnologia, fase ou palavra-chave.</p></article>
+        <article class="explainer"><h3 id="exp2Title">Conhecimento compartilhado</h3><p id="exp2Text">Consolide aprendizados de diferentes paises e equipes em um unico lugar.</p></article>
+        <article class="explainer"><h3 id="exp3Title">Catalogo de casos de uso</h3><p id="exp3Text">Documente problemas, abordagens e resultados para acelerar novas iniciativas.</p></article>
       </section>
     </div>
-
     <div id="catalogView" class="container hidden">
       <h1 id="catalogTitle">Catalogo de Casos de Uso</h1>
       <div id="counter" class="sub">0 casos documentados</div>
@@ -185,18 +162,13 @@
         </div>
       </section>
       <section id="cards" class="cards"></section>
-      <section id="empty" class="empty">
-        <strong id="emptyTitle">Seu catalogo esta vazio</strong><br />
-        <span id="emptyDesc">Clique em "+ Adicionar caso" para incluir o primeiro item.</span>
-      </section>
+      <section id="empty" class="empty"><strong id="emptyTitle">Seu catalogo esta vazio</strong><br /><span id="emptyDesc">Clique em "+ Adicionar caso" para incluir o primeiro item.</span></section>
     </div>
-
     <div id="aboutView" class="container hidden">
       <h1 id="aboutTitle">Sobre</h1>
-      <section id="aboutText" class="about">Plataforma de catalogo de casos de uso com filtros por area, tecnologia, fase e tema. O modo administrador permite cadastrar, editar, excluir e enviar imagem para os casos.</section>
+      <section id="aboutText" class="about">Plataforma de catalogo de casos de uso com filtros por area, tecnologia, fase e tema. Qualquer colaborador pode criar e editar casos. Remocao e permitida somente para administradores.</section>
     </div>
   </main>
-
   <div id="modalWrap" class="modal-wrap">
     <div class="modal">
       <h3 id="caseModalTitle">Novo caso de uso</h3>
@@ -214,148 +186,30 @@
           <div class="field full"><label id="labelTags" for="tags">Tags (separadas por virgula)</label><input id="tags" /></div>
           <div class="field full"><label id="labelDescription" for="description">Descricao</label><textarea id="description"></textarea></div>
         </div>
-        <div class="actions">
-          <button type="button" class="pill-btn" id="closeModal">Cancelar</button>
-          <button type="submit" class="pill-btn primary" id="saveCaseBtn">Salvar caso</button>
-        </div>
+        <div class="actions"><button type="button" class="pill-btn" id="closeModal">Cancelar</button><button type="submit" class="pill-btn primary" id="saveCaseBtn">Salvar caso</button></div>
       </form>
     </div>
   </div>
-
   <div id="authWrap" class="modal-wrap">
     <div class="modal" style="max-width:420px;">
       <h3 id="authTitle">Login administrador</h3>
       <form id="authForm">
-        <div class="field">
-          <label id="labelPassword" for="adminPassword">Senha</label>
-          <input id="adminPassword" type="password" required />
-          <span class="hint" id="authHint">Defina no Heroku: ADMIN_PASSWORD</span>
-        </div>
-        <div class="actions">
-          <button type="button" class="pill-btn" id="closeAuth">Cancelar</button>
-          <button type="submit" class="pill-btn primary" id="loginBtn">Entrar</button>
-        </div>
+        <div class="field"><label id="labelPassword" for="adminPassword">Senha</label><input id="adminPassword" type="password" required /></div>
+        <div class="actions"><button type="button" class="pill-btn" id="closeAuth">Cancelar</button><button type="submit" class="pill-btn primary" id="loginBtn">Entrar</button></div>
       </form>
     </div>
   </div>
-
   <script>
     const I18N = {
-      pt: {
-        title: "AI LATAM CoE",
-        caption: "CATALOGO",
-        tabs: { home: "Home", catalog: "Catalogo", favorites: "Favoritos", about: "Sobre" },
-        authIn: "Entrar",
-        authOut: "Sair",
-        addCase: "+ Adicionar caso",
-        homeTitle: "AI LATAM CoE",
-        homeDesc: "Centralize e compartilhe casos de uso de IA com filtros por tema, tecnologia e fase. Use a aba Catalogo para explorar todos os casos.",
-        homeCta: "Ir para Catalogo",
-        catalogTitle: "Catalogo de Casos de Uso",
-        caseCountOne: "caso documentado",
-        caseCountMany: "casos documentados",
-        searchPlaceholder: "Buscar por nome, autor, projeto...",
-        allAreas: "Todas as areas",
-        allTechnologies: "Todas as tecnologias",
-        allPhases: "Todas as fases SPM",
-        allThemes: "Todos os temas SPM",
-        recent: "Mais recentes",
-        oldest: "Mais antigos",
-        all: "Todos",
-        onlyFavorites: "Apenas favoritos",
-        emptyTitle: "Seu catalogo esta vazio",
-        emptyDesc: "Clique em \"+ Adicionar caso\" para incluir o primeiro item.",
-        aboutTitle: "Sobre",
-        aboutText: "Plataforma de catalogo de casos de uso com filtros por area, tecnologia, fase e tema. O modo administrador permite cadastrar, editar, excluir e enviar imagem para os casos.",
-        modalNew: "Novo caso de uso",
-        modalEdit: "Editar caso de uso",
-        labels: { title: "Titulo *", category: "Categoria", area: "Area", technology: "Tecnologia", phase: "Fase SPM", theme: "Tema SPM", author: "Autor", project: "Skill/Projeto", tags: "Tags (separadas por virgula)", description: "Descricao", password: "Senha" },
-        cancel: "Cancelar",
-        saveCase: "Salvar caso",
-        loginTitle: "Login administrador",
-        loginBtn: "Entrar",
-        authHint: "Defina no Heroku: ADMIN_PASSWORD",
-        fallback: { noAuthor: "Sem autor", noProject: "Sem projeto", noArea: "Sem area", noTechnology: "Sem tecnologia", noPhase: "Sem fase", noTheme: "Sem tema", noCategory: "Sem categoria" },
-        actions: { favorite: "Favoritar", favoriteOn: "Favorito", edit: "Editar", delete: "Excluir", image: "Imagem" },
-        confirmDelete: "Excluir este caso de uso?"
-      },
-      es: {
-        title: "AI LATAM CoE",
-        caption: "CATALOGO",
-        tabs: { home: "Inicio", catalog: "Catalogo", favorites: "Favoritos", about: "Acerca" },
-        authIn: "Ingresar",
-        authOut: "Salir",
-        addCase: "+ Agregar caso",
-        homeTitle: "AI LATAM CoE",
-        homeDesc: "Centraliza y comparte casos de uso de IA con filtros por tema, tecnologia y fase. Usa la pestana Catalogo para explorar todos los casos.",
-        homeCta: "Ir al Catalogo",
-        catalogTitle: "Catalogo de Casos de Uso",
-        caseCountOne: "caso documentado",
-        caseCountMany: "casos documentados",
-        searchPlaceholder: "Buscar por nombre, autor, proyecto...",
-        allAreas: "Todas las areas",
-        allTechnologies: "Todas las tecnologias",
-        allPhases: "Todas las fases SPM",
-        allThemes: "Todos los temas SPM",
-        recent: "Mas recientes",
-        oldest: "Mas antiguos",
-        all: "Todos",
-        onlyFavorites: "Solo favoritos",
-        emptyTitle: "Tu catalogo esta vacio",
-        emptyDesc: "Haz clic en \"+ Agregar caso\" para incluir el primer item.",
-        aboutTitle: "Acerca",
-        aboutText: "Plataforma de catalogo de casos de uso con filtros por area, tecnologia, fase y tema. El modo administrador permite crear, editar, eliminar y subir imagenes.",
-        modalNew: "Nuevo caso de uso",
-        modalEdit: "Editar caso de uso",
-        labels: { title: "Titulo *", category: "Categoria", area: "Area", technology: "Tecnologia", phase: "Fase SPM", theme: "Tema SPM", author: "Autor", project: "Skill/Proyecto", tags: "Etiquetas (separadas por coma)", description: "Descripcion", password: "Contrasena" },
-        cancel: "Cancelar",
-        saveCase: "Guardar caso",
-        loginTitle: "Login administrador",
-        loginBtn: "Ingresar",
-        authHint: "Define en Heroku: ADMIN_PASSWORD",
-        fallback: { noAuthor: "Sin autor", noProject: "Sin proyecto", noArea: "Sin area", noTechnology: "Sin tecnologia", noPhase: "Sin fase", noTheme: "Sin tema", noCategory: "Sin categoria" },
-        actions: { favorite: "Favorito", favoriteOn: "Favorito", edit: "Editar", delete: "Eliminar", image: "Imagen" },
-        confirmDelete: "Eliminar este caso de uso?"
-      },
-      en: {
-        title: "AI LATAM CoE",
-        caption: "CATALOG",
-        tabs: { home: "Home", catalog: "Catalog", favorites: "Favorites", about: "About" },
-        authIn: "Sign in",
-        authOut: "Sign out",
-        addCase: "+ Add case",
-        homeTitle: "AI LATAM CoE",
-        homeDesc: "Centralize and share AI use cases with filters by theme, technology, and phase. Use the Catalog tab to explore all cases.",
-        homeCta: "Go to Catalog",
-        catalogTitle: "Use Case Catalog",
-        caseCountOne: "documented case",
-        caseCountMany: "documented cases",
-        searchPlaceholder: "Search by name, author, project...",
-        allAreas: "All areas",
-        allTechnologies: "All technologies",
-        allPhases: "All SPM phases",
-        allThemes: "All SPM themes",
-        recent: "Most recent",
-        oldest: "Oldest",
-        all: "All",
-        onlyFavorites: "Only favorites",
-        emptyTitle: "Your catalog is empty",
-        emptyDesc: "Click \"+ Add case\" to include your first item.",
-        aboutTitle: "About",
-        aboutText: "Use case catalog platform with filters by area, technology, phase, and theme. Admin mode allows create, edit, delete, and image upload.",
-        modalNew: "New use case",
-        modalEdit: "Edit use case",
-        labels: { title: "Title *", category: "Category", area: "Area", technology: "Technology", phase: "SPM Phase", theme: "SPM Theme", author: "Author", project: "Skill/Project", tags: "Tags (comma separated)", description: "Description", password: "Password" },
-        cancel: "Cancel",
-        saveCase: "Save case",
-        loginTitle: "Admin login",
-        loginBtn: "Sign in",
-        authHint: "Set in Heroku: ADMIN_PASSWORD",
-        fallback: { noAuthor: "No author", noProject: "No project", noArea: "No area", noTechnology: "No technology", noPhase: "No phase", noTheme: "No theme", noCategory: "No category" },
-        actions: { favorite: "Favorite", favoriteOn: "Favorited", edit: "Edit", delete: "Delete", image: "Image" },
-        confirmDelete: "Delete this use case?"
-      }
+      pt: { tabs: { home: "Home", catalog: "Catalogo", favorites: "Favoritos", about: "Sobre" }, authIn: "Entrar", authOut: "Sair", addCase: "+ Adicionar caso", homeTitle: "AI CoE ProServ", homeDesc: "Centralize e compartilhe conhecimento aplicado em IA para toda a organizacao.", catalogTitle: "Catalogo de Casos de Uso", caseCountOne: "caso documentado", caseCountMany: "casos documentados", allAreas: "Todas as areas", allTechnologies: "Todas as tecnologias", allPhases: "Todas as fases SPM", allThemes: "Todos os temas SPM", recent: "Mais recentes", oldest: "Mais antigos", all: "Todos", onlyFavorites: "Apenas favoritos", emptyTitle: "Seu catalogo esta vazio", emptyDesc: "Clique em \"+ Adicionar caso\" para incluir o primeiro item.", aboutTitle: "Sobre", aboutText: "Plataforma de catalogo de casos de uso com filtros por area, tecnologia, fase e tema. Qualquer colaborador pode criar e editar casos. Remocao e permitida somente para administradores.", metrics: ["Casos documentados", "Tecnologias cobertas", "Contribuidores"], explainers: [["Busca e filtros","Encontre rapidamente casos por autor, tema, tecnologia, fase ou palavra-chave."],["Conhecimento compartilhado","Consolide aprendizados de diferentes paises e equipes em um unico lugar."],["Catalogo de casos de uso","Documente problemas, abordagens e resultados para acelerar novas iniciativas."]], modalNew: "Novo caso de uso", modalEdit: "Editar caso de uso", labels: { title: "Titulo *", category: "Categoria", area: "Area", technology: "Tecnologia", phase: "Fase SPM", theme: "Tema SPM", author: "Autor", project: "Skill/Projeto", tags: "Tags (separadas por virgula)", description: "Descricao", password: "Senha" }, cancel: "Cancelar", saveCase: "Salvar caso", loginTitle: "Login administrador", loginBtn: "Entrar", fallback: { noAuthor: "Sem autor", noProject: "Sem projeto", noArea: "Sem area", noTechnology: "Sem tecnologia", noPhase: "Sem fase", noTheme: "Sem tema", noCategory: "Sem categoria" }, actions: { favorite: "Favoritar", favoriteOn: "Favorito", edit: "Editar", delete: "Excluir", image: "Imagem" }, confirmDelete: "Excluir este caso de uso?" },
+      es: { tabs: { home: "Inicio", catalog: "Catalogo", favorites: "Favoritos", about: "Acerca" }, authIn: "Ingresar", authOut: "Salir", addCase: "+ Agregar caso", homeTitle: "AI CoE ProServ", homeDesc: "Centraliza y comparte conocimiento aplicado en IA para toda la organizacion.", catalogTitle: "Catalogo de Casos de Uso", caseCountOne: "caso documentado", caseCountMany: "casos documentados", allAreas: "Todas las areas", allTechnologies: "Todas las tecnologias", allPhases: "Todas las fases SPM", allThemes: "Todos los temas SPM", recent: "Mas recientes", oldest: "Mas antiguos", all: "Todos", onlyFavorites: "Solo favoritos", emptyTitle: "Tu catalogo esta vacio", emptyDesc: "Haz clic en \"+ Agregar caso\" para incluir el primer item.", aboutTitle: "Acerca", aboutText: "Plataforma de catalogo de casos de uso con filtros por area, tecnologia, fase y tema. Cualquier colaborador puede crear y editar casos. Eliminar solo para administradores.", metrics: ["Casos documentados", "Tecnologias cubiertas", "Colaboradores"], explainers: [["Busqueda y filtros","Encuentra casos por autor, tema, tecnologia, fase o palabra clave."],["Conocimiento compartido","Consolida aprendizajes de distintos paises y equipos en un solo lugar."],["Catalogo de casos de uso","Documenta problemas, enfoques y resultados para acelerar nuevas iniciativas."]], modalNew: "Nuevo caso de uso", modalEdit: "Editar caso de uso", labels: { title: "Titulo *", category: "Categoria", area: "Area", technology: "Tecnologia", phase: "Fase SPM", theme: "Tema SPM", author: "Autor", project: "Skill/Proyecto", tags: "Etiquetas (separadas por coma)", description: "Descripcion", password: "Contrasena" }, cancel: "Cancelar", saveCase: "Guardar caso", loginTitle: "Login administrador", loginBtn: "Ingresar", fallback: { noAuthor: "Sin autor", noProject: "Sin proyecto", noArea: "Sin area", noTechnology: "Sin tecnologia", noPhase: "Sin fase", noTheme: "Sin tema", noCategory: "Sin categoria" }, actions: { favorite: "Favorito", favoriteOn: "Favorito", edit: "Editar", delete: "Eliminar", image: "Imagen" }, confirmDelete: "Eliminar este caso de uso?" },
+      en: { tabs: { home: "Home", catalog: "Catalog", favorites: "Favorites", about: "About" }, authIn: "Sign in", authOut: "Sign out", addCase: "+ Add case", homeTitle: "AI CoE ProServ", homeDesc: "Centralize and share AI applied knowledge across the organization.", catalogTitle: "Use Case Catalog", caseCountOne: "documented case", caseCountMany: "documented cases", allAreas: "All areas", allTechnologies: "All technologies", allPhases: "All SPM phases", allThemes: "All SPM themes", recent: "Most recent", oldest: "Oldest", all: "All", onlyFavorites: "Only favorites", emptyTitle: "Your catalog is empty", emptyDesc: "Click \"+ Add case\" to include your first item.", aboutTitle: "About", aboutText: "Use case catalog platform with filters by area, technology, phase, and theme. Any collaborator can create and edit cases. Delete is admin-only.", metrics: ["Documented cases", "Technologies covered", "Contributors"], explainers: [["Search and filters","Find cases by author, theme, technology, phase, or keyword."],["Shared knowledge","Consolidate learnings from countries and teams in one place."],["Use case catalog","Document problems, approaches, and outcomes to accelerate initiatives."]], modalNew: "New use case", modalEdit: "Edit use case", labels: { title: "Title *", category: "Category", area: "Area", technology: "Technology", phase: "SPM Phase", theme: "SPM Theme", author: "Author", project: "Skill/Project", tags: "Tags (comma separated)", description: "Description", password: "Password" }, cancel: "Cancel", saveCase: "Save case", loginTitle: "Admin login", loginBtn: "Sign in", fallback: { noAuthor: "No author", noProject: "No project", noArea: "No area", noTechnology: "No technology", noPhase: "No phase", noTheme: "No theme", noCategory: "No category" }, actions: { favorite: "Favorite", favoriteOn: "Favorited", edit: "Edit", delete: "Delete", image: "Image" }, confirmDelete: "Delete this use case?" }
     };
+
+    const flagCloud = document.getElementById("flagCloud");
+    const flagSequence = ["🇧🇷", "🇦🇷", "🇲🇽", "🇵🇪", "🇨🇱", "🇨🇴"];
+    let flagIndex = 0;
+    setInterval(() => { flagCloud.textContent = flagSequence[flagIndex % flagSequence.length]; flagIndex += 1; }, 1500);
 
     const cardsEl = document.getElementById("cards");
     const emptyEl = document.getElementById("empty");
@@ -386,7 +240,6 @@
     const langMenu = document.getElementById("langMenu");
     const langItems = Array.from(document.querySelectorAll(".lang-item"));
     const themeBtn = document.getElementById("themeBtn");
-    const homeCtaBtn = document.getElementById("homeCtaBtn");
 
     let allCases = [];
     let isAuthenticated = false;
@@ -395,25 +248,28 @@
 
     function t() { return I18N[currentLang]; }
 
+    function updateMetrics() {
+      const tech = new Set(allCases.map((c) => (c.technology || "").trim()).filter(Boolean)).size;
+      const contributors = new Set(allCases.map((c) => (c.author_name || "").trim()).filter(Boolean)).size;
+      document.getElementById("metricCases").textContent = String(allCases.length);
+      document.getElementById("metricTech").textContent = String(tech);
+      document.getElementById("metricContrib").textContent = String(contributors);
+    }
+
     function updateStaticTranslations() {
       const i = t();
-      document.title = i.title;
-      document.getElementById("logoCaption").textContent = i.caption;
       document.getElementById("tabHome").textContent = i.tabs.home;
       document.getElementById("tabCatalog").textContent = i.tabs.catalog;
       document.getElementById("tabFavorites").textContent = i.tabs.favorites;
       document.getElementById("tabAbout").textContent = i.tabs.about;
       document.getElementById("homeTitle").textContent = i.homeTitle;
       document.getElementById("homeDesc").textContent = i.homeDesc;
-      homeCtaBtn.textContent = i.homeCta;
       document.getElementById("catalogTitle").textContent = i.catalogTitle;
-      searchEl.placeholder = i.searchPlaceholder;
       document.getElementById("emptyTitle").textContent = i.emptyTitle;
       document.getElementById("emptyDesc").textContent = i.emptyDesc;
       document.getElementById("aboutTitle").textContent = i.aboutTitle;
       document.getElementById("aboutText").textContent = i.aboutText;
       document.getElementById("authTitle").textContent = i.loginTitle;
-      document.getElementById("authHint").textContent = i.authHint;
       document.getElementById("loginBtn").textContent = i.loginBtn;
       document.getElementById("saveCaseBtn").textContent = i.saveCase;
       document.getElementById("closeModal").textContent = i.cancel;
@@ -429,6 +285,16 @@
       document.getElementById("labelTags").textContent = i.labels.tags;
       document.getElementById("labelDescription").textContent = i.labels.description;
       document.getElementById("labelPassword").textContent = i.labels.password;
+      document.getElementById("metricCasesLabel").textContent = i.metrics[0];
+      document.getElementById("metricTechLabel").textContent = i.metrics[1];
+      document.getElementById("metricContribLabel").textContent = i.metrics[2];
+      document.getElementById("exp1Title").textContent = i.explainers[0][0];
+      document.getElementById("exp1Text").textContent = i.explainers[0][1];
+      document.getElementById("exp2Title").textContent = i.explainers[1][0];
+      document.getElementById("exp2Text").textContent = i.explainers[1][1];
+      document.getElementById("exp3Title").textContent = i.explainers[2][0];
+      document.getElementById("exp3Text").textContent = i.explainers[2][1];
+      searchEl.placeholder = i.searchPlaceholder || searchEl.placeholder;
       langBtnCode.textContent = currentLang.toUpperCase();
       langItems.forEach((item) => item.classList.toggle("active", item.dataset.lang === currentLang));
       updateAuthLabel();
@@ -509,15 +375,10 @@
       cardsEl.innerHTML = "";
       counterEl.textContent = formatCaseCount(cases.length);
       emptyEl.classList.toggle("hidden", Boolean(cases.length));
-
       cases.forEach((item) => {
         const card = document.createElement("article");
         card.className = "card";
-        const adminActions = isAuthenticated
-          ? `<button class="mini edit" data-id="${item.id}">${i.actions.edit}</button>
-             <button class="mini delete" data-id="${item.id}">${i.actions.delete}</button>
-             <label class="mini">${i.actions.image}<input class="upload" data-id="${item.id}" type="file" accept="image/*" style="display:none;" /></label>`
-          : "";
+        const adminDelete = isAuthenticated ? `<button class="mini delete" data-id="${item.id}">${i.actions.delete}</button>` : "";
         card.innerHTML = `
           ${item.image_data ? `<img class="card-image" src="${item.image_data}" alt="case image" />` : ""}
           <div class="kicker">${(item.category || i.fallback.noCategory).toUpperCase()}</div>
@@ -528,58 +389,40 @@
           <p class="desc">${item.description || ""}</p>
           <div class="card-actions">
             <button class="mini fav" data-id="${item.id}">${item.is_favorite ? i.actions.favoriteOn : i.actions.favorite}</button>
-            ${adminActions}
+            <button class="mini edit" data-id="${item.id}">${i.actions.edit}</button>
+            ${adminDelete}
           </div>
         `;
         cardsEl.appendChild(card);
       });
-
-      document.querySelectorAll(".fav").forEach((btn) => {
-        btn.addEventListener("click", async () => {
-          await request(`/api/use-cases/${btn.dataset.id}/favorite`, { method: "POST" });
-          await loadCases();
-        });
-      });
-      document.querySelectorAll(".edit").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const item = allCases.find((caseItem) => String(caseItem.id) === String(btn.dataset.id));
-          if (!item) return;
-          editingIdEl.value = item.id;
-          updateCaseModalTitle();
-          document.getElementById("title").value = item.title || "";
-          document.getElementById("category").value = item.category || "";
-          document.getElementById("area").value = item.area || "";
-          document.getElementById("technology").value = item.technology || "";
-          document.getElementById("phase").value = item.phase || "";
-          document.getElementById("theme").value = item.theme || "";
-          document.getElementById("authorName").value = item.author_name || "";
-          document.getElementById("skillName").value = item.skill_name || "";
-          document.getElementById("description").value = item.description || "";
-          document.getElementById("tags").value = (item.tags || []).join(", ");
-          modalWrap.style.display = "flex";
-        });
-      });
-      document.querySelectorAll(".delete").forEach((btn) => {
-        btn.addEventListener("click", async () => {
-          if (!confirm(t().confirmDelete)) return;
-          await request(`/api/use-cases/${btn.dataset.id}`, { method: "DELETE" });
-          await loadCases();
-        });
-      });
-      document.querySelectorAll(".upload").forEach((input) => {
-        input.addEventListener("change", async (event) => {
-          const file = event.target.files[0];
-          if (!file) return;
-          const formData = new FormData();
-          formData.append("image", file);
-          await request(`/api/use-cases/${input.dataset.id}/image`, { method: "POST", body: formData });
-          await loadCases();
-        });
-      });
+      document.querySelectorAll(".fav").forEach((btn) => btn.addEventListener("click", async () => { await request(`/api/use-cases/${btn.dataset.id}/favorite`, { method: "POST" }); await loadCases(); }));
+      document.querySelectorAll(".edit").forEach((btn) => btn.addEventListener("click", () => {
+        const item = allCases.find((caseItem) => String(caseItem.id) === String(btn.dataset.id));
+        if (!item) return;
+        editingIdEl.value = item.id;
+        updateCaseModalTitle();
+        document.getElementById("title").value = item.title || "";
+        document.getElementById("category").value = item.category || "";
+        document.getElementById("area").value = item.area || "";
+        document.getElementById("technology").value = item.technology || "";
+        document.getElementById("phase").value = item.phase || "";
+        document.getElementById("theme").value = item.theme || "";
+        document.getElementById("authorName").value = item.author_name || "";
+        document.getElementById("skillName").value = item.skill_name || "";
+        document.getElementById("description").value = item.description || "";
+        document.getElementById("tags").value = (item.tags || []).join(", ");
+        modalWrap.style.display = "flex";
+      }));
+      document.querySelectorAll(".delete").forEach((btn) => btn.addEventListener("click", async () => {
+        if (!confirm(t().confirmDelete)) return;
+        await request(`/api/use-cases/${btn.dataset.id}`, { method: "DELETE" });
+        await loadCases();
+      }));
     }
 
     async function loadCases() {
       allCases = await request("/api/use-cases");
+      updateMetrics();
       updateFilters();
       applySearch();
     }
@@ -607,13 +450,8 @@
       homeViewEl.classList.toggle("hidden", tab !== "home");
       catalogViewEl.classList.toggle("hidden", tab === "about" || tab === "home");
       aboutViewEl.classList.toggle("hidden", tab !== "about");
-      if (tab === "favorites") {
-        favoriteFilterEl.value = "only";
-        applySearch();
-      } else if (tab === "catalog") {
-        favoriteFilterEl.value = "all";
-        applySearch();
-      }
+      if (tab === "favorites") { favoriteFilterEl.value = "only"; applySearch(); }
+      else if (tab === "catalog") { favoriteFilterEl.value = "all"; applySearch(); }
     }
 
     function closeModal() {
@@ -633,7 +471,6 @@
     themeFilterEl.addEventListener("change", applySearch);
     sortFilterEl.addEventListener("change", applySearch);
     favoriteFilterEl.addEventListener("change", applySearch);
-    homeCtaBtn.addEventListener("click", () => switchTab("catalog"));
 
     authBtn.addEventListener("click", async () => {
       if (isAuthenticated) {
@@ -649,41 +486,18 @@
     authForm.addEventListener("submit", async (event) => {
       event.preventDefault();
       try {
-        await request("/api/auth/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ password: document.getElementById("adminPassword").value }),
-        });
+        await request("/api/auth/login", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ password: document.getElementById("adminPassword").value }) });
         authWrap.style.display = "none";
         authForm.reset();
         await checkAuth();
         await loadCases();
-      } catch (error) {
-        alert(error.message);
-      }
+      } catch (error) { alert(error.message); }
     });
 
-    langBtn.addEventListener("click", () => {
-      langMenu.style.display = langMenu.style.display === "block" ? "none" : "block";
-    });
-    langItems.forEach((item) => {
-      item.addEventListener("click", () => {
-        currentLang = item.dataset.lang;
-        langMenu.style.display = "none";
-        updateStaticTranslations();
-        switchTab(currentTab);
-      });
-    });
-    document.addEventListener("click", (event) => {
-      if (!langMenu.contains(event.target) && !langBtn.contains(event.target)) {
-        langMenu.style.display = "none";
-      }
-    });
-
-    themeBtn.addEventListener("click", () => {
-      document.body.classList.toggle("dark");
-      themeBtn.textContent = document.body.classList.contains("dark") ? "🌙" : "☀️";
-    });
+    langBtn.addEventListener("click", () => { langMenu.style.display = langMenu.style.display === "block" ? "none" : "block"; });
+    langItems.forEach((item) => item.addEventListener("click", () => { currentLang = item.dataset.lang; langMenu.style.display = "none"; updateStaticTranslations(); switchTab(currentTab); }));
+    document.addEventListener("click", (event) => { if (!langMenu.contains(event.target) && !langBtn.contains(event.target)) { langMenu.style.display = "none"; } });
+    themeBtn.addEventListener("click", () => { document.body.classList.toggle("dark"); themeBtn.textContent = document.body.classList.contains("dark") ? "🌙" : "☀️"; });
 
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
@@ -691,33 +505,17 @@
         const editingId = editingIdEl.value;
         const payload = getPayloadFromForm();
         if (editingId) {
-          await request(`/api/use-cases/${editingId}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload),
-          });
+          await request(`/api/use-cases/${editingId}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
         } else {
-          await request("/api/use-cases", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload),
-          });
+          await request("/api/use-cases", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
         }
         closeModal();
         await loadCases();
-      } catch (error) {
-        alert(error.message);
-      }
+      } catch (error) { alert(error.message); }
     });
 
     tabs.forEach((tabEl) => tabEl.addEventListener("click", () => switchTab(tabEl.dataset.tab)));
-
-    (async function bootstrap() {
-      await checkAuth();
-      await loadCases();
-      updateStaticTranslations();
-      switchTab("home");
-    })();
+    (async function bootstrap() { await checkAuth(); await loadCases(); updateStaticTranslations(); switchTab("home"); })();
   </script>
 </body>
 </html>
