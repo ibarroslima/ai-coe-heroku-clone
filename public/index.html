@@ -5,60 +5,280 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AI LATAM CoE</title>
   <style>
-    :root { --bg:#edf2ff; --card:#fff; --line:#dce3ff; --text:#0f1a46; --muted:#6d79a5; --primary:#3e4bff; }
+    :root {
+      --bg: #ebf1ff;
+      --surface: #ffffff;
+      --line: #d9e1ff;
+      --text: #0d1f59;
+      --muted: #6f7ea8;
+      --primary: #3c4fff;
+      --primary-soft: #e7ebff;
+      --chip: #f5f7ff;
+      --shadow: 0 10px 28px rgba(23, 45, 124, 0.08);
+    }
     * { box-sizing: border-box; }
-    body { margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; background:var(--bg); color:var(--text); }
-    .container { width:min(1280px,94%); margin:0 auto; }
-    .topbar { padding:18px 0 10px; border-bottom:1px solid var(--line); }
-    .row { display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; }
-    .logo { font-weight:800; color:#081955; font-size:22px; }
-    .btn { border:0; border-radius:999px; padding:10px 14px; font-weight:700; cursor:pointer; background:#fff; color:var(--text); }
-    .btn-primary { background:linear-gradient(90deg,#3344ff,#4f63ff); color:#fff; }
-    .top-actions { display:flex; gap:8px; align-items:center; }
-    .tabs { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:14px; }
-    .tab { text-align:center; color:#66729e; font-weight:700; padding-bottom:8px; cursor:pointer; }
-    .tab.active { color:#2f45ff; border-bottom:3px solid #2f45ff; }
-    main { padding:24px 0 36px; }
-    h1 { margin:0; font-size:clamp(28px,3vw,42px); }
-    .sub { color:var(--muted); margin:6px 0 16px; font-size:20px; }
-    .filters { background:#fff; border:1px solid var(--line); border-radius:20px; padding:14px; }
-    .search { width:100%; border:1px solid #e9edff; border-radius:14px; padding:12px 14px; }
-    .filter-row { margin-top:10px; display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:8px; }
-    .select { width:100%; border:1px solid #dde5ff; border-radius:999px; padding:9px 12px; background:#fff; color:#46568f; font-weight:600; }
-    .cards { margin-top:16px; display:grid; gap:14px; grid-template-columns:repeat(3,minmax(0,1fr)); }
-    .card { background:var(--card); border:1px solid var(--line); border-top:4px solid #67a1ff; border-radius:18px; padding:16px; box-shadow:0 8px 24px rgba(19,41,120,.07); }
-    .kicker { font-size:11px; letter-spacing:2px; font-weight:800; color:#5864d6; }
-    .title { margin:8px 0; font-size:24px; line-height:1.15; }
-    .meta { color:#55608f; font-size:14px; }
-    .chips { display:flex; gap:8px; flex-wrap:wrap; margin:8px 0; }
-    .chip { padding:4px 10px; border-radius:999px; background:#f4f6ff; border:1px solid #e3e9ff; font-size:12px; }
-    .empty { margin-top:18px; background:#fff; border:1px dashed #cfd8ff; border-radius:18px; text-align:center; padding:30px 16px; color:#6070a6; }
-    .card-image { width:100%; border-radius:12px; margin-bottom:10px; border:1px solid #e1e8ff; }
-    .card-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
-    .mini { border:1px solid #dbe3ff; border-radius:10px; padding:6px 9px; background:#fff; cursor:pointer; font-size:12px; }
-    .modal-wrap { position:fixed; inset:0; background:rgba(8,15,56,.35); display:none; align-items:center; justify-content:center; padding:16px; z-index:3; }
-    .modal { width:min(760px,100%); background:#fff; border-radius:18px; padding:18px; border:1px solid var(--line); }
-    .grid { display:grid; gap:10px; grid-template-columns:1fr 1fr; }
-    .field { display:grid; gap:6px; margin-bottom:10px; }
-    .field.full { grid-column:1 / -1; }
-    label { font-size:13px; font-weight:700; color:#3f4f8f; }
-    input, textarea { border:1px solid #dde5ff; border-radius:12px; padding:10px 12px; font:inherit; }
-    textarea { min-height:92px; resize:vertical; }
-    .actions { display:flex; justify-content:flex-end; gap:8px; margin-top:12px; }
-    .hint { font-size:12px; color:#7786bb; }
-    .about { margin-top:16px; background:#fff; border:1px solid var(--line); border-radius:18px; padding:16px; color:#48578f; line-height:1.45; }
-    .hidden { display:none !important; }
-    @media (max-width:1024px) { .cards { grid-template-columns:repeat(2,minmax(0,1fr)); } }
-    @media (max-width:760px) { .cards,.grid,.filter-row,.tabs { grid-template-columns:1fr; } .sub { font-size:16px; } }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+    }
+    .container { width: min(1280px, 94%); margin: 0 auto; }
+    .topbar { padding: 18px 0 10px; border-bottom: 1px solid var(--line); }
+    .row { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .logo {
+      font-size: 34px;
+      font-weight: 900;
+      letter-spacing: -0.8px;
+      color: #102265;
+    }
+    .logo small {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: #6f7eb2;
+      margin-top: -6px;
+    }
+    .top-actions { display: flex; gap: 10px; align-items: center; }
+    .pill-btn {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      color: var(--text);
+      font-weight: 700;
+      padding: 10px 14px;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+    .pill-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow); }
+    .pill-btn.primary {
+      border: none;
+      color: #fff;
+      background: linear-gradient(90deg, #2f44ff, #4f63ff);
+      box-shadow: 0 8px 18px rgba(53, 76, 255, 0.28);
+    }
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      display: grid;
+      place-items: center;
+      font-size: 18px;
+    }
+    .tabs {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      align-items: center;
+      text-align: center;
+    }
+    .tab {
+      padding-bottom: 10px;
+      font-weight: 700;
+      color: #66729e;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+    }
+    .tab.active {
+      color: #2f45ff;
+      border-bottom-color: #2f45ff;
+    }
+    main { padding: 24px 0 36px; }
+    h1 {
+      margin: 0;
+      font-size: clamp(34px, 4vw, 52px);
+      letter-spacing: -1px;
+      line-height: 1.06;
+    }
+    .sub {
+      margin: 6px 0 18px;
+      color: var(--muted);
+      font-size: 22px;
+    }
+    .filters {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 14px;
+      box-shadow: var(--shadow);
+    }
+    .search {
+      width: 100%;
+      border: 1px solid #e5eaff;
+      border-radius: 14px;
+      padding: 13px 14px;
+      background: #fcfdff;
+      font-size: 15px;
+      color: #435189;
+      outline: none;
+    }
+    .search:focus { border-color: #adc0ff; }
+    .filter-row {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .select {
+      width: 100%;
+      border: 1px solid #dde4ff;
+      border-radius: 999px;
+      background: #fff;
+      color: #4b5a90;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 10px 12px;
+    }
+    .cards {
+      margin-top: 16px;
+      display: grid;
+      gap: 14px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-top: 4px solid #63a0ff;
+      border-radius: 18px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+      transition: 0.2s ease;
+    }
+    .card:hover { transform: translateY(-2px); }
+    .kicker {
+      font-size: 11px;
+      letter-spacing: 2px;
+      font-weight: 800;
+      color: #6071d8;
+    }
+    .title {
+      margin: 8px 0;
+      font-size: 28px;
+      letter-spacing: -0.4px;
+      line-height: 1.12;
+    }
+    .meta {
+      color: #55608f;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 8px 0;
+    }
+    .chip {
+      border: 1px solid #e3e8ff;
+      background: var(--chip);
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #31418b;
+    }
+    .desc {
+      margin: 0;
+      color: #4f5f93;
+      line-height: 1.42;
+    }
+    .card-image {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid #e2e8ff;
+      margin-bottom: 10px;
+    }
+    .card-actions {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .mini {
+      border: 1px solid #dce3ff;
+      border-radius: 10px;
+      background: #fff;
+      cursor: pointer;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #2e3f8f;
+    }
+    .empty {
+      margin-top: 18px;
+      background: #fff;
+      border: 1px dashed #cad6ff;
+      border-radius: 18px;
+      text-align: center;
+      color: #6070a6;
+      padding: 32px 16px;
+    }
+    .empty.hidden { display: none; }
+    .hidden { display: none !important; }
+    .about {
+      margin-top: 16px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #fff;
+      box-shadow: var(--shadow);
+      padding: 18px;
+      color: #4b5a8f;
+      line-height: 1.5;
+    }
+    .modal-wrap {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(8, 15, 56, 0.35);
+      z-index: 4;
+      padding: 16px;
+    }
+    .modal {
+      width: min(760px, 100%);
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+    .grid { display: grid; gap: 10px; grid-template-columns: 1fr 1fr; }
+    .field { display: grid; gap: 6px; margin-bottom: 10px; }
+    .field.full { grid-column: 1 / -1; }
+    label { font-size: 13px; font-weight: 700; color: #3f4f8f; }
+    input, textarea {
+      border: 1px solid #dde5ff;
+      border-radius: 12px;
+      padding: 10px 12px;
+      font: inherit;
+    }
+    textarea { min-height: 92px; resize: vertical; }
+    .actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; }
+    .hint { font-size: 12px; color: #7786bb; }
+    @media (max-width: 1100px) {
+      .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .title { font-size: 24px; }
+      .filter-row { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+    @media (max-width: 760px) {
+      .cards, .grid, .filter-row, .tabs { grid-template-columns: 1fr; }
+      .logo { font-size: 26px; }
+      .sub { font-size: 16px; }
+    }
   </style>
 </head>
 <body>
   <header class="topbar">
     <div class="container row">
-      <div class="logo">AI LATAM CoE</div>
+      <div class="logo">AI LATAM CoE<small>CATALOGO</small></div>
       <div class="top-actions">
-        <button id="authBtn" class="btn">Entrar</button>
-        <button id="openModal" class="btn btn-primary" style="display:none;">+ Adicionar caso</button>
+        <button id="authBtn" class="pill-btn">Entrar</button>
+        <button class="pill-btn icon-btn" title="Idioma">PT</button>
+        <button class="pill-btn icon-btn" title="Tema">*</button>
+        <button id="openModal" class="pill-btn primary hidden">+ Adicionar caso</button>
       </div>
     </div>
     <div class="container tabs">
@@ -67,10 +287,12 @@
       <div class="tab" data-tab="about">Sobre</div>
     </div>
   </header>
+
   <main>
     <div id="catalogView" class="container">
       <h1>Catalogo de Casos de Uso</h1>
       <div id="counter" class="sub">0 casos documentados</div>
+
       <section class="filters">
         <input id="search" class="search" placeholder="Buscar por nome, autor, projeto..." />
         <div class="filter-row">
@@ -82,12 +304,20 @@
           <select id="favoriteFilter" class="select"><option value="all">Todos</option><option value="only">Apenas favoritos</option></select>
         </div>
       </section>
+
       <section id="cards" class="cards"></section>
-      <section id="empty" class="empty"><strong>Seu catalogo esta vazio</strong><br />Clique em "+ Adicionar caso" para incluir o primeiro item.</section>
+      <section id="empty" class="empty">
+        <strong>Seu catalogo esta vazio</strong><br />
+        Clique em "+ Adicionar caso" para incluir o primeiro item.
+      </section>
     </div>
+
     <div id="aboutView" class="container hidden">
       <h1>Sobre</h1>
-      <section class="about">Plataforma de catalogo de casos de uso com filtros por area, tecnologia, fase e tema. Entre como administrador para criar, editar, remover e enviar imagens dos casos.</section>
+      <section class="about">
+        Plataforma de catalogo de casos de uso com filtros por area, tecnologia, fase e tema.
+        O modo administrador permite cadastrar, editar, excluir e enviar imagem para os casos.
+      </section>
     </div>
   </main>
 
@@ -108,7 +338,10 @@
           <div class="field full"><label for="tags">Tags (separadas por virgula)</label><input id="tags" placeholder="Design, Solution, Backlog" /></div>
           <div class="field full"><label for="description">Descricao</label><textarea id="description"></textarea></div>
         </div>
-        <div class="actions"><button type="button" class="btn" id="closeModal">Cancelar</button><button type="submit" class="btn btn-primary">Salvar caso</button></div>
+        <div class="actions">
+          <button type="button" class="pill-btn" id="closeModal">Cancelar</button>
+          <button type="submit" class="pill-btn primary">Salvar caso</button>
+        </div>
       </form>
     </div>
   </div>
@@ -122,7 +355,10 @@
           <input id="adminPassword" type="password" required />
           <span class="hint">Defina no Heroku: ADMIN_PASSWORD</span>
         </div>
-        <div class="actions"><button type="button" class="btn" id="closeAuth">Cancelar</button><button type="submit" class="btn btn-primary">Entrar</button></div>
+        <div class="actions">
+          <button type="button" class="pill-btn" id="closeAuth">Cancelar</button>
+          <button type="submit" class="pill-btn primary">Entrar</button>
+        </div>
       </form>
     </div>
   </div>
@@ -183,7 +419,7 @@
       const data = await request("/api/auth/status");
       isAuthenticated = data.authenticated;
       authBtn.textContent = isAuthenticated ? "Sair" : "Entrar";
-      openModalBtn.style.display = isAuthenticated ? "inline-block" : "none";
+      openModalBtn.classList.toggle("hidden", !isAuthenticated);
     }
 
     function uniqueValues(field) {
@@ -206,7 +442,7 @@
     function render(cases) {
       cardsEl.innerHTML = "";
       counterEl.textContent = `${cases.length} caso${cases.length === 1 ? "" : "s"} documentado${cases.length === 1 ? "" : "s"}`;
-      emptyEl.style.display = cases.length ? "none" : "block";
+      emptyEl.classList.toggle("hidden", Boolean(cases.length));
 
       cases.forEach((item) => {
         const card = document.createElement("article");
@@ -223,9 +459,9 @@
           <div class="meta"><strong>${item.author_name || "Sem autor"}</strong> - ${item.skill_name || "Sem projeto"}</div>
           <div class="meta">${item.area || "Sem area"} | ${item.technology || "Sem tecnologia"} | ${item.phase || "Sem fase"} | ${item.theme || "Sem tema"}</div>
           <div class="chips">${(item.tags || []).map((tag) => `<span class="chip">${tag}</span>`).join("")}</div>
-          <p>${item.description || ""}</p>
+          <p class="desc">${item.description || ""}</p>
           <div class="card-actions">
-            <button class="mini fav" data-id="${item.id}">${item.is_favorite ? "★ Favorito" : "☆ Favoritar"}</button>
+            <button class="mini fav" data-id="${item.id}">${item.is_favorite ? "Favorito" : "Favoritar"}</button>
             ${adminActions}
           </div>
         `;
@@ -295,11 +531,7 @@
       if (phaseFilterEl.value) result = result.filter((item) => item.phase === phaseFilterEl.value);
       if (themeFilterEl.value) result = result.filter((item) => item.theme === themeFilterEl.value);
       if (favoriteFilterEl.value === "only") result = result.filter((item) => item.is_favorite);
-      if (sortFilterEl.value === "oldest") {
-        result = [...result].sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
-      } else {
-        result = [...result].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-      }
+      result = [...result].sort((a, b) => (sortFilterEl.value === "oldest" ? new Date(a.created_at) - new Date(b.created_at) : new Date(b.created_at) - new Date(a.created_at)));
       render(result);
     }
 
