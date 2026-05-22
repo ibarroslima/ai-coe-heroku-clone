@@ -25,6 +25,7 @@ const upload = multer({
 let memoryCases = [];
 let memoryId = 1;
 
+app.set("trust proxy", 1);
 app.disable("etag");
 app.use(express.json());
 app.use("/api", (_req, res, next) => {
@@ -38,7 +39,7 @@ app.use(
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: "auto",
       sameSite: "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     },
