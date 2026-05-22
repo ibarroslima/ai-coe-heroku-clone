@@ -59,12 +59,13 @@
     main { padding: 24px 0 36px; }
     h1 { margin: 0; font-size: clamp(34px, 4vw, 52px); letter-spacing: -1px; line-height: 1.06; }
     .sub { margin: 6px 0 18px; color: var(--muted); font-size: 22px; }
-    .home-grid { margin-top: 14px; display: grid; gap: 12px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .metric { border: 1px solid var(--line); border-radius: 16px; background: var(--surface); box-shadow: var(--shadow); padding: 16px; }
-    .metric .value { font-size: 32px; font-weight: 900; margin-bottom: 2px; }
-    .metric .label { color: var(--muted); font-weight: 700; }
-    .explainers { margin-top: 14px; display: grid; gap: 12px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .explainer { border: 1px solid var(--line); border-radius: 16px; background: var(--surface); box-shadow: var(--shadow); padding: 16px; }
+    .home-grid { margin-top: 8px; display: grid; gap: 8px; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid var(--line); padding-top: 12px; }
+    .metric { text-align: center; padding: 12px 8px; }
+    .metric .value { font-size: 48px; line-height: 1; font-weight: 900; margin-bottom: 6px; color: #2f44ff; }
+    .metric .label { color: var(--muted); font-weight: 800; letter-spacing: 2px; font-size: 12px; text-transform: uppercase; }
+    .explainers { margin-top: 18px; display: grid; gap: 12px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .explainer { border: 1px solid var(--line); border-top: 4px solid #2f7eff; border-radius: 16px; background: var(--surface); box-shadow: var(--shadow); padding: 16px; }
+    .explainer-icon { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; background: linear-gradient(135deg, #4a66ff, #17b2ff); color: #fff; font-weight: 800; margin-bottom: 10px; }
     .explainer h3 { margin: 0 0 8px; }
     .explainer p { margin: 0; color: var(--muted); line-height: 1.4; }
     .filters { background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 14px; box-shadow: var(--shadow); }
@@ -83,6 +84,13 @@
     .mini { border: 1px solid #dce3ff; border-radius: 10px; background: #fff; cursor: pointer; padding: 6px 10px; font-size: 12px; font-weight: 700; color: #2e3f8f; }
     .empty { margin-top: 18px; background: var(--surface); border: 1px dashed #cad6ff; border-radius: 18px; text-align: center; color: var(--muted); padding: 32px 16px; }
     .about { margin-top: 16px; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); box-shadow: var(--shadow); padding: 18px; color: var(--muted); line-height: 1.5; }
+    .recent-header { margin-top: 22px; display: flex; justify-content: space-between; align-items: baseline; }
+    .recent-header h2 { margin: 0; font-size: 40px; letter-spacing: -0.7px; }
+    .recent-link { color: #2f44ff; font-weight: 700; cursor: pointer; }
+    .recent-cards { margin-top: 10px; display: grid; gap: 12px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .recent-card { border: 1px solid var(--line); border-top: 4px solid #3aa4ff; border-radius: 16px; background: var(--surface); padding: 14px; box-shadow: var(--shadow); }
+    .recent-card h4 { margin: 6px 0; font-size: 34px; line-height: 1.1; letter-spacing: -0.4px; }
+    .recent-meta { color: var(--muted); font-size: 14px; }
     .modal-wrap { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(8, 15, 56, 0.35); z-index: 4; padding: 16px; }
     .modal { width: min(760px, 100%); background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 18px; box-shadow: var(--shadow); }
     .grid { display: grid; gap: 10px; grid-template-columns: 1fr 1fr; }
@@ -94,11 +102,11 @@
     .actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; }
     .hidden { display: none !important; }
     @media (max-width: 1100px) {
-      .cards, .home-grid, .explainers { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .cards, .home-grid, .explainers, .recent-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .filter-row { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     }
     @media (max-width: 760px) {
-      .cards, .grid, .filter-row, .tabs, .home-grid, .explainers { grid-template-columns: 1fr; }
+      .cards, .grid, .filter-row, .tabs, .home-grid, .explainers, .recent-cards { grid-template-columns: 1fr; }
       .brand-text { font-size: 26px; }
       .sub { font-size: 16px; }
     }
@@ -140,11 +148,19 @@
         <article class="metric"><div id="metricCases" class="value">0</div><div id="metricCasesLabel" class="label">Casos documentados</div></article>
         <article class="metric"><div id="metricTech" class="value">0</div><div id="metricTechLabel" class="label">Tecnologias cobertas</div></article>
         <article class="metric"><div id="metricContrib" class="value">0</div><div id="metricContribLabel" class="label">Contribuidores</div></article>
+        <article class="metric"><div id="metricBiz" class="value">0</div><div id="metricBizLabel" class="label">Areas de negocio</div></article>
       </section>
       <section class="explainers">
-        <article class="explainer"><h3 id="exp1Title">Busca e filtros</h3><p id="exp1Text">Encontre rapidamente casos por autor, tema, tecnologia, fase ou palavra-chave.</p></article>
-        <article class="explainer"><h3 id="exp2Title">Conhecimento compartilhado</h3><p id="exp2Text">Consolide aprendizados de diferentes paises e equipes em um unico lugar.</p></article>
-        <article class="explainer"><h3 id="exp3Title">Catalogo de casos de uso</h3><p id="exp3Text">Documente problemas, abordagens e resultados para acelerar novas iniciativas.</p></article>
+        <article class="explainer"><div class="explainer-icon">📘</div><h3 id="exp1Title">Catalogo de Casos de Uso</h3><p id="exp1Text">Explore todos os projetos de IA documentados pela equipe, com tecnologias, repositorios e contatos.</p></article>
+        <article class="explainer"><div class="explainer-icon">🔎</div><h3 id="exp2Title">Busca e filtros</h3><p id="exp2Text">Encontre rapidamente casos por tecnologia, projeto, area de negocio ou data.</p></article>
+        <article class="explainer"><div class="explainer-icon">🔗</div><h3 id="exp3Title">Conhecimento Compartilhado</h3><p id="exp3Text">Evite duplicar esforcos. Aprenda com o que o time ja fez e construa em cima disso.</p></article>
+      </section>
+      <section>
+        <div class="recent-header">
+          <h2 id="recentTitle">Mais recentes</h2>
+          <a id="recentViewAll" class="recent-link">Ver todos ></a>
+        </div>
+        <div id="recentCards" class="recent-cards"></div>
       </section>
     </div>
     <div id="catalogView" class="container hidden">
@@ -201,7 +217,7 @@
   </div>
   <script>
     const I18N = {
-      pt: { tabs: { home: "Home", catalog: "Catalogo", favorites: "Favoritos", about: "Sobre" }, authIn: "Entrar", authOut: "Sair", addCase: "+ Adicionar caso", homeTitle: "AI CoE ProServ", homeDesc: "Centralize e compartilhe conhecimento aplicado em IA para toda a organizacao.", catalogTitle: "Catalogo de Casos de Uso", caseCountOne: "caso documentado", caseCountMany: "casos documentados", allAreas: "Todas as areas", allTechnologies: "Todas as tecnologias", allPhases: "Todas as fases SPM", allThemes: "Todos os temas SPM", recent: "Mais recentes", oldest: "Mais antigos", all: "Todos", onlyFavorites: "Apenas favoritos", emptyTitle: "Seu catalogo esta vazio", emptyDesc: "Clique em \"+ Adicionar caso\" para incluir o primeiro item.", aboutTitle: "Sobre", aboutText: "Plataforma de catalogo de casos de uso com filtros por area, tecnologia, fase e tema. Qualquer colaborador pode criar e editar casos. Remocao e permitida somente para administradores.", metrics: ["Casos documentados", "Tecnologias cobertas", "Contribuidores"], explainers: [["Busca e filtros","Encontre rapidamente casos por autor, tema, tecnologia, fase ou palavra-chave."],["Conhecimento compartilhado","Consolide aprendizados de diferentes paises e equipes em um unico lugar."],["Catalogo de casos de uso","Documente problemas, abordagens e resultados para acelerar novas iniciativas."]], modalNew: "Novo caso de uso", modalEdit: "Editar caso de uso", labels: { title: "Titulo *", category: "Categoria", area: "Area", technology: "Tecnologia", phase: "Fase SPM", theme: "Tema SPM", author: "Autor", project: "Skill/Projeto", tags: "Tags (separadas por virgula)", description: "Descricao", password: "Senha" }, cancel: "Cancelar", saveCase: "Salvar caso", loginTitle: "Login administrador", loginBtn: "Entrar", fallback: { noAuthor: "Sem autor", noProject: "Sem projeto", noArea: "Sem area", noTechnology: "Sem tecnologia", noPhase: "Sem fase", noTheme: "Sem tema", noCategory: "Sem categoria" }, actions: { favorite: "Favoritar", favoriteOn: "Favorito", edit: "Editar", delete: "Excluir", image: "Imagem" }, confirmDelete: "Excluir este caso de uso?" },
+      pt: { tabs: { home: "Home", catalog: "Catalogo", favorites: "Favoritos", about: "Sobre" }, authIn: "Entrar", authOut: "Sair", addCase: "+ Adicionar caso", homeTitle: "AI CoE ProServ", homeDesc: "Centralize e compartilhe conhecimento aplicado em IA para toda a organizacao.", catalogTitle: "Catalogo de Casos de Uso", caseCountOne: "caso documentado", caseCountMany: "casos documentados", allAreas: "Todas as areas", allTechnologies: "Todas as tecnologias", allPhases: "Todas as fases SPM", allThemes: "Todos os temas SPM", recent: "Mais recentes", oldest: "Mais antigos", all: "Todos", onlyFavorites: "Apenas favoritos", emptyTitle: "Seu catalogo esta vazio", emptyDesc: "Clique em \"+ Adicionar caso\" para incluir o primeiro item.", aboutTitle: "Sobre", aboutText: "Plataforma de catalogo de casos de uso com filtros por area, tecnologia, fase e tema. Qualquer colaborador pode criar e editar casos. Remocao e permitida somente para administradores.", recentSectionTitle: "Mais recentes", recentViewAll: "Ver todos >", metrics: ["Casos documentados", "Tecnologias cobertas", "Contribuidores", "Areas de negocio"], explainers: [["Catalogo de Casos de Uso","Explore todos os projetos de IA documentados pela equipe, com tecnologias, repositorios e contatos."],["Busca e filtros","Encontre rapidamente casos por tecnologia, projeto, area de negocio ou data."],["Conhecimento Compartilhado","Evite duplicar esforcos. Aprenda com o que o time ja fez e construa em cima disso."]], modalNew: "Novo caso de uso", modalEdit: "Editar caso de uso", labels: { title: "Titulo *", category: "Categoria", area: "Area", technology: "Tecnologia", phase: "Fase SPM", theme: "Tema SPM", author: "Autor", project: "Skill/Projeto", tags: "Tags (separadas por virgula)", description: "Descricao", password: "Senha" }, cancel: "Cancelar", saveCase: "Salvar caso", loginTitle: "Login administrador", loginBtn: "Entrar", fallback: { noAuthor: "Sem autor", noProject: "Sem projeto", noArea: "Sem area", noTechnology: "Sem tecnologia", noPhase: "Sem fase", noTheme: "Sem tema", noCategory: "Sem categoria" }, actions: { favorite: "Favoritar", favoriteOn: "Favorito", edit: "Editar", delete: "Excluir", image: "Imagem" }, confirmDelete: "Excluir este caso de uso?" },
       es: { tabs: { home: "Inicio", catalog: "Catalogo", favorites: "Favoritos", about: "Acerca" }, authIn: "Ingresar", authOut: "Salir", addCase: "+ Agregar caso", homeTitle: "AI CoE ProServ", homeDesc: "Centraliza y comparte conocimiento aplicado en IA para toda la organizacion.", catalogTitle: "Catalogo de Casos de Uso", caseCountOne: "caso documentado", caseCountMany: "casos documentados", allAreas: "Todas las areas", allTechnologies: "Todas las tecnologias", allPhases: "Todas las fases SPM", allThemes: "Todos los temas SPM", recent: "Mas recientes", oldest: "Mas antiguos", all: "Todos", onlyFavorites: "Solo favoritos", emptyTitle: "Tu catalogo esta vacio", emptyDesc: "Haz clic en \"+ Agregar caso\" para incluir el primer item.", aboutTitle: "Acerca", aboutText: "Plataforma de catalogo de casos de uso con filtros por area, tecnologia, fase y tema. Cualquier colaborador puede crear y editar casos. Eliminar solo para administradores.", metrics: ["Casos documentados", "Tecnologias cubiertas", "Colaboradores"], explainers: [["Busqueda y filtros","Encuentra casos por autor, tema, tecnologia, fase o palabra clave."],["Conocimiento compartido","Consolida aprendizajes de distintos paises y equipos en un solo lugar."],["Catalogo de casos de uso","Documenta problemas, enfoques y resultados para acelerar nuevas iniciativas."]], modalNew: "Nuevo caso de uso", modalEdit: "Editar caso de uso", labels: { title: "Titulo *", category: "Categoria", area: "Area", technology: "Tecnologia", phase: "Fase SPM", theme: "Tema SPM", author: "Autor", project: "Skill/Proyecto", tags: "Etiquetas (separadas por coma)", description: "Descripcion", password: "Contrasena" }, cancel: "Cancelar", saveCase: "Guardar caso", loginTitle: "Login administrador", loginBtn: "Ingresar", fallback: { noAuthor: "Sin autor", noProject: "Sin proyecto", noArea: "Sin area", noTechnology: "Sin tecnologia", noPhase: "Sin fase", noTheme: "Sin tema", noCategory: "Sin categoria" }, actions: { favorite: "Favorito", favoriteOn: "Favorito", edit: "Editar", delete: "Eliminar", image: "Imagen" }, confirmDelete: "Eliminar este caso de uso?" },
       en: { tabs: { home: "Home", catalog: "Catalog", favorites: "Favorites", about: "About" }, authIn: "Sign in", authOut: "Sign out", addCase: "+ Add case", homeTitle: "AI CoE ProServ", homeDesc: "Centralize and share AI applied knowledge across the organization.", catalogTitle: "Use Case Catalog", caseCountOne: "documented case", caseCountMany: "documented cases", allAreas: "All areas", allTechnologies: "All technologies", allPhases: "All SPM phases", allThemes: "All SPM themes", recent: "Most recent", oldest: "Oldest", all: "All", onlyFavorites: "Only favorites", emptyTitle: "Your catalog is empty", emptyDesc: "Click \"+ Add case\" to include your first item.", aboutTitle: "About", aboutText: "Use case catalog platform with filters by area, technology, phase, and theme. Any collaborator can create and edit cases. Delete is admin-only.", metrics: ["Documented cases", "Technologies covered", "Contributors"], explainers: [["Search and filters","Find cases by author, theme, technology, phase, or keyword."],["Shared knowledge","Consolidate learnings from countries and teams in one place."],["Use case catalog","Document problems, approaches, and outcomes to accelerate initiatives."]], modalNew: "New use case", modalEdit: "Edit use case", labels: { title: "Title *", category: "Category", area: "Area", technology: "Technology", phase: "SPM Phase", theme: "SPM Theme", author: "Author", project: "Skill/Project", tags: "Tags (comma separated)", description: "Description", password: "Password" }, cancel: "Cancel", saveCase: "Save case", loginTitle: "Admin login", loginBtn: "Sign in", fallback: { noAuthor: "No author", noProject: "No project", noArea: "No area", noTechnology: "No technology", noPhase: "No phase", noTheme: "No theme", noCategory: "No category" }, actions: { favorite: "Favorite", favoriteOn: "Favorited", edit: "Edit", delete: "Delete", image: "Image" }, confirmDelete: "Delete this use case?" }
     };
@@ -235,6 +251,8 @@
     const homeViewEl = document.getElementById("homeView");
     const catalogViewEl = document.getElementById("catalogView");
     const aboutViewEl = document.getElementById("aboutView");
+    const recentCardsEl = document.getElementById("recentCards");
+    const recentViewAllEl = document.getElementById("recentViewAll");
     const langBtn = document.getElementById("langBtn");
     const langBtnCode = document.getElementById("langBtnCode");
     const langMenu = document.getElementById("langMenu");
@@ -251,9 +269,32 @@
     function updateMetrics() {
       const tech = new Set(allCases.map((c) => (c.technology || "").trim()).filter(Boolean)).size;
       const contributors = new Set(allCases.map((c) => (c.author_name || "").trim()).filter(Boolean)).size;
+      const businessAreas = new Set(allCases.map((c) => (c.area || "").trim()).filter(Boolean)).size;
       document.getElementById("metricCases").textContent = String(allCases.length);
       document.getElementById("metricTech").textContent = String(tech);
       document.getElementById("metricContrib").textContent = String(contributors);
+      document.getElementById("metricBiz").textContent = String(businessAreas);
+    }
+
+    function renderRecentCards() {
+      const i = t();
+      const recentItems = [...allCases]
+        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+        .slice(0, 3);
+      recentCardsEl.innerHTML = "";
+      recentItems.forEach((item) => {
+        const el = document.createElement("article");
+        el.className = "recent-card";
+        el.innerHTML = `
+          <div class="kicker">${(item.category || i.fallback.noCategory).toUpperCase()}</div>
+          <h4>${item.title}</h4>
+          <div class="recent-meta">${item.author_name || i.fallback.noAuthor} • ${item.skill_name || i.fallback.noProject}</div>
+        `;
+        recentCardsEl.appendChild(el);
+      });
+      if (!recentItems.length) {
+        recentCardsEl.innerHTML = `<article class="recent-card"><h4>-</h4><div class="recent-meta">Sem casos ainda.</div></article>`;
+      }
     }
 
     function updateStaticTranslations() {
@@ -288,18 +329,22 @@
       document.getElementById("metricCasesLabel").textContent = i.metrics[0];
       document.getElementById("metricTechLabel").textContent = i.metrics[1];
       document.getElementById("metricContribLabel").textContent = i.metrics[2];
+      document.getElementById("metricBizLabel").textContent = i.metrics[3] || "Areas de negocio";
       document.getElementById("exp1Title").textContent = i.explainers[0][0];
       document.getElementById("exp1Text").textContent = i.explainers[0][1];
       document.getElementById("exp2Title").textContent = i.explainers[1][0];
       document.getElementById("exp2Text").textContent = i.explainers[1][1];
       document.getElementById("exp3Title").textContent = i.explainers[2][0];
       document.getElementById("exp3Text").textContent = i.explainers[2][1];
+      document.getElementById("recentTitle").textContent = i.recentSectionTitle || "Mais recentes";
+      document.getElementById("recentViewAll").textContent = i.recentViewAll || "Ver todos >";
       searchEl.placeholder = i.searchPlaceholder || searchEl.placeholder;
       langBtnCode.textContent = currentLang.toUpperCase();
       langItems.forEach((item) => item.classList.toggle("active", item.dataset.lang === currentLang));
       updateAuthLabel();
       updateCaseModalTitle();
       updateFilters();
+      renderRecentCards();
       applySearch();
     }
 
@@ -423,6 +468,7 @@
     async function loadCases() {
       allCases = await request("/api/use-cases");
       updateMetrics();
+      renderRecentCards();
       updateFilters();
       applySearch();
     }
@@ -515,6 +561,7 @@
     });
 
     tabs.forEach((tabEl) => tabEl.addEventListener("click", () => switchTab(tabEl.dataset.tab)));
+    recentViewAllEl.addEventListener("click", () => switchTab("catalog"));
     (async function bootstrap() { await checkAuth(); await loadCases(); updateStaticTranslations(); switchTab("home"); })();
   </script>
 </body>
