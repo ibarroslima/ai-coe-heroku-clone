@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI CoE | Catalogo</title>
+  <style>
+    :root {
+      --bg: #edf2ff;
+      --card: #fff;
+      --line: #dce3ff;
+      --text: #0f1a46;
+      --muted: #6d79a5;
+      --primary: #3e4bff;
+      --soft: #e6e9ff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+    .container { width: min(1280px, 94%); margin: 0 auto; }
+    .topbar { padding: 18px 0 10px; border-bottom: 1px solid var(--line); }
+    .row { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    .logo { font-weight: 800; color: #081955; }
+    .btn {
+      border: 0; border-radius: 999px; padding: 10px 14px; font-weight: 700; cursor: pointer;
+      background: #fff; color: var(--text);
+    }
+    .btn-primary { background: linear-gradient(90deg, #3344ff, #4f63ff); color: #fff; }
+    main { padding: 24px 0 36px; }
+    h1 { margin: 0; font-size: clamp(28px, 3vw, 42px); }
+    .sub { color: var(--muted); margin: 6px 0 16px; font-size: 20px; }
+    .filters { background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 14px; }
+    .search { width: 100%; border: 1px solid #e9edff; border-radius: 14px; padding: 12px 14px; }
+    .cards { margin-top: 16px; display: grid; gap: 14px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .card {
+      background: var(--card); border: 1px solid var(--line); border-top: 4px solid #67a1ff; border-radius: 18px;
+      padding: 16px; box-shadow: 0 8px 24px rgba(19, 41, 120, 0.07);
+    }
+    .kicker { font-size: 11px; letter-spacing: 2px; font-weight: 800; color: #5864d6; }
+    .title { margin: 8px 0; font-size: 24px; line-height: 1.15; }
+    .meta { color: #55608f; font-size: 14px; }
+    .chips { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0; }
+    .chip { padding: 4px 10px; border-radius: 999px; background: #f4f6ff; border: 1px solid #e3e9ff; font-size: 12px; }
+    .empty {
+      margin-top: 18px; background: #fff; border: 1px dashed #cfd8ff; border-radius: 18px; text-align: center;
+      padding: 30px 16px; color: #6070a6;
+    }
+    .modal-wrap {
+      position: fixed; inset: 0; background: rgba(8, 15, 56, 0.35); display: none;
+      align-items: center; justify-content: center; padding: 16px;
+    }
+    .modal {
+      width: min(700px, 100%); background: #fff; border-radius: 18px; padding: 18px;
+      border: 1px solid var(--line);
+    }
+    .grid { display: grid; gap: 10px; grid-template-columns: 1fr 1fr; }
+    .field { display: grid; gap: 6px; margin-bottom: 10px; }
+    .field.full { grid-column: 1 / -1; }
+    label { font-size: 13px; font-weight: 700; color: #3f4f8f; }
+    input, textarea {
+      border: 1px solid #dde5ff; border-radius: 12px; padding: 10px 12px; font: inherit;
+    }
+    textarea { min-height: 92px; resize: vertical; }
+    .actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; }
+    .fav {
+      border: 1px solid #dbe3ff; border-radius: 10px; padding: 6px 9px; background: #fff; cursor: pointer;
+    }
+    @media (max-width: 1024px) { .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 760px) { .cards, .grid { grid-template-columns: 1fr; } .sub { font-size: 16px; } }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container row">
+      <div class="logo">AI COE LATAM</div>
+      <button id="openModal" class="btn btn-primary">+ Adicionar caso</button>
+    </div>
+  </header>
+  <main>
+    <div class="container">
+      <h1>Catalogo de Casos de Uso</h1>
+      <div id="counter" class="sub">0 casos documentados</div>
+      <section class="filters">
+        <input id="search" class="search" placeholder="Buscar por nome, autor, projeto..." />
+      </section>
+      <section id="cards" class="cards"></section>
+      <section id="empty" class="empty">
+        <strong>Seu catalogo esta vazio</strong><br />
+        Clique em "+ Adicionar caso" para incluir o primeiro item.
+      </section>
+    </div>
+  </main>
+
+  <div id="modalWrap" class="modal-wrap">
+    <div class="modal">
+      <h3>Novo caso de uso</h3>
+      <form id="caseForm">
+        <div class="grid">
+          <div class="field">
+            <label for="title">Titulo *</label>
+            <input id="title" required />
+          </div>
+          <div class="field">
+            <label for="category">Categoria</label>
+            <input id="category" placeholder="Ex: Discovery & Backlog" />
+          </div>
+          <div class="field">
+            <label for="authorName">Autor</label>
+            <input id="authorName" />
+          </div>
+          <div class="field">
+            <label for="skillName">Skill/Projeto</label>
+            <input id="skillName" />
+          </div>
+          <div class="field full">
+            <label for="tags">Tags (separadas por virgula)</label>
+            <input id="tags" placeholder="Design, Solution, Backlog" />
+          </div>
+          <div class="field full">
+            <label for="description">Descricao</label>
+            <textarea id="description"></textarea>
+          </div>
+        </div>
+        <div class="actions">
+          <button type="button" class="btn" id="closeModal">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Salvar caso</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const cardsEl = document.getElementById("cards");
+    const emptyEl = document.getElementById("empty");
+    const counterEl = document.getElementById("counter");
+    const searchEl = document.getElementById("search");
+    const modalWrap = document.getElementById("modalWrap");
+    const openModalBtn = document.getElementById("openModal");
+    const closeModalBtn = document.getElementById("closeModal");
+    const form = document.getElementById("caseForm");
+
+    let allCases = [];
+
+    function render(cases) {
+      cardsEl.innerHTML = "";
+      counterEl.textContent = `${cases.length} caso${cases.length === 1 ? "" : "s"} documentado${cases.length === 1 ? "" : "s"}`;
+      emptyEl.style.display = cases.length ? "none" : "block";
+
+      cases.forEach((item) => {
+        const card = document.createElement("article");
+        card.className = "card";
+        card.innerHTML = `
+          <div class="kicker">${(item.category || "SEM CATEGORIA").toUpperCase()}</div>
+          <h2 class="title">${item.title}</h2>
+          <div class="meta"><strong>${item.author_name || "Sem autor"}</strong> - ${item.skill_name || "Sem projeto"}</div>
+          <div class="chips">${(item.tags || []).map((tag) => `<span class="chip">${tag}</span>`).join("")}</div>
+          <p>${item.description || ""}</p>
+          <button class="fav" data-id="${item.id}">${item.is_favorite ? "★ Favorito" : "☆ Favoritar"}</button>
+        `;
+        cardsEl.appendChild(card);
+      });
+
+      document.querySelectorAll(".fav").forEach((btn) => {
+        btn.addEventListener("click", async () => {
+          await fetch(`/api/use-cases/${btn.dataset.id}/favorite`, { method: "POST" });
+          await loadCases();
+        });
+      });
+    }
+
+    async function loadCases() {
+      const response = await fetch("/api/use-cases");
+      allCases = await response.json();
+      applySearch();
+    }
+
+    function applySearch() {
+      const term = searchEl.value.trim().toLowerCase();
+      if (!term) return render(allCases);
+      render(
+        allCases.filter((item) =>
+          [item.title, item.author_name, item.skill_name, item.description, item.category]
+            .join(" ")
+            .toLowerCase()
+            .includes(term)
+        )
+      );
+    }
+
+    function openModal() {
+      modalWrap.style.display = "flex";
+    }
+    function closeModal() {
+      modalWrap.style.display = "none";
+      form.reset();
+    }
+
+    openModalBtn.addEventListener("click", openModal);
+    closeModalBtn.addEventListener("click", closeModal);
+    modalWrap.addEventListener("click", (e) => {
+      if (e.target === modalWrap) closeModal();
+    });
+    searchEl.addEventListener("input", applySearch);
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const payload = {
+        title: document.getElementById("title").value,
+        category: document.getElementById("category").value,
+        authorName: document.getElementById("authorName").value,
+        skillName: document.getElementById("skillName").value,
+        description: document.getElementById("description").value,
+        tags: document.getElementById("tags").value.split(",").map((tag) => tag.trim()).filter(Boolean),
+      };
+
+      await fetch("/api/use-cases", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      closeModal();
+      await loadCases();
+    });
+
+    loadCases();
+  </script>
+</body>
+</html>
