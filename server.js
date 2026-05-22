@@ -1,24 +1,50 @@
 const path = require("path");
 const express = require("express");
+const session = require("express-session");
+const multer = require("multer");
 const { Pool } = require("pg");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123";
+const SESSION_SECRET = process.env.SESSION_SECRET || "change-me";
 
 const hasDatabase = Boolean(process.env.DATABASE_URL);
 const pool = hasDatabase
   ? new Pool({
       connectionString: process.env.DATABASE_URL,
-      ssl: {
-        rejectUnauthorized: false,
-      },
+      ssl: { rejectUnauthorized: false },
     })
   : null;
+
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 2 * 1024 * 1024 },
+});
+
 let memoryCases = [];
 let memoryId = 1;
 
 app.use(express.json());
+app.use(
+  session({
+    secret: SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    },
+  })
+);
 app.use(express.static(path.join(__dirname, "public")));
+
+function requireAuth(req, res, next) {
+  if (req.session && req.session.isAuthenticated) return next();
+  return res.status(401).json({ error: "Nao autorizado." });
+}
 
 async function ensureSchema() {
   if (!hasDatabase) return;
@@ -31,52 +57,78 @@ async function ensureSchema() {
       skill_name TEXT DEFAULT '',
       description TEXT DEFAULT '',
       tags TEXT[] DEFAULT ARRAY[]::TEXT[],
+      image_data TEXT DEFAULT '',
       is_favorite BOOLEAN DEFAULT FALSE,
       created_at TIMESTAMPTZ DEFAULT NOW()
     )
   `);
+  await pool.query(`
+    ALTER TABLE use_cases
+    ADD COLUMN IF NOT EXISTS image_data TEXT DEFAULT ''
+  `);
 }
+
+function toTrimmedText(value) {
+  return String(value || "").trim();
+}
+
+app.get("/api/auth/status", (req, res) => {
+  res.json({ authenticated: Boolean(req.session && req.session.isAuthenticated) });
+});
+
+app.post("/api/auth/login", (req, res) => {
+  const { password = "" } = req.body || {};
+  if (String(password) !== ADMIN_PASSWORD) {
+    return res.status(401).json({ error: "Senha invalida." });
+  }
+  req.session.isAuthenticated = true;
+  return res.json({ ok: true });
+});
+
+app.post("/api/auth/logout", (req, res) => {
+  req.session.destroy(() => {
+    res.clearCookie("connect.sid");
+    res.json({ ok: true });
+  });
+});
 
 app.get("/api/use-cases", async (_req, res) => {
   if (!hasDatabase) {
     return res.json([...memoryCases].sort((a, b) => b.created_at - a.created_at));
   }
   try {
-    const { rows } = await pool.query(
-      "SELECT * FROM use_cases ORDER BY created_at DESC"
-    );
-    res.json(rows);
+    const { rows } = await pool.query("SELECT * FROM use_cases ORDER BY created_at DESC");
+    return res.json(rows);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Erro ao listar casos." });
+    return res.status(500).json({ error: "Erro ao listar casos." });
   }
 });
 
-app.post("/api/use-cases", async (req, res) => {
-  const {
-    title,
-    category = "",
-    authorName = "",
-    skillName = "",
-    description = "",
-    tags = [],
-  } = req.body || {};
+app.post("/api/use-cases", requireAuth, async (req, res) => {
+  const { title, category = "", authorName = "", skillName = "", description = "", tags = [] } =
+    req.body || {};
 
-  if (!title || !String(title).trim()) {
+  if (!toTrimmedText(title)) {
     return res.status(400).json({ error: "Titulo e obrigatorio." });
   }
+
+  const payload = {
+    title: toTrimmedText(title),
+    category: toTrimmedText(category),
+    author_name: toTrimmedText(authorName),
+    skill_name: toTrimmedText(skillName),
+    description: toTrimmedText(description),
+    tags: Array.isArray(tags)
+      ? tags.map((tag) => toTrimmedText(tag)).filter(Boolean)
+      : [],
+  };
 
   if (!hasDatabase) {
     const item = {
       id: memoryId++,
-      title: String(title).trim(),
-      category: String(category).trim(),
-      author_name: String(authorName).trim(),
-      skill_name: String(skillName).trim(),
-      description: String(description).trim(),
-      tags: Array.isArray(tags)
-        ? tags.map((tag) => String(tag).trim()).filter(Boolean)
-        : [],
+      ...payload,
+      image_data: "",
       is_favorite: false,
       created_at: Date.now(),
     };
@@ -89,16 +141,7 @@ app.post("/api/use-cases", async (req, res) => {
       `INSERT INTO use_cases (title, category, author_name, skill_name, description, tags)
        VALUES ($1, $2, $3, $4, $5, $6)
        RETURNING *`,
-      [
-        String(title).trim(),
-        String(category).trim(),
-        String(authorName).trim(),
-        String(skillName).trim(),
-        String(description).trim(),
-        Array.isArray(tags)
-          ? tags.map((tag) => String(tag).trim()).filter(Boolean)
-          : [],
-      ]
+      [payload.title, payload.category, payload.author_name, payload.skill_name, payload.description, payload.tags]
     );
     return res.status(201).json(rows[0]);
   } catch (error) {
@@ -107,30 +150,107 @@ app.post("/api/use-cases", async (req, res) => {
   }
 });
 
-app.post("/api/use-cases/:id/favorite", async (req, res) => {
+app.put("/api/use-cases/:id", requireAuth, async (req, res) => {
+  const { title, category = "", authorName = "", skillName = "", description = "", tags = [] } =
+    req.body || {};
+  if (!toTrimmedText(title)) {
+    return res.status(400).json({ error: "Titulo e obrigatorio." });
+  }
+
   if (!hasDatabase) {
     const id = Number(req.params.id);
     const found = memoryCases.find((item) => item.id === id);
-    if (!found) {
-      return res.status(404).json({ error: "Caso nao encontrado." });
-    }
-    found.is_favorite = !found.is_favorite;
+    if (!found) return res.status(404).json({ error: "Caso nao encontrado." });
+    found.title = toTrimmedText(title);
+    found.category = toTrimmedText(category);
+    found.author_name = toTrimmedText(authorName);
+    found.skill_name = toTrimmedText(skillName);
+    found.description = toTrimmedText(description);
+    found.tags = Array.isArray(tags)
+      ? tags.map((tag) => toTrimmedText(tag)).filter(Boolean)
+      : [];
     return res.json(found);
   }
 
   try {
     const { rows } = await pool.query(
       `UPDATE use_cases
-       SET is_favorite = NOT is_favorite
-       WHERE id = $1
+       SET title = $1, category = $2, author_name = $3, skill_name = $4, description = $5, tags = $6
+       WHERE id = $7
        RETURNING *`,
+      [
+        toTrimmedText(title),
+        toTrimmedText(category),
+        toTrimmedText(authorName),
+        toTrimmedText(skillName),
+        toTrimmedText(description),
+        Array.isArray(tags) ? tags.map((tag) => toTrimmedText(tag)).filter(Boolean) : [],
+        req.params.id,
+      ]
+    );
+    if (!rows.length) return res.status(404).json({ error: "Caso nao encontrado." });
+    return res.json(rows[0]);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Erro ao editar caso." });
+  }
+});
+
+app.delete("/api/use-cases/:id", requireAuth, async (req, res) => {
+  if (!hasDatabase) {
+    const id = Number(req.params.id);
+    memoryCases = memoryCases.filter((item) => item.id !== id);
+    return res.json({ ok: true });
+  }
+  try {
+    await pool.query("DELETE FROM use_cases WHERE id = $1", [req.params.id]);
+    return res.json({ ok: true });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Erro ao excluir caso." });
+  }
+});
+
+app.post("/api/use-cases/:id/image", requireAuth, upload.single("image"), async (req, res) => {
+  if (!req.file) return res.status(400).json({ error: "Arquivo obrigatorio." });
+
+  const dataUrl = `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`;
+  if (!hasDatabase) {
+    const id = Number(req.params.id);
+    const found = memoryCases.find((item) => item.id === id);
+    if (!found) return res.status(404).json({ error: "Caso nao encontrado." });
+    found.image_data = dataUrl;
+    return res.json(found);
+  }
+
+  try {
+    const { rows } = await pool.query(
+      `UPDATE use_cases SET image_data = $1 WHERE id = $2 RETURNING *`,
+      [dataUrl, req.params.id]
+    );
+    if (!rows.length) return res.status(404).json({ error: "Caso nao encontrado." });
+    return res.json(rows[0]);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Erro ao enviar imagem." });
+  }
+});
+
+app.post("/api/use-cases/:id/favorite", async (req, res) => {
+  if (!hasDatabase) {
+    const id = Number(req.params.id);
+    const found = memoryCases.find((item) => item.id === id);
+    if (!found) return res.status(404).json({ error: "Caso nao encontrado." });
+    found.is_favorite = !found.is_favorite;
+    return res.json(found);
+  }
+
+  try {
+    const { rows } = await pool.query(
+      `UPDATE use_cases SET is_favorite = NOT is_favorite WHERE id = $1 RETURNING *`,
       [req.params.id]
     );
-
-    if (!rows.length) {
-      return res.status(404).json({ error: "Caso nao encontrado." });
-    }
-
+    if (!rows.length) return res.status(404).json({ error: "Caso nao encontrado." });
     return res.json(rows[0]);
   } catch (error) {
     console.error(error);

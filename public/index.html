@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI CoE | Catalogo</title>
+  <title>AI LATAM CoE</title>
   <style>
     :root {
       --bg: #edf2ff;
@@ -12,63 +12,43 @@
       --text: #0f1a46;
       --muted: #6d79a5;
       --primary: #3e4bff;
-      --soft: #e6e9ff;
     }
     * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-    }
+    body { margin: 0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background: var(--bg); color: var(--text); }
     .container { width: min(1280px, 94%); margin: 0 auto; }
     .topbar { padding: 18px 0 10px; border-bottom: 1px solid var(--line); }
-    .row { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
-    .logo { font-weight: 800; color: #081955; }
-    .btn {
-      border: 0; border-radius: 999px; padding: 10px 14px; font-weight: 700; cursor: pointer;
-      background: #fff; color: var(--text);
-    }
+    .row { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .logo { font-weight: 800; color: #081955; font-size: 22px; }
+    .btn { border: 0; border-radius: 999px; padding: 10px 14px; font-weight: 700; cursor: pointer; background: #fff; color: var(--text); }
     .btn-primary { background: linear-gradient(90deg, #3344ff, #4f63ff); color: #fff; }
+    .btn-danger { background: #ffe8ec; color: #b5183b; }
+    .top-actions { display: flex; gap: 8px; align-items: center; }
     main { padding: 24px 0 36px; }
     h1 { margin: 0; font-size: clamp(28px, 3vw, 42px); }
     .sub { color: var(--muted); margin: 6px 0 16px; font-size: 20px; }
     .filters { background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 14px; }
     .search { width: 100%; border: 1px solid #e9edff; border-radius: 14px; padding: 12px 14px; }
     .cards { margin-top: 16px; display: grid; gap: 14px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .card {
-      background: var(--card); border: 1px solid var(--line); border-top: 4px solid #67a1ff; border-radius: 18px;
-      padding: 16px; box-shadow: 0 8px 24px rgba(19, 41, 120, 0.07);
-    }
+    .card { background: var(--card); border: 1px solid var(--line); border-top: 4px solid #67a1ff; border-radius: 18px; padding: 16px; box-shadow: 0 8px 24px rgba(19, 41, 120, 0.07); }
     .kicker { font-size: 11px; letter-spacing: 2px; font-weight: 800; color: #5864d6; }
     .title { margin: 8px 0; font-size: 24px; line-height: 1.15; }
     .meta { color: #55608f; font-size: 14px; }
     .chips { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0; }
     .chip { padding: 4px 10px; border-radius: 999px; background: #f4f6ff; border: 1px solid #e3e9ff; font-size: 12px; }
-    .empty {
-      margin-top: 18px; background: #fff; border: 1px dashed #cfd8ff; border-radius: 18px; text-align: center;
-      padding: 30px 16px; color: #6070a6;
-    }
-    .modal-wrap {
-      position: fixed; inset: 0; background: rgba(8, 15, 56, 0.35); display: none;
-      align-items: center; justify-content: center; padding: 16px;
-    }
-    .modal {
-      width: min(700px, 100%); background: #fff; border-radius: 18px; padding: 18px;
-      border: 1px solid var(--line);
-    }
+    .empty { margin-top: 18px; background: #fff; border: 1px dashed #cfd8ff; border-radius: 18px; text-align: center; padding: 30px 16px; color: #6070a6; }
+    .card-image { width: 100%; border-radius: 12px; margin-bottom: 10px; border: 1px solid #e1e8ff; }
+    .card-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .mini { border: 1px solid #dbe3ff; border-radius: 10px; padding: 6px 9px; background: #fff; cursor: pointer; font-size: 12px; }
+    .modal-wrap { position: fixed; inset: 0; background: rgba(8, 15, 56, 0.35); display: none; align-items: center; justify-content: center; padding: 16px; z-index: 3; }
+    .modal { width: min(760px, 100%); background: #fff; border-radius: 18px; padding: 18px; border: 1px solid var(--line); }
     .grid { display: grid; gap: 10px; grid-template-columns: 1fr 1fr; }
     .field { display: grid; gap: 6px; margin-bottom: 10px; }
     .field.full { grid-column: 1 / -1; }
     label { font-size: 13px; font-weight: 700; color: #3f4f8f; }
-    input, textarea {
-      border: 1px solid #dde5ff; border-radius: 12px; padding: 10px 12px; font: inherit;
-    }
+    input, textarea { border: 1px solid #dde5ff; border-radius: 12px; padding: 10px 12px; font: inherit; }
     textarea { min-height: 92px; resize: vertical; }
     .actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; }
-    .fav {
-      border: 1px solid #dbe3ff; border-radius: 10px; padding: 6px 9px; background: #fff; cursor: pointer;
-    }
+    .hint { font-size: 12px; color: #7786bb; }
     @media (max-width: 1024px) { .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     @media (max-width: 760px) { .cards, .grid { grid-template-columns: 1fr; } .sub { font-size: 16px; } }
   </style>
@@ -76,8 +56,11 @@
 <body>
   <header class="topbar">
     <div class="container row">
-      <div class="logo">AI COE LATAM</div>
-      <button id="openModal" class="btn btn-primary">+ Adicionar caso</button>
+      <div class="logo">AI LATAM CoE</div>
+      <div class="top-actions">
+        <button id="authBtn" class="btn">Entrar</button>
+        <button id="openModal" class="btn btn-primary" style="display:none;">+ Adicionar caso</button>
+      </div>
     </div>
   </header>
   <main>
@@ -97,37 +80,37 @@
 
   <div id="modalWrap" class="modal-wrap">
     <div class="modal">
-      <h3>Novo caso de uso</h3>
+      <h3 id="caseModalTitle">Novo caso de uso</h3>
       <form id="caseForm">
+        <input type="hidden" id="editingId" />
         <div class="grid">
-          <div class="field">
-            <label for="title">Titulo *</label>
-            <input id="title" required />
-          </div>
-          <div class="field">
-            <label for="category">Categoria</label>
-            <input id="category" placeholder="Ex: Discovery & Backlog" />
-          </div>
-          <div class="field">
-            <label for="authorName">Autor</label>
-            <input id="authorName" />
-          </div>
-          <div class="field">
-            <label for="skillName">Skill/Projeto</label>
-            <input id="skillName" />
-          </div>
-          <div class="field full">
-            <label for="tags">Tags (separadas por virgula)</label>
-            <input id="tags" placeholder="Design, Solution, Backlog" />
-          </div>
-          <div class="field full">
-            <label for="description">Descricao</label>
-            <textarea id="description"></textarea>
-          </div>
+          <div class="field"><label for="title">Titulo *</label><input id="title" required /></div>
+          <div class="field"><label for="category">Categoria</label><input id="category" placeholder="Ex: Discovery & Backlog" /></div>
+          <div class="field"><label for="authorName">Autor</label><input id="authorName" /></div>
+          <div class="field"><label for="skillName">Skill/Projeto</label><input id="skillName" /></div>
+          <div class="field full"><label for="tags">Tags (separadas por virgula)</label><input id="tags" placeholder="Design, Solution, Backlog" /></div>
+          <div class="field full"><label for="description">Descricao</label><textarea id="description"></textarea></div>
         </div>
         <div class="actions">
           <button type="button" class="btn" id="closeModal">Cancelar</button>
           <button type="submit" class="btn btn-primary">Salvar caso</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="authWrap" class="modal-wrap">
+    <div class="modal" style="max-width:420px;">
+      <h3>Login administrador</h3>
+      <form id="authForm">
+        <div class="field">
+          <label for="adminPassword">Senha</label>
+          <input id="adminPassword" type="password" required />
+          <span class="hint">Defina no Heroku: ADMIN_PASSWORD</span>
+        </div>
+        <div class="actions">
+          <button type="button" class="btn" id="closeAuth">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Entrar</button>
         </div>
       </form>
     </div>
@@ -139,11 +122,45 @@
     const counterEl = document.getElementById("counter");
     const searchEl = document.getElementById("search");
     const modalWrap = document.getElementById("modalWrap");
+    const authWrap = document.getElementById("authWrap");
     const openModalBtn = document.getElementById("openModal");
     const closeModalBtn = document.getElementById("closeModal");
     const form = document.getElementById("caseForm");
+    const editingIdEl = document.getElementById("editingId");
+    const caseModalTitleEl = document.getElementById("caseModalTitle");
+    const authBtn = document.getElementById("authBtn");
+    const authForm = document.getElementById("authForm");
+    const closeAuthBtn = document.getElementById("closeAuth");
 
     let allCases = [];
+    let isAuthenticated = false;
+
+    function getPayloadFromForm() {
+      return {
+        title: document.getElementById("title").value,
+        category: document.getElementById("category").value,
+        authorName: document.getElementById("authorName").value,
+        skillName: document.getElementById("skillName").value,
+        description: document.getElementById("description").value,
+        tags: document.getElementById("tags").value.split(",").map((tag) => tag.trim()).filter(Boolean),
+      };
+    }
+
+    async function request(url, options = {}) {
+      const response = await fetch(url, options);
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.error || "Erro na requisicao.");
+      }
+      return response.json();
+    }
+
+    async function checkAuth() {
+      const data = await request("/api/auth/status");
+      isAuthenticated = data.authenticated;
+      authBtn.textContent = isAuthenticated ? "Sair" : "Entrar";
+      openModalBtn.style.display = isAuthenticated ? "inline-block" : "none";
+    }
 
     function render(cases) {
       cardsEl.innerHTML = "";
@@ -153,81 +170,163 @@
       cases.forEach((item) => {
         const card = document.createElement("article");
         card.className = "card";
+        const adminActions = isAuthenticated
+          ? `<button class="mini edit" data-id="${item.id}">Editar</button>
+             <button class="mini delete" data-id="${item.id}">Excluir</button>
+             <label class="mini">Imagem<input class="upload" data-id="${item.id}" type="file" accept="image/*" style="display:none;" /></label>`
+          : "";
         card.innerHTML = `
+          ${item.image_data ? `<img class="card-image" src="${item.image_data}" alt="imagem do caso" />` : ""}
           <div class="kicker">${(item.category || "SEM CATEGORIA").toUpperCase()}</div>
           <h2 class="title">${item.title}</h2>
           <div class="meta"><strong>${item.author_name || "Sem autor"}</strong> - ${item.skill_name || "Sem projeto"}</div>
           <div class="chips">${(item.tags || []).map((tag) => `<span class="chip">${tag}</span>`).join("")}</div>
           <p>${item.description || ""}</p>
-          <button class="fav" data-id="${item.id}">${item.is_favorite ? "★ Favorito" : "☆ Favoritar"}</button>
+          <div class="card-actions">
+            <button class="mini fav" data-id="${item.id}">${item.is_favorite ? "★ Favorito" : "☆ Favoritar"}</button>
+            ${adminActions}
+          </div>
         `;
         cardsEl.appendChild(card);
       });
 
       document.querySelectorAll(".fav").forEach((btn) => {
         btn.addEventListener("click", async () => {
-          await fetch(`/api/use-cases/${btn.dataset.id}/favorite`, { method: "POST" });
+          await request(`/api/use-cases/${btn.dataset.id}/favorite`, { method: "POST" });
+          await loadCases();
+        });
+      });
+
+      document.querySelectorAll(".edit").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const item = allCases.find((caseItem) => String(caseItem.id) === String(btn.dataset.id));
+          if (!item) return;
+          editingIdEl.value = item.id;
+          caseModalTitleEl.textContent = "Editar caso de uso";
+          document.getElementById("title").value = item.title || "";
+          document.getElementById("category").value = item.category || "";
+          document.getElementById("authorName").value = item.author_name || "";
+          document.getElementById("skillName").value = item.skill_name || "";
+          document.getElementById("description").value = item.description || "";
+          document.getElementById("tags").value = (item.tags || []).join(", ");
+          modalWrap.style.display = "flex";
+        });
+      });
+
+      document.querySelectorAll(".delete").forEach((btn) => {
+        btn.addEventListener("click", async () => {
+          if (!confirm("Excluir este caso de uso?")) return;
+          await request(`/api/use-cases/${btn.dataset.id}`, { method: "DELETE" });
+          await loadCases();
+        });
+      });
+
+      document.querySelectorAll(".upload").forEach((input) => {
+        input.addEventListener("change", async (event) => {
+          const file = event.target.files[0];
+          if (!file) return;
+          const formData = new FormData();
+          formData.append("image", file);
+          await request(`/api/use-cases/${input.dataset.id}/image`, {
+            method: "POST",
+            body: formData,
+          });
           await loadCases();
         });
       });
     }
 
     async function loadCases() {
-      const response = await fetch("/api/use-cases");
-      allCases = await response.json();
+      allCases = await request("/api/use-cases");
       applySearch();
     }
 
     function applySearch() {
       const term = searchEl.value.trim().toLowerCase();
       if (!term) return render(allCases);
-      render(
-        allCases.filter((item) =>
-          [item.title, item.author_name, item.skill_name, item.description, item.category]
-            .join(" ")
-            .toLowerCase()
-            .includes(term)
-        )
-      );
+      render(allCases.filter((item) =>
+        [item.title, item.author_name, item.skill_name, item.description, item.category].join(" ").toLowerCase().includes(term)
+      ));
     }
 
-    function openModal() {
-      modalWrap.style.display = "flex";
-    }
     function closeModal() {
       modalWrap.style.display = "none";
       form.reset();
+      editingIdEl.value = "";
+      caseModalTitleEl.textContent = "Novo caso de uso";
     }
 
-    openModalBtn.addEventListener("click", openModal);
+    openModalBtn.addEventListener("click", () => { modalWrap.style.display = "flex"; });
     closeModalBtn.addEventListener("click", closeModal);
-    modalWrap.addEventListener("click", (e) => {
-      if (e.target === modalWrap) closeModal();
-    });
+    modalWrap.addEventListener("click", (e) => { if (e.target === modalWrap) closeModal(); });
     searchEl.addEventListener("input", applySearch);
+
+    authBtn.addEventListener("click", async () => {
+      if (isAuthenticated) {
+        await request("/api/auth/logout", { method: "POST" });
+        await checkAuth();
+        await loadCases();
+      } else {
+        authWrap.style.display = "flex";
+      }
+    });
+    closeAuthBtn.addEventListener("click", () => {
+      authWrap.style.display = "none";
+      authForm.reset();
+    });
+    authWrap.addEventListener("click", (e) => {
+      if (e.target === authWrap) {
+        authWrap.style.display = "none";
+        authForm.reset();
+      }
+    });
+
+    authForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      try {
+        await request("/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ password: document.getElementById("adminPassword").value }),
+        });
+        authWrap.style.display = "none";
+        authForm.reset();
+        await checkAuth();
+        await loadCases();
+      } catch (error) {
+        alert(error.message);
+      }
+    });
 
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
-      const payload = {
-        title: document.getElementById("title").value,
-        category: document.getElementById("category").value,
-        authorName: document.getElementById("authorName").value,
-        skillName: document.getElementById("skillName").value,
-        description: document.getElementById("description").value,
-        tags: document.getElementById("tags").value.split(",").map((tag) => tag.trim()).filter(Boolean),
-      };
-
-      await fetch("/api/use-cases", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      closeModal();
-      await loadCases();
+      try {
+        const editingId = editingIdEl.value;
+        const payload = getPayloadFromForm();
+        if (editingId) {
+          await request(`/api/use-cases/${editingId}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+        } else {
+          await request("/api/use-cases", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+        }
+        closeModal();
+        await loadCases();
+      } catch (error) {
+        alert(error.message);
+      }
     });
 
-    loadCases();
+    (async function bootstrap() {
+      await checkAuth();
+      await loadCases();
+    })();
   </script>
 </body>
 </html>

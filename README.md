@@ -1,10 +1,13 @@
-# AI CoE Catalogo - Heroku
+# AI LATAM CoE - Heroku
 
 Replica funcional de catalogo com:
 - listagem de casos
 - cadastro de novos casos
 - busca por texto
 - favorito/desfavorito
+- login de administrador
+- edicao/exclusao de casos
+- upload de imagem por caso
 
 ## Rodar local
 
@@ -31,6 +34,8 @@ git commit -m "Initial AI CoE catalog app"
 git branch -M main
 heroku create
 heroku addons:create heroku-postgresql:mini
+heroku config:set ADMIN_PASSWORD="troque-esta-senha"
+heroku config:set SESSION_SECRET="$(openssl rand -hex 32)"
 git push heroku main
 heroku open
 ```
