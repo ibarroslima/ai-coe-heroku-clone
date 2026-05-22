@@ -25,7 +25,12 @@ const upload = multer({
 let memoryCases = [];
 let memoryId = 1;
 
+app.disable("etag");
 app.use(express.json());
+app.use("/api", (_req, res, next) => {
+  res.set("Cache-Control", "no-store, no-cache, must-revalidate, private");
+  next();
+});
 app.use(
   session({
     secret: SESSION_SECRET,
