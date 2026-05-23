@@ -197,6 +197,13 @@
     .mini { border: 1px solid #dce3ff; border-radius: 10px; background: #fff; cursor: pointer; padding: 6px 10px; font-size: 12px; font-weight: 700; color: #2e3f8f; }
     .empty { margin-top: 18px; background: var(--surface); border: 1px dashed #cad6ff; border-radius: 18px; text-align: center; color: var(--muted); padding: 32px 16px; }
     .about { margin-top: 16px; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); box-shadow: var(--shadow); padding: 18px; color: var(--muted); line-height: 1.5; }
+    .about-layout { margin-top: 16px; display: flex; align-items: center; gap: 16px; }
+    .about-mascot {
+      width: 140px;
+      height: auto;
+      flex: 0 0 auto;
+    }
+    .about-layout .about { margin-top: 0; flex: 1 1 auto; }
     .recent-header { margin-top: 22px; display: flex; justify-content: space-between; align-items: baseline; }
     .recent-header h2 { margin: 0; font-size: 32px; letter-spacing: -0.5px; }
     .recent-link { color: #066afe; font-weight: 700; cursor: pointer; }
@@ -226,6 +233,8 @@
       .hero-banner { text-align: center; }
       .hero-main-actions { justify-content: center; }
       .hero-mascot { width: min(220px, 66vw); }
+      .about-layout { flex-direction: column; align-items: flex-start; }
+      .about-mascot { width: 120px; }
     }
   </style>
 </head>
@@ -321,7 +330,10 @@
     </div>
     <div id="aboutView" class="container hidden">
       <h1 id="aboutTitle">Sobre</h1>
-      <section id="aboutText" class="about">Plataforma de catálogo de casos de uso com filtros por área, tecnologia, fase e tema. Qualquer colaborador pode criar e editar casos. Remoção é permitida somente para administradores.</section>
+      <div class="about-layout">
+        <img class="about-mascot" src="/assets/about-mascot.png" alt="About mascot" />
+        <section id="aboutText" class="about">Plataforma de catálogo de casos de uso com filtros por área, tecnologia, fase e tema. Qualquer colaborador pode criar e editar casos. Remoção é permitida somente para administradores.</section>
+      </div>
     </div>
   </main>
   <div id="modalWrap" class="modal-wrap">
