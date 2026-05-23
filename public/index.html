@@ -57,9 +57,9 @@
     .pill-btn.primary { border: none; color: #fff; background: linear-gradient(90deg, #0b3bff, #066afe); box-shadow: 0 8px 18px rgba(6, 106, 254, 0.32); }
     .icon-btn { width: 44px; height: 40px; padding: 0; display: grid; place-items: center; font-size: 13px; }
     .lang-wrap { position: relative; }
-    .lang-btn { width: 104px; display: flex; justify-content: space-between; align-items: center; gap: 6px; padding: 8px 10px; }
+    .lang-btn { width: 74px; display: flex; justify-content: space-between; align-items: center; gap: 4px; padding: 5px 7px; font-size: 11px; }
     .lang-menu {
-      position: absolute; top: 46px; right: 0; width: 260px; border: 1px solid var(--line); border-radius: 16px;
+      position: absolute; top: 42px; right: 0; width: 240px; border: 1px solid var(--line); border-radius: 16px;
       background: var(--surface); box-shadow: var(--shadow); padding: 10px; display: none; z-index: 5;
     }
     .lang-item {
@@ -182,7 +182,7 @@
       <div class="top-actions">
         <button id="openModal" class="pill-btn primary">+ Adicionar caso</button>
         <div class="lang-wrap">
-          <button id="langBtn" class="pill-btn lang-btn" title="Idioma"><span>🌐 <strong id="langBtnCode">PT</strong></span><span>▾</span></button>
+          <button id="langBtn" class="pill-btn lang-btn" title="Idioma"><span><strong id="langBtnCode">PT</strong></span><span>▾</span></button>
           <div id="langMenu" class="lang-menu">
             <button class="lang-item active" data-lang="pt"><span>Português (Brasil)</span><span>PT</span></button>
             <button class="lang-item" data-lang="es"><span>Español</span><span>ES</span></button>
