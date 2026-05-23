@@ -111,6 +111,17 @@
       gap: 12px;
       flex-wrap: wrap;
     }
+    .hero-mascot-wrap {
+      margin-top: 18px;
+      display: flex;
+      justify-content: center;
+    }
+    .hero-mascot {
+      width: min(320px, 75vw);
+      height: auto;
+      border-radius: 16px;
+      filter: drop-shadow(0 14px 24px rgba(0, 35, 110, 0.18));
+    }
     .hero-view-btn {
       border: none;
       color: #fff;
@@ -209,6 +220,9 @@
         <div class="hero-main-actions">
           <button id="heroViewCatalogBtn" class="pill-btn hero-view-btn">Ver catálogo</button>
           <button id="heroAddCaseBtn" class="pill-btn primary">Adicionar caso de uso</button>
+        </div>
+        <div class="hero-mascot-wrap">
+          <img class="hero-mascot" src="/assets/astrobot.png" alt="Astrobot Salesforce" />
         </div>
       </section>
       <h1 id="homeTitle">AI CoE ProServ</h1>
