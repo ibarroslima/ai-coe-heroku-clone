@@ -30,7 +30,7 @@
     .topbar { padding: 18px 0 10px; border-bottom: 1px solid var(--line); }
     .row { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
     .brand { display: flex; align-items: center; gap: 12px; }
-    .brand-text { font-size: 30px; font-weight: 900; letter-spacing: -0.6px; color: var(--text); }
+    .brand-text { font-size: 24px; font-weight: 900; letter-spacing: -0.4px; color: var(--text); }
     .brand-text small { display: block; font-size: 12px; font-weight: 700; letter-spacing: 2px; color: #28a0ff; margin-top: -6px; }
     .cloud {
       width: 50px; height: 50px; border-radius: 50%; background: #e7f5ff; border: 1px solid #b9ddff;
@@ -60,13 +60,9 @@
     h1 { margin: 0; font-size: clamp(30px, 3.5vw, 44px); letter-spacing: -0.8px; line-height: 1.08; }
     .sub { margin: 6px 0 18px; color: var(--muted); font-size: 18px; }
     .hero-banner {
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      background: var(--surface);
-      box-shadow: var(--shadow);
-      padding: 18px 18px;
+      padding: 24px 6px 30px;
       text-align: center;
-      margin-bottom: 10px;
+      margin-bottom: 18px;
     }
     .hero-badge {
       display: inline-block;
@@ -77,24 +73,24 @@
       font-weight: 800;
       background: #eef1ff;
       color: #2f45ff;
-      margin-bottom: 10px;
+      margin-bottom: 14px;
       text-transform: uppercase;
     }
     .hero-main-title {
       margin: 0;
-      font-size: clamp(26px, 3vw, 46px);
+      font-size: clamp(22px, 2.6vw, 36px);
       line-height: 1.08;
       letter-spacing: -0.6px;
     }
     .hero-main-desc {
-      margin: 10px auto 0;
+      margin: 18px auto 0;
       max-width: 920px;
       color: var(--muted);
       font-size: 15px;
       line-height: 1.4;
     }
     .hero-main-actions {
-      margin-top: 14px;
+      margin-top: 22px;
       display: flex;
       justify-content: center;
       gap: 12px;
@@ -181,10 +177,10 @@
       </div>
     </div>
     <div class="container tabs">
-      <div id="tabHome" class="tab active" data-tab="home">Home</div>
-      <div id="tabCatalog" class="tab" data-tab="catalog">Catalogo</div>
-      <div id="tabFavorites" class="tab" data-tab="favorites">Favoritos</div>
-      <div id="tabAbout" class="tab" data-tab="about">Sobre</div>
+      <div id="tabHome" class="tab active" data-tab="home">🏠 Home</div>
+      <div id="tabCatalog" class="tab" data-tab="catalog">📖 Catalogo</div>
+      <div id="tabFavorites" class="tab" data-tab="favorites">⭐ Favoritos</div>
+      <div id="tabAbout" class="tab" data-tab="about">❓ Sobre</div>
     </div>
   </header>
   <main>
@@ -273,7 +269,7 @@
   </div>
   <script>
     const I18N = {
-      pt: { tabs: { home: "Home", catalog: "Catalogo", favorites: "Favoritos", about: "Sobre" }, authIn: "Entrar/ADM", authOut: "Sair/ADM", addCase: "+ Adicionar caso", homeTitle: "AI CoE ProServ", homeDesc: "Centralize e compartilhe conhecimento aplicado em IA para toda a organizacao.", catalogTitle: "Catalogo de Casos de Uso", caseCountOne: "caso documentado", caseCountMany: "casos documentados", allAreas: "Todas as areas", allTechnologies: "Todas as tecnologias", allPhases: "Todas as fases SPM", allThemes: "Todos os temas SPM", recent: "Mais recentes", oldest: "Mais antigos", all: "Todos", onlyFavorites: "Apenas favoritos", emptyTitle: "Seu catalogo esta vazio", emptyDesc: "Clique em \"+ Adicionar caso\" para incluir o primeiro item.", aboutTitle: "Sobre", aboutText: "Plataforma de catalogo de casos de uso com filtros por area, tecnologia, fase e tema. Qualquer colaborador pode criar e editar casos. Remocao e permitida somente para administradores.", recentSectionTitle: "Mais recentes", recentViewAll: "Ver todos >", metrics: ["Casos documentados", "Tecnologias cobertas", "Contribuidores", "Areas de negocio"], explainers: [["Catalogo de Casos de Uso","Explore todos os projetos de IA documentados pela equipe, com tecnologias, repositorios e contatos."],["Busca e filtros","Encontre rapidamente casos por tecnologia, projeto, area de negocio ou data."],["Conhecimento Compartilhado","Evite duplicar esforcos. Aprenda com o que o time ja fez e construa em cima disso."]], hero: { badge: "• Centro de excelência em IA • LATAM", title: "O repositório de conhecimento do time de IA", desc: "Documente, descubra e reutilize casos de uso de inteligência artificial criados pela sua organização. Pensado regionalmente, construído para escalar globalmente.", viewCatalog: "Ver catálogo", addCase: "Adicionar caso de uso" }, modalNew: "Novo caso de uso", modalEdit: "Editar caso de uso", labels: { title: "Titulo *", category: "Categoria", area: "Area", technology: "Tecnologia", phase: "Fase SPM", theme: "Tema SPM", author: "Autor", project: "Skill/Projeto", tags: "Tags (separadas por virgula)", description: "Descricao", password: "Senha" }, cancel: "Cancelar", saveCase: "Salvar caso", loginTitle: "Login administrador", loginBtn: "Entrar", fallback: { noAuthor: "Sem autor", noProject: "Sem projeto", noArea: "Sem area", noTechnology: "Sem tecnologia", noPhase: "Sem fase", noTheme: "Sem tema", noCategory: "Sem categoria" }, actions: { favorite: "Favoritar", favoriteOn: "Favorito", edit: "Editar", delete: "Excluir", image: "Imagem" }, confirmDelete: "Excluir este caso de uso?" },
+      pt: { tabs: { home: "🏠 Home", catalog: "📖 Catalogo", favorites: "⭐ Favoritos", about: "❓ Sobre" }, authIn: "Entrar/ADM", authOut: "Sair/ADM", addCase: "+ Adicionar caso", homeTitle: "AI CoE ProServ", homeDesc: "Centralize e compartilhe conhecimento aplicado em IA para toda a organizacao.", catalogTitle: "Catalogo de Casos de Uso", caseCountOne: "caso documentado", caseCountMany: "casos documentados", allAreas: "Todas as areas", allTechnologies: "Todas as tecnologias", allPhases: "Todas as fases SPM", allThemes: "Todos os temas SPM", recent: "Mais recentes", oldest: "Mais antigos", all: "Todos", onlyFavorites: "Apenas favoritos", emptyTitle: "Seu catalogo esta vazio", emptyDesc: "Clique em \"+ Adicionar caso\" para incluir o primeiro item.", aboutTitle: "Sobre", aboutText: "Plataforma de catalogo de casos de uso com filtros por area, tecnologia, fase e tema. Qualquer colaborador pode criar e editar casos. Remocao e permitida somente para administradores.", recentSectionTitle: "Mais recentes", recentViewAll: "Ver todos >", metrics: ["Casos documentados", "Tecnologias cobertas", "Contribuidores", "Areas de negocio"], explainers: [["Catalogo de Casos de Uso","Explore todos os projetos de IA documentados pela equipe, com tecnologias, repositorios e contatos."],["Busca e filtros","Encontre rapidamente casos por tecnologia, projeto, area de negocio ou data."],["Conhecimento Compartilhado","Evite duplicar esforcos. Aprenda com o que o time ja fez e construa em cima disso."]], hero: { badge: "• Centro de excelência em IA • LATAM", title: "O repositório de conhecimento do time de IA", desc: "Documente, descubra e reutilize casos de uso de inteligência artificial criados pela sua organização. Pensado regionalmente, construído para escalar globalmente.", viewCatalog: "Ver catálogo", addCase: "Adicionar caso de uso" }, modalNew: "Novo caso de uso", modalEdit: "Editar caso de uso", labels: { title: "Titulo *", category: "Categoria", area: "Area", technology: "Tecnologia", phase: "Fase SPM", theme: "Tema SPM", author: "Autor", project: "Skill/Projeto", tags: "Tags (separadas por virgula)", description: "Descricao", password: "Senha" }, cancel: "Cancelar", saveCase: "Salvar caso", loginTitle: "Login administrador", loginBtn: "Entrar", fallback: { noAuthor: "Sem autor", noProject: "Sem projeto", noArea: "Sem area", noTechnology: "Sem tecnologia", noPhase: "Sem fase", noTheme: "Sem tema", noCategory: "Sem categoria" }, actions: { favorite: "Favoritar", favoriteOn: "Favorito", edit: "Editar", delete: "Excluir", image: "Imagem" }, confirmDelete: "Excluir este caso de uso?" },
       es: { tabs: { home: "Inicio", catalog: "Catalogo", favorites: "Favoritos", about: "Acerca" }, authIn: "Ingresar", authOut: "Salir", addCase: "+ Agregar caso", homeTitle: "AI CoE ProServ", homeDesc: "Centraliza y comparte conocimiento aplicado en IA para toda la organizacion.", catalogTitle: "Catalogo de Casos de Uso", caseCountOne: "caso documentado", caseCountMany: "casos documentados", allAreas: "Todas las areas", allTechnologies: "Todas las tecnologias", allPhases: "Todas las fases SPM", allThemes: "Todos los temas SPM", recent: "Mas recientes", oldest: "Mas antiguos", all: "Todos", onlyFavorites: "Solo favoritos", emptyTitle: "Tu catalogo esta vacio", emptyDesc: "Haz clic en \"+ Agregar caso\" para incluir el primer item.", aboutTitle: "Acerca", aboutText: "Plataforma de catalogo de casos de uso con filtros por area, tecnologia, fase y tema. Cualquier colaborador puede crear y editar casos. Eliminar solo para administradores.", metrics: ["Casos documentados", "Tecnologias cubiertas", "Colaboradores"], explainers: [["Busqueda y filtros","Encuentra casos por autor, tema, tecnologia, fase o palabra clave."],["Conocimiento compartido","Consolida aprendizajes de distintos paises y equipos en un solo lugar."],["Catalogo de casos de uso","Documenta problemas, enfoques y resultados para acelerar nuevas iniciativas."]], modalNew: "Nuevo caso de uso", modalEdit: "Editar caso de uso", labels: { title: "Titulo *", category: "Categoria", area: "Area", technology: "Tecnologia", phase: "Fase SPM", theme: "Tema SPM", author: "Autor", project: "Skill/Proyecto", tags: "Etiquetas (separadas por coma)", description: "Descripcion", password: "Contrasena" }, cancel: "Cancelar", saveCase: "Guardar caso", loginTitle: "Login administrador", loginBtn: "Ingresar", fallback: { noAuthor: "Sin autor", noProject: "Sin proyecto", noArea: "Sin area", noTechnology: "Sin tecnologia", noPhase: "Sin fase", noTheme: "Sin tema", noCategory: "Sin categoria" }, actions: { favorite: "Favorito", favoriteOn: "Favorito", edit: "Editar", delete: "Eliminar", image: "Imagen" }, confirmDelete: "Eliminar este caso de uso?" },
       en: { tabs: { home: "Home", catalog: "Catalog", favorites: "Favorites", about: "About" }, authIn: "Sign in", authOut: "Sign out", addCase: "+ Add case", homeTitle: "AI CoE ProServ", homeDesc: "Centralize and share AI applied knowledge across the organization.", catalogTitle: "Use Case Catalog", caseCountOne: "documented case", caseCountMany: "documented cases", allAreas: "All areas", allTechnologies: "All technologies", allPhases: "All SPM phases", allThemes: "All SPM themes", recent: "Most recent", oldest: "Oldest", all: "All", onlyFavorites: "Only favorites", emptyTitle: "Your catalog is empty", emptyDesc: "Click \"+ Add case\" to include your first item.", aboutTitle: "About", aboutText: "Use case catalog platform with filters by area, technology, phase, and theme. Any collaborator can create and edit cases. Delete is admin-only.", metrics: ["Documented cases", "Technologies covered", "Contributors"], explainers: [["Search and filters","Find cases by author, theme, technology, phase, or keyword."],["Shared knowledge","Consolidate learnings from countries and teams in one place."],["Use case catalog","Document problems, approaches, and outcomes to accelerate initiatives."]], modalNew: "New use case", modalEdit: "Edit use case", labels: { title: "Title *", category: "Category", area: "Area", technology: "Technology", phase: "SPM Phase", theme: "SPM Theme", author: "Author", project: "Skill/Project", tags: "Tags (comma separated)", description: "Description", password: "Password" }, cancel: "Cancel", saveCase: "Save case", loginTitle: "Admin login", loginBtn: "Sign in", fallback: { noAuthor: "No author", noProject: "No project", noArea: "No area", noTechnology: "No technology", noPhase: "No phase", noTheme: "No theme", noCategory: "No category" }, actions: { favorite: "Favorite", favoriteOn: "Favorited", edit: "Edit", delete: "Delete", image: "Image" }, confirmDelete: "Delete this use case?" }
     };
@@ -284,15 +280,14 @@
       { icon: "☁", color: "#00A1E0" },
       { icon: "🇦🇷" },
       { icon: "🤖" },
-      { icon: "🌐" },
-      { icon: "💬" },
       { icon: "🇲🇽" },
-      { icon: "🖱️" },
-      { icon: "🇵🇪" },
-      { icon: "♊" },
+      { icon: "🌐" },
       { icon: "🇨🇴" },
-      { icon: "🔎" },
-      { icon: "🇨🇱" }
+      { icon: "💬", color: "#611f69" },
+      { icon: "🇵🇪" },
+      { icon: "🖱️", color: "#3c4fff" },
+      { icon: "🇨🇱" },
+      { icon: "♊", color: "#4285F4" }
     ];
     let flagIndex = 0;
     setInterval(() => {
