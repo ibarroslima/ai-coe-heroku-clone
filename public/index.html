@@ -36,6 +36,12 @@
       width: 50px; height: 50px; border-radius: 50%; background: #e7f5ff; border: 1px solid #b9ddff;
       display: grid; place-items: center; font-size: 24px; color: #0089ff;
     }
+    .cloud-img {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
+      display: block;
+    }
     .top-actions { display: flex; gap: 10px; align-items: center; }
     .pill-btn { border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--text); font-weight: 700; padding: 10px 14px; cursor: pointer; transition: 0.2s ease; }
     .pill-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow); }
@@ -283,16 +289,20 @@
       { icon: "🇲🇽" },
       { icon: "🌐" },
       { icon: "🇨🇴" },
-      { icon: "💬", color: "#611f69" },
+      { image: "/assets/slack.png" },
       { icon: "🇵🇪" },
       { icon: "🖱️", color: "#3c4fff" },
       { icon: "🇨🇱" },
-      { icon: "♊", color: "#4285F4" }
+      { image: "/assets/gemini.png" }
     ];
     let flagIndex = 0;
     setInterval(() => {
       const item = flagSequence[flagIndex % flagSequence.length];
-      flagCloud.textContent = item.icon;
+      if (item.image) {
+        flagCloud.innerHTML = `<img class="cloud-img" src="${item.image}" alt="" />`;
+      } else {
+        flagCloud.textContent = item.icon;
+      }
       flagCloud.style.color = item.color || "#0089ff";
       flagIndex += 1;
     }, 1500);
