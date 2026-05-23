@@ -271,7 +271,7 @@
             </div>
           </div>
           <div class="hero-mascot-wrap">
-            <img class="hero-mascot" src="/assets/astrobot.png" alt="Astrobot Salesforce" />
+            <img class="hero-mascot" src="/assets/home-mascot.png" alt="Home mascot" />
           </div>
         </div>
       </section>
@@ -302,7 +302,7 @@
       </div>
       <div class="catalog-header">
         <h1 id="catalogTitle">Catálogo de Casos de Uso</h1>
-        <img class="catalog-astro" src="/assets/agent-astro.png" alt="Agent Astro" />
+        <img id="catalogAstro" class="catalog-astro" src="/assets/catalog-mascot.png" alt="Catalog mascot" />
       </div>
       <div id="counter" class="sub">0 casos documentados</div>
       <section class="filters">
@@ -674,10 +674,15 @@
       aboutViewEl.classList.toggle("hidden", tab !== "about");
       if (tab === "favorites") { favoriteFilterEl.value = "only"; applySearch(); }
       else if (tab === "catalog") { favoriteFilterEl.value = "all"; applySearch(); }
+      const catalogAstroEl = document.getElementById("catalogAstro");
       if (tab === "favorites") {
         document.getElementById("catalogTitle").textContent = t().favoritesTitle || t().tabs.favorites;
+        catalogAstroEl.src = "/assets/favorites-mascot.png";
+        catalogAstroEl.alt = "Favorites mascot";
       } else if (tab === "catalog") {
         document.getElementById("catalogTitle").textContent = t().catalogTitle;
+        catalogAstroEl.src = "/assets/catalog-mascot.png";
+        catalogAstroEl.alt = "Catalog mascot";
       }
     }
 
