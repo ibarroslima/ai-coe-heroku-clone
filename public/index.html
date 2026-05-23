@@ -98,6 +98,16 @@
       flex: 1 1 0%;
       min-width: 0;
     }
+    .hero-layout {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .hero-content {
+      flex: 1 1 0%;
+      min-width: 0;
+    }
     .hero-badge {
       display: inline-block;
       border-radius: 999px;
@@ -139,6 +149,8 @@
       width: min(250px, 28vw);
       height: auto;
       border-radius: 0;
+      background: transparent;
+      mix-blend-mode: multiply;
       filter: drop-shadow(0 14px 24px rgba(0, 35, 110, 0.18));
     }
     .hero-view-btn {
@@ -165,10 +177,17 @@
       justify-content: space-between;
       gap: 12px;
     }
+    .catalog-badge-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
     .catalog-astro {
       width: 94px;
       height: auto;
       border-radius: 0;
+      background: transparent;
+      mix-blend-mode: multiply;
       filter: drop-shadow(0 8px 12px rgba(0, 45, 120, 0.2));
     }
     .search { width: 100%; border: 1px solid #e5eaff; border-radius: 14px; padding: 13px 14px; background: #fcfdff; font-size: 15px; color: #435189; outline: none; }
@@ -286,6 +305,9 @@
       </section>
     </div>
     <div id="catalogView" class="container hidden">
+      <div class="catalog-badge-wrap">
+        <span id="catalogBadge" class="hero-badge">• Centro de excelência em IA • LATAM</span>
+      </div>
       <div class="catalog-header">
         <h1 id="catalogTitle">Catálogo de Casos de Uso</h1>
         <img class="catalog-astro" src="/assets/agent-astro.png" alt="Agent Astro" />
@@ -358,7 +380,7 @@
       { icon: "🇨🇴" },
       { image: "/assets/slack.png" },
       { icon: "🇵🇪" },
-      { icon: "🖱️", color: "#3c4fff" },
+      { image: "/assets/cursor-cube.png" },
       { icon: "🇨🇱" },
       { image: "/assets/gemini.png" }
     ];
@@ -462,6 +484,7 @@
       document.getElementById("homeTitle").textContent = i.homeTitle;
       document.getElementById("homeDesc").textContent = i.homeDesc;
       document.getElementById("heroBadge").textContent = hero.badge;
+      document.getElementById("catalogBadge").textContent = hero.badge;
       document.getElementById("heroMainTitle").textContent = hero.title;
       document.getElementById("heroMainDesc").textContent = hero.desc;
       heroViewCatalogBtn.textContent = hero.viewCatalog;
