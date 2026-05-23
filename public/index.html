@@ -273,9 +273,24 @@
     };
 
     const flagCloud = document.getElementById("flagCloud");
-    const flagSequence = ["🇧🇷", "☁️", "🇦🇷", "🤖", "🇲🇽", "🇵🇪", "🇨🇱", "🇨🇴", "💻"];
+    const flagSequence = [
+      { icon: "🇧🇷" },
+      { icon: "☁", color: "#00A1E0" },
+      { icon: "🇦🇷" },
+      { icon: "🤖" },
+      { icon: "🇲🇽" },
+      { icon: "🇵🇪" },
+      { icon: "🇨🇱" },
+      { icon: "🇨🇴" },
+      { icon: "🌐" }
+    ];
     let flagIndex = 0;
-    setInterval(() => { flagCloud.textContent = flagSequence[flagIndex % flagSequence.length]; flagIndex += 1; }, 1500);
+    setInterval(() => {
+      const item = flagSequence[flagIndex % flagSequence.length];
+      flagCloud.textContent = item.icon;
+      flagCloud.style.color = item.color || "#0089ff";
+      flagIndex += 1;
+    }, 1500);
 
     const cardsEl = document.getElementById("cards");
     const emptyEl = document.getElementById("empty");
