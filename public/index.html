@@ -118,11 +118,13 @@
       box-shadow: 0 8px 18px rgba(40, 160, 255, 0.28);
     }
     .home-grid { margin-top: 8px; display: grid; gap: 6px; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid var(--line); padding-top: 10px; }
+    #homeTitle { font-size: clamp(20px, 2vw, 30px); letter-spacing: -0.3px; }
     .metric { text-align: center; padding: 12px 8px; }
     .metric .value { font-size: 34px; line-height: 1; font-weight: 900; margin-bottom: 4px; color: #0b3bff; }
     .metric .label { color: var(--muted); font-weight: 800; letter-spacing: 1.4px; font-size: 11px; text-transform: uppercase; }
+    body.dark .metric .label { color: #d7e6ff; }
     .explainers { margin-top: 14px; display: grid; gap: 10px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .explainer { border: 1px solid var(--line); border-top: 4px solid #066afe; border-radius: 16px; background: var(--surface); box-shadow: var(--shadow); padding: 16px; }
+    .explainer { border: 1px solid var(--line); border-top: 3px solid #066afe; border-radius: 16px; background: var(--surface); box-shadow: var(--shadow); padding: 16px; }
     .explainer-icon { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; background: linear-gradient(135deg, #0b3bff, #00b3ff); color: #fff; font-weight: 800; margin-bottom: 10px; }
     .explainer h3 { margin: 0 0 6px; font-size: 18px; }
     .explainer p { margin: 0; color: var(--muted); line-height: 1.35; font-size: 14px; }
@@ -131,7 +133,7 @@
     .filter-row { margin-top: 10px; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; }
     .select { width: 100%; border: 1px solid #dde4ff; border-radius: 999px; background: #fff; color: #4b5a90; font-size: 13px; font-weight: 700; padding: 10px 12px; }
     .cards { margin-top: 16px; display: grid; gap: 14px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .card { background: var(--surface); border: 1px solid var(--line); border-top: 4px solid #00b3ff; border-radius: 18px; padding: 16px; box-shadow: var(--shadow); }
+    .card { background: var(--surface); border: 1px solid var(--line); border-top: 3px solid #00b3ff; border-radius: 18px; padding: 16px; box-shadow: var(--shadow); }
     .kicker { font-size: 11px; letter-spacing: 2px; font-weight: 800; color: #0b3bff; }
     .title { margin: 8px 0; font-size: 20px; line-height: 1.18; }
     .meta, .desc { color: var(--muted); }
@@ -146,7 +148,7 @@
     .recent-header h2 { margin: 0; font-size: 32px; letter-spacing: -0.5px; }
     .recent-link { color: #066afe; font-weight: 700; cursor: pointer; }
     .recent-cards { margin-top: 10px; display: grid; gap: 12px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .recent-card { border: 1px solid var(--line); border-top: 4px solid #066afe; border-radius: 16px; background: var(--surface); padding: 14px; box-shadow: var(--shadow); }
+    .recent-card { border: 1px solid var(--line); border-top: 3px solid #066afe; border-radius: 16px; background: var(--surface); padding: 14px; box-shadow: var(--shadow); }
     .recent-card h4 { margin: 6px 0; font-size: 26px; line-height: 1.15; letter-spacing: -0.3px; }
     .recent-meta { color: var(--muted); font-size: 14px; }
     .modal-wrap { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(8, 15, 56, 0.35); z-index: 4; padding: 16px; }
@@ -210,17 +212,17 @@
         </div>
       </section>
       <h1 id="homeTitle">AI CoE ProServ</h1>
-      <p class="sub" id="homeDesc">Centralize e compartilhe conhecimento aplicado em IA para toda a organizacao.</p>
+      <p class="sub" id="homeDesc">Centralize e compartilhe conhecimento aplicado em IA para toda a organização.</p>
       <section class="home-grid">
         <article class="metric"><div id="metricCases" class="value">0</div><div id="metricCasesLabel" class="label">Casos documentados</div></article>
         <article class="metric"><div id="metricTech" class="value">0</div><div id="metricTechLabel" class="label">Tecnologias cobertas</div></article>
         <article class="metric"><div id="metricContrib" class="value">0</div><div id="metricContribLabel" class="label">Contribuidores</div></article>
-        <article class="metric"><div id="metricBiz" class="value">0</div><div id="metricBizLabel" class="label">Areas de negocio</div></article>
+        <article class="metric"><div id="metricBiz" class="value">0</div><div id="metricBizLabel" class="label">Áreas de negócio</div></article>
       </section>
       <section class="explainers">
-        <article class="explainer"><div class="explainer-icon">📘</div><h3 id="exp1Title">Catalogo de Casos de Uso</h3><p id="exp1Text">Explore todos os projetos de IA documentados pela equipe, com tecnologias, repositorios e contatos.</p></article>
-        <article class="explainer"><div class="explainer-icon">🔎</div><h3 id="exp2Title">Busca e filtros</h3><p id="exp2Text">Encontre rapidamente casos por tecnologia, projeto, area de negocio ou data.</p></article>
-        <article class="explainer"><div class="explainer-icon">🔗</div><h3 id="exp3Title">Conhecimento Compartilhado</h3><p id="exp3Text">Evite duplicar esforcos. Aprenda com o que o time ja fez e construa em cima disso.</p></article>
+        <article class="explainer"><div class="explainer-icon">📘</div><h3 id="exp1Title">Catálogo de Casos de Uso</h3><p id="exp1Text">Explore todos os projetos de IA documentados pela equipe, com tecnologias, repositórios e contatos.</p></article>
+        <article class="explainer"><div class="explainer-icon">🔎</div><h3 id="exp2Title">Busca e filtros</h3><p id="exp2Text">Encontre rapidamente casos por tecnologia, projeto, área de negócio ou data.</p></article>
+        <article class="explainer"><div class="explainer-icon">🔗</div><h3 id="exp3Title">Conhecimento Compartilhado</h3><p id="exp3Text">Evite duplicar esforços. Aprenda com o que o time já fez e construa em cima disso.</p></article>
       </section>
       <section>
         <div class="recent-header">
@@ -231,7 +233,7 @@
       </section>
     </div>
     <div id="catalogView" class="container hidden">
-      <h1 id="catalogTitle">Catalogo de Casos de Uso</h1>
+      <h1 id="catalogTitle">Catálogo de Casos de Uso</h1>
       <div id="counter" class="sub">0 casos documentados</div>
       <section class="filters">
         <input id="search" class="search" placeholder="Buscar por nome, autor, projeto..." />
@@ -245,11 +247,11 @@
         </div>
       </section>
       <section id="cards" class="cards"></section>
-      <section id="empty" class="empty"><strong id="emptyTitle">Seu catalogo esta vazio</strong><br /><span id="emptyDesc">Clique em "+ Adicionar caso" para incluir o primeiro item.</span></section>
+      <section id="empty" class="empty"><strong id="emptyTitle">Seu catálogo está vazio</strong><br /><span id="emptyDesc">Clique em "+ Adicionar caso" para incluir o primeiro item.</span></section>
     </div>
     <div id="aboutView" class="container hidden">
       <h1 id="aboutTitle">Sobre</h1>
-      <section id="aboutText" class="about">Plataforma de catalogo de casos de uso com filtros por area, tecnologia, fase e tema. Qualquer colaborador pode criar e editar casos. Remocao e permitida somente para administradores.</section>
+      <section id="aboutText" class="about">Plataforma de catálogo de casos de uso com filtros por área, tecnologia, fase e tema. Qualquer colaborador pode criar e editar casos. Remoção é permitida somente para administradores.</section>
     </div>
   </main>
   <div id="modalWrap" class="modal-wrap">
