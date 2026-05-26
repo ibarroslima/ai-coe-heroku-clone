@@ -1162,7 +1162,9 @@
     heroViewCatalogBtn.addEventListener("click", () => switchTab("catalog"));
     heroAddCaseBtn.addEventListener("click", () => { modalWrap.style.display = "flex"; });
     closeModalBtn.addEventListener("click", closeModal);
-    modalWrap.addEventListener("click", (e) => { if (e.target === modalWrap) closeModal(); });
+    // Keep modal stable during text selection/copy interactions.
+    // Close is handled by explicit buttons to avoid accidental dismiss.
+    modalWrap.addEventListener("click", (e) => { if (e.target === modalWrap) return; });
     searchEl.addEventListener("input", applySearch);
     areaFilterEl.addEventListener("change", applySearch);
     technologyFilterEl.addEventListener("change", applySearch);
