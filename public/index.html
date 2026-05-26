@@ -566,6 +566,10 @@
         <input id="newAuthorName" placeholder="Nome do usuario" />
         <button id="addAuthorBtn" class="pill-btn primary" type="button">Adicionar</button>
       </div>
+      <div class="field" style="margin-top: 8px;">
+        <label for="newAuthorPhoto">Foto do usuario (opcional)</label>
+        <input id="newAuthorPhoto" type="file" accept="image/*" />
+      </div>
       <div id="manageUsersList" class="manage-users-list"></div>
       <div class="actions">
         <button id="closeManageUsers" class="pill-btn" type="button">Fechar</button>
@@ -633,6 +637,7 @@
     const manageUsersList = document.getElementById("manageUsersList");
     const closeManageUsersBtn = document.getElementById("closeManageUsers");
     const newAuthorNameEl = document.getElementById("newAuthorName");
+    const newAuthorPhotoEl = document.getElementById("newAuthorPhoto");
     const addAuthorBtn = document.getElementById("addAuthorBtn");
     const tabs = Array.from(document.querySelectorAll(".tab"));
     const homeViewEl = document.getElementById("homeView");
@@ -660,6 +665,7 @@
     let currentLang = "pt";
 
     const AUTHORS_STORAGE_KEY = "ai_coe_authors_v1";
+    const AUTHOR_PHOTOS_STORAGE_KEY = "ai_coe_author_photos_v1";
     const DEFAULT_AUTHORS = [
       "Alejandra Acuña",
       "Amanda Basilio",
@@ -706,6 +712,7 @@
       "Sandro Thomas": "/assets/authors/sandro-thomas.png",
       "Thais Ishii": "/assets/authors/thais-ishii.png",
     };
+    let authorPhotos = { ...AUTHOR_PHOTOS };
 
     function t() { return I18N[currentLang]; }
 
@@ -726,6 +733,10 @@
       localStorage.setItem(AUTHORS_STORAGE_KEY, JSON.stringify(authors));
     }
 
+    function saveAuthorPhotos() {
+      localStorage.setItem(AUTHOR_PHOTOS_STORAGE_KEY, JSON.stringify(authorPhotos));
+    }
+
     function loadAuthors() {
       try {
         const raw = localStorage.getItem(AUTHORS_STORAGE_KEY);
@@ -734,17 +745,46 @@
         if (Array.isArray(parsed) && parsed.length) {
           authors = parsed.map((item) => String(item || "").trim()).filter(Boolean);
         }
+        if (authors.includes("Igor Barros Lima") && !authors.includes("Igor Lima")) {
+          authors = authors.map((name) => (name === "Igor Barros Lima" ? "Igor Lima" : name));
+          saveAuthors();
+        }
       } catch (_error) {
         authors = [...DEFAULT_AUTHORS];
       }
     }
 
+    function loadAuthorPhotos() {
+      try {
+        const raw = localStorage.getItem(AUTHOR_PHOTOS_STORAGE_KEY);
+        if (!raw) return;
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === "object") {
+          authorPhotos = { ...AUTHOR_PHOTOS, ...parsed };
+          if (authorPhotos["Igor Barros Lima"] && !authorPhotos["Igor Lima"]) {
+            authorPhotos["Igor Lima"] = authorPhotos["Igor Barros Lima"];
+          }
+        }
+      } catch (_error) {
+        authorPhotos = { ...AUTHOR_PHOTOS };
+      }
+    }
+
     function getAuthorAvatarMarkup(name) {
-      const photo = AUTHOR_PHOTOS[name];
+      const photo = authorPhotos[name];
       if (photo) {
         return `<img src="${photo}" alt="${name}" />`;
       }
       return getInitials(name);
+    }
+
+    function fileToDataUrl(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result || ""));
+        reader.onerror = () => reject(new Error("Falha ao ler imagem."));
+        reader.readAsDataURL(file);
+      });
     }
 
     function setSelectedAuthor(name) {
@@ -792,8 +832,10 @@
         btn.addEventListener("click", () => {
           const name = btn.dataset.name;
           authors = authors.filter((item) => item !== name);
+          delete authorPhotos[name];
           if (authorNameEl.value === name) setSelectedAuthor("");
           saveAuthors();
+          saveAuthorPhotos();
           buildAuthorOptions();
           renderManageUsersList();
         })
@@ -899,6 +941,7 @@
       authBtn.textContent = isAuthenticated ? t().authOut : t().authIn;
       openModalBtn.textContent = t().addCase;
       exportCsvBtn.classList.toggle("show", isAuthenticated);
+      manageUsersBtn.classList.toggle("show", isAuthenticated);
     }
 
     function updateCaseModalTitle() {
@@ -1133,6 +1176,49 @@
       authorListEl.classList.toggle("show");
     });
 
+    manageUsersBtn.addEventListener("click", () => {
+      if (!isAuthenticated) return;
+      renderManageUsersList();
+      manageUsersWrap.style.display = "flex";
+    });
+    closeManageUsersBtn.addEventListener("click", () => {
+      manageUsersWrap.style.display = "none";
+      newAuthorNameEl.value = "";
+      newAuthorPhotoEl.value = "";
+    });
+    manageUsersWrap.addEventListener("click", (event) => {
+      if (event.target === manageUsersWrap) {
+        manageUsersWrap.style.display = "none";
+        newAuthorNameEl.value = "";
+        newAuthorPhotoEl.value = "";
+      }
+    });
+    addAuthorBtn.addEventListener("click", async () => {
+      const name = String(newAuthorNameEl.value || "").trim();
+      if (!name) return;
+      if (!authors.includes(name)) {
+        authors.push(name);
+      }
+      const file = newAuthorPhotoEl.files && newAuthorPhotoEl.files[0];
+      if (file) {
+        try {
+          authorPhotos[name] = await fileToDataUrl(file);
+        } catch (error) {
+          alert(error.message);
+          return;
+        }
+      }
+      saveAuthors();
+      saveAuthorPhotos();
+      buildAuthorOptions();
+      renderManageUsersList();
+      if (authorNameEl.value === name || !authorNameEl.value) {
+        setSelectedAuthor(name);
+      }
+      newAuthorNameEl.value = "";
+      newAuthorPhotoEl.value = "";
+    });
+
     authBtn.addEventListener("click", async () => {
       if (isAuthenticated) {
         await request("/api/auth/logout", { method: "POST" });
@@ -1184,7 +1270,10 @@
     tabs.forEach((tabEl) => tabEl.addEventListener("click", () => switchTab(tabEl.dataset.tab)));
     recentViewAllEl.addEventListener("click", () => switchTab("catalog"));
     (async function bootstrap() {
+      loadAuthors();
+      loadAuthorPhotos();
       buildAuthorOptions();
+      renderManageUsersList();
       setSelectedAuthor("");
       statusEl.value = "in_progress";
       await checkAuth();
