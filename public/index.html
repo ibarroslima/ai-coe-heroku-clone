@@ -298,6 +298,13 @@
       color: #fff;
       background: linear-gradient(135deg, #0b3bff, #00b3ff);
       flex: 0 0 auto;
+      overflow: hidden;
+    }
+    .author-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
     body.dark .author-btn { background: #182652; border-color: #31467f; color: #e7edff; }
     body.dark .author-list { border-color: #31467f; }
@@ -617,6 +624,28 @@
       "Sandro Thomas",
       "Thais Ishii",
     ];
+    const AUTHOR_PHOTOS = {
+      "Alejandra Acuña": "/assets/authors/alejandra-acuna.png",
+      "Amanda Basilio": "/assets/authors/amanda-basilio.png",
+      "Christian Salazar": "/assets/authors/christian-salazar.png",
+      "Cleri Inhauser": "/assets/authors/cleri-inhauser.png",
+      "Diego Castro": "/assets/authors/diego-castro.png",
+      "Diego da Fonseca": "/assets/authors/diego-da-fonseca.png",
+      "Egberto Peretti": "/assets/authors/egberto-peretti.png",
+      "Emmanuel Moreno": "/assets/authors/emmanuel-moreno.png",
+      "Fabio Tamaki": "/assets/authors/fabio-tamaki.png",
+      "Igor Barros Lima": "/assets/authors/igor-barros-lima.png",
+      "Irineu Silva": "/assets/authors/irineu-silva.png",
+      "Ixchel Saucedo": "/assets/authors/ixchel-saucedo.png",
+      "Juan Schunck": "/assets/authors/juan-schunck.png",
+      "Julio Carmo": "/assets/authors/julio-carmo.png",
+      "Luis M. Pacheco": "/assets/authors/luis-m-pacheco.png",
+      "Luis Resende": "/assets/authors/luis-resende.png",
+      "Nelson Stebulatis": "/assets/authors/nelson-stebulatis.png",
+      "Regina Garrido": "/assets/authors/regina-garrido.png",
+      "Sandro Thomas": "/assets/authors/sandro-thomas.png",
+      "Thais Ishii": "/assets/authors/thais-ishii.png",
+    };
 
     function t() { return I18N[currentLang]; }
 
@@ -633,14 +662,22 @@
       return status === "completed" ? "Concluido" : "Em andamento";
     }
 
+    function getAuthorAvatarMarkup(name) {
+      const photo = AUTHOR_PHOTOS[name];
+      if (photo) {
+        return `<img src="${photo}" alt="${name}" />`;
+      }
+      return getInitials(name);
+    }
+
     function setSelectedAuthor(name) {
       const value = String(name || "");
       authorNameEl.value = value;
       if (value) {
-        authorBtnAvatar.textContent = getInitials(value);
+        authorBtnAvatar.innerHTML = getAuthorAvatarMarkup(value);
         authorBtnText.textContent = value;
       } else {
-        authorBtnAvatar.textContent = "--";
+        authorBtnAvatar.innerHTML = "--";
         authorBtnText.textContent = "Selecione um autor";
       }
     }
@@ -651,7 +688,7 @@
         const option = document.createElement("button");
         option.type = "button";
         option.className = "author-option";
-        option.innerHTML = `<span class="author-avatar">${getInitials(name)}</span><span>${name}</span>`;
+        option.innerHTML = `<span class="author-avatar">${getAuthorAvatarMarkup(name)}</span><span>${name}</span>`;
         option.addEventListener("click", () => {
           setSelectedAuthor(name);
           authorListEl.classList.remove("show");
