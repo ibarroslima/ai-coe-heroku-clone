@@ -243,6 +243,60 @@
       flex: 0 0 auto;
     }
     .about-layout .about { margin-top: 0; flex: 1 1 auto; }
+    .about-framework { margin-top: 20px; display: grid; gap: 14px; }
+    .about-mv { display: grid; gap: 12px; grid-template-columns: 1fr 1fr; }
+    .about-box {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      padding: 14px 16px;
+    }
+    .about-kicker {
+      margin: 0 0 8px;
+      font-size: 11px;
+      letter-spacing: 3px;
+      font-weight: 900;
+      color: #4759ff;
+      text-transform: uppercase;
+    }
+    .about-box p { margin: 0; color: var(--muted); }
+    .how-grid { display: grid; gap: 12px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .how-card {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      padding: 14px 16px;
+    }
+    .how-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-size: 16px;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #4259ff, #00b4ff);
+    }
+    .how-card h4 { margin: 0 0 6px; font-size: 30px; }
+    .how-card p { margin: 0; color: var(--muted); font-size: 14px; }
+    .principles-grid { display: grid; gap: 10px; grid-template-columns: 1fr 1fr; }
+    .principle-item { display: flex; align-items: flex-start; gap: 8px; color: var(--muted); font-weight: 600; }
+    .principle-dot {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: inline-grid;
+      place-items: center;
+      font-size: 11px;
+      font-weight: 800;
+      color: #fff;
+      background: #4b5bff;
+      flex: 0 0 auto;
+      margin-top: 1px;
+    }
     .recent-header { margin-top: 22px; display: flex; justify-content: space-between; align-items: baseline; }
     .recent-header h2 { margin: 0; font-size: 32px; letter-spacing: -0.5px; }
     .recent-link { color: #066afe; font-weight: 700; cursor: pointer; }
@@ -385,6 +439,22 @@
       color: #b4c4eb;
     }
     body.dark .modal-wrap { background: rgba(2, 8, 26, 0.62); }
+    .detail-wrap { max-width: 1100px !important; width: min(1100px, 100%); }
+    .detail-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .detail-body { display: grid; grid-template-columns: 2fr 1fr; gap: 14px; }
+    .detail-main, .detail-side {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+    .detail-title { margin: 8px 0; font-size: 40px; }
+    .detail-desc { color: var(--muted); line-height: 1.5; white-space: pre-wrap; }
+    .detail-side h4 { margin: 0 0 8px; letter-spacing: 2px; font-size: 12px; color: #4d5bff; text-transform: uppercase; }
+    .detail-author { display: flex; align-items: center; gap: 10px; }
+    .detail-author .author-avatar { width: 34px; height: 34px; font-size: 12px; }
+    .detail-meta-item { margin-top: 8px; color: var(--muted); font-size: 14px; }
     textarea { min-height: 92px; resize: vertical; }
     .actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; }
     .manage-users-list {
@@ -439,6 +509,8 @@
       .hero-mascot { width: min(220px, 66vw); }
       .about-layout { flex-direction: column; align-items: flex-start; }
       .about-mascot { width: 116px; }
+      .about-mv, .how-grid, .principles-grid, .detail-body { grid-template-columns: 1fr; }
+      .detail-title { font-size: 34px; }
     }
   </style>
 </head>
@@ -541,6 +613,32 @@
         <img class="about-mascot" src="/assets/about-mascot.png" alt="About mascot" />
         <section id="aboutText" class="about">Plataforma de catálogo de casos de uso com filtros por área, tecnologia, fase e tema. Qualquer colaborador pode criar e editar casos. Remoção é permitida somente para administradores.</section>
       </div>
+      <section class="about-framework">
+        <div class="about-mv">
+          <article class="about-box">
+            <p class="about-kicker">Missao</p>
+            <p id="aboutMissionText">Reduzir o tempo entre "consultor alocado" e "consultor produtivo" de semanas para horas, capturando e compartilhando o conhecimento de IA do time LATAM.</p>
+          </article>
+          <article class="about-box">
+            <p class="about-kicker">Visao</p>
+            <p id="aboutVisionText">Que cada novo consultor no LATAM chegue ao primeiro dia de um engagement com a mesma clareza operacional de um colega que esta ha meses no projeto.</p>
+          </article>
+        </div>
+        <h2 id="aboutHowTitle">Como fazemos</h2>
+        <div class="how-grid">
+          <article class="how-card"><div class="how-icon">🔗</div><h4 id="aboutHow1Title">Compartilhar</h4><p id="aboutHow1Text">Documentamos cada caso de uso reutilizavel e o tornamos pesquisavel.</p></article>
+          <article class="how-card"><div class="how-icon">📈</div><h4 id="aboutHow2Title">Medir</h4><p id="aboutHow2Text">Cada solucao vem com metrica de impacto e indicadores de risco.</p></article>
+          <article class="how-card"><div class="how-icon">🌎</div><h4 id="aboutHow3Title">Escalar</h4><p id="aboutHow3Text">Pensado regionalmente, construido para escalar globalmente.</p></article>
+        </div>
+        <h2 id="aboutPrinciplesTitle">Principios</h2>
+        <div class="principles-grid">
+          <div class="principle-item"><span class="principle-dot">1</span><span id="aboutP1">O que se documenta, se reutiliza.</span></div>
+          <div class="principle-item"><span class="principle-dot">2</span><span id="aboutP2">Toda melhoria precisa de uma metrica.</span></div>
+          <div class="principle-item"><span class="principle-dot">3</span><span id="aboutP3">O idioma do usuario nunca deve ser uma barreira.</span></div>
+          <div class="principle-item"><span class="principle-dot">4</span><span id="aboutP4">A confidencialidade do cliente e nao-negociavel.</span></div>
+          <div class="principle-item"><span class="principle-dot">5</span><span id="aboutP5">Melhor pequeno, real e compartilhado do que grande, perfeito e secreto.</span></div>
+        </div>
+      </section>
     </div>
   </main>
   <div id="modalWrap" class="modal-wrap">
@@ -604,11 +702,40 @@
       </div>
     </div>
   </div>
+  <div id="detailWrap" class="modal-wrap">
+    <div class="modal detail-wrap">
+      <div class="detail-top">
+        <button id="closeDetailBtn" class="pill-btn" type="button">← Voltar ao catalogo</button>
+      </div>
+      <div class="detail-body">
+        <section class="detail-main">
+          <div id="detailCategory" class="kicker"></div>
+          <h2 id="detailTitle" class="detail-title"></h2>
+          <div id="detailTags" class="chips"></div>
+          <p id="detailDesc" class="detail-desc"></p>
+        </section>
+        <aside class="detail-side">
+          <h4>Autor</h4>
+          <div class="detail-author">
+            <span id="detailAvatar" class="author-avatar">--</span>
+            <div>
+              <div id="detailAuthorName"></div>
+              <div id="detailProject" class="detail-meta-item"></div>
+            </div>
+          </div>
+          <div class="detail-meta-item"><strong>Data:</strong> <span id="detailDate"></span></div>
+          <div class="detail-meta-item"><strong>Area:</strong> <span id="detailArea"></span></div>
+          <div class="detail-meta-item"><strong>Tecnologia:</strong> <span id="detailTech"></span></div>
+          <div class="detail-meta-item"><strong>SPM:</strong> <span id="detailSpm"></span></div>
+        </aside>
+      </div>
+    </div>
+  </div>
   <script>
     const I18N = {
       pt: { tabs: { home: "🏠 Home", catalog: "📖 Catalogo", favorites: "⭐ Favoritos", about: "❓ Sobre" }, authIn: "Entrar/ADM", authOut: "Sair/ADM", addCase: "+ Adicionar caso", homeTitle: "AI CoE ProServ", homeDesc: "Centralize e compartilhe conhecimento aplicado em IA para toda a organizacao.", catalogTitle: "Catalogo de Casos de Uso", favoritesTitle: "Favoritos", caseCountOne: "caso documentado", caseCountMany: "casos documentados", allAreas: "Todas as areas", allTechnologies: "Todas as tecnologias", allPhases: "Todas as fases SPM", allThemes: "Todos os temas SPM", recent: "Mais recentes", oldest: "Mais antigos", all: "Todos", onlyFavorites: "Apenas favoritos", emptyTitle: "Seu catalogo esta vazio", emptyDesc: "Clique em \"+ Adicionar caso\" para incluir o primeiro item.", aboutTitle: "Sobre", aboutText: "Plataforma de catalogo de casos de uso com filtros por area, tecnologia, fase e tema. Qualquer colaborador pode criar e editar casos. Remocao e permitida somente para administradores.", recentSectionTitle: "Mais recentes", recentViewAll: "Ver todos >", metrics: ["Casos documentados", "Tecnologias cobertas", "Contribuidores", "Areas de negocio"], explainers: [["Catalogo de Casos de Uso","Explore todos os projetos de IA documentados pela equipe, com tecnologias, repositorios e contatos."],["Busca e filtros","Encontre rapidamente casos por tecnologia, projeto, area de negocio ou data."],["Conhecimento Compartilhado","Evite duplicar esforcos. Aprenda com o que o time ja fez e construa em cima disso."]], hero: { badge: "• Centro de excelência em IA • LATAM", title: "O repositório de conhecimento do time de IA", desc: "Documente, descubra e reutilize casos de uso de inteligência artificial criados pela sua organização. Pensado regionalmente, construído para escalar globalmente.", viewCatalog: "Ver catálogo", addCase: "Adicionar caso de uso" }, modalNew: "Novo caso de uso", modalEdit: "Editar caso de uso", labels: { title: "Titulo *", category: "Categoria", area: "Area", technology: "Tecnologia", phase: "Fase SPM", theme: "Tema SPM", author: "Autor", project: "Skill/Projeto", tags: "Tags (separadas por virgula)", description: "Descricao", password: "Senha" }, cancel: "Cancelar", saveCase: "Salvar caso", loginTitle: "Login administrador", loginBtn: "Entrar", fallback: { noAuthor: "Sem autor", noProject: "Sem projeto", noArea: "Sem area", noTechnology: "Sem tecnologia", noPhase: "Sem fase", noTheme: "Sem tema", noCategory: "Sem categoria" }, actions: { favorite: "Favoritar", favoriteOn: "Favorito", edit: "Editar", delete: "Excluir", image: "Imagem" }, confirmDelete: "Excluir este caso de uso?" },
-      es: { tabs: { home: "Inicio", catalog: "Catalogo", favorites: "Favoritos", about: "Acerca" }, authIn: "Ingresar", authOut: "Salir", addCase: "+ Agregar caso", homeTitle: "AI CoE ProServ", homeDesc: "Centraliza y comparte conocimiento aplicado en IA para toda la organizacion.", catalogTitle: "Catalogo de Casos de Uso", caseCountOne: "caso documentado", caseCountMany: "casos documentados", allAreas: "Todas las areas", allTechnologies: "Todas las tecnologias", allPhases: "Todas las fases SPM", allThemes: "Todos los temas SPM", recent: "Mas recientes", oldest: "Mas antiguos", all: "Todos", onlyFavorites: "Solo favoritos", emptyTitle: "Tu catalogo esta vacio", emptyDesc: "Haz clic en \"+ Agregar caso\" para incluir el primer item.", aboutTitle: "Acerca", aboutText: "Plataforma de catalogo de casos de uso con filtros por area, tecnologia, fase y tema. Cualquier colaborador puede crear y editar casos. Eliminar solo para administradores.", metrics: ["Casos documentados", "Tecnologias cubiertas", "Colaboradores"], explainers: [["Busqueda y filtros","Encuentra casos por autor, tema, tecnologia, fase o palabra clave."],["Conocimiento compartido","Consolida aprendizajes de distintos paises y equipos en un solo lugar."],["Catalogo de casos de uso","Documenta problemas, enfoques y resultados para acelerar nuevas iniciativas."]], modalNew: "Nuevo caso de uso", modalEdit: "Editar caso de uso", labels: { title: "Titulo *", category: "Categoria", area: "Area", technology: "Tecnologia", phase: "Fase SPM", theme: "Tema SPM", author: "Autor", project: "Skill/Proyecto", tags: "Etiquetas (separadas por coma)", description: "Descripcion", password: "Contrasena" }, cancel: "Cancelar", saveCase: "Guardar caso", loginTitle: "Login administrador", loginBtn: "Ingresar", fallback: { noAuthor: "Sin autor", noProject: "Sin proyecto", noArea: "Sin area", noTechnology: "Sin tecnologia", noPhase: "Sin fase", noTheme: "Sin tema", noCategory: "Sin categoria" }, actions: { favorite: "Favorito", favoriteOn: "Favorito", edit: "Editar", delete: "Eliminar", image: "Imagen" }, confirmDelete: "Eliminar este caso de uso?" },
-      en: { tabs: { home: "Home", catalog: "Catalog", favorites: "Favorites", about: "About" }, authIn: "Sign in", authOut: "Sign out", addCase: "+ Add case", homeTitle: "AI CoE ProServ", homeDesc: "Centralize and share AI applied knowledge across the organization.", catalogTitle: "Use Case Catalog", caseCountOne: "documented case", caseCountMany: "documented cases", allAreas: "All areas", allTechnologies: "All technologies", allPhases: "All SPM phases", allThemes: "All SPM themes", recent: "Most recent", oldest: "Oldest", all: "All", onlyFavorites: "Only favorites", emptyTitle: "Your catalog is empty", emptyDesc: "Click \"+ Add case\" to include your first item.", aboutTitle: "About", aboutText: "Use case catalog platform with filters by area, technology, phase, and theme. Any collaborator can create and edit cases. Delete is admin-only.", metrics: ["Documented cases", "Technologies covered", "Contributors"], explainers: [["Search and filters","Find cases by author, theme, technology, phase, or keyword."],["Shared knowledge","Consolidate learnings from countries and teams in one place."],["Use case catalog","Document problems, approaches, and outcomes to accelerate initiatives."]], modalNew: "New use case", modalEdit: "Edit use case", labels: { title: "Title *", category: "Category", area: "Area", technology: "Technology", phase: "SPM Phase", theme: "SPM Theme", author: "Author", project: "Skill/Project", tags: "Tags (comma separated)", description: "Description", password: "Password" }, cancel: "Cancel", saveCase: "Save case", loginTitle: "Admin login", loginBtn: "Sign in", fallback: { noAuthor: "No author", noProject: "No project", noArea: "No area", noTechnology: "No technology", noPhase: "No phase", noTheme: "No theme", noCategory: "No category" }, actions: { favorite: "Favorite", favoriteOn: "Favorited", edit: "Edit", delete: "Delete", image: "Image" }, confirmDelete: "Delete this use case?" }
+      es: { tabs: { home: "🏠 Inicio", catalog: "📖 Catalogo", favorites: "⭐ Favoritos", about: "❓ Acerca" }, authIn: "Ingresar", authOut: "Salir", addCase: "+ Agregar caso", homeTitle: "AI CoE ProServ", homeDesc: "Centraliza y comparte conocimiento aplicado en IA para toda la organizacion.", catalogTitle: "Catalogo de Casos de Uso", caseCountOne: "caso documentado", caseCountMany: "casos documentados", allAreas: "Todas las areas", allTechnologies: "Todas las tecnologias", allPhases: "Todas las fases SPM", allThemes: "Todos los temas SPM", recent: "Mas recientes", oldest: "Mas antiguos", all: "Todos", onlyFavorites: "Solo favoritos", emptyTitle: "Tu catalogo esta vacio", emptyDesc: "Haz clic en \"+ Agregar caso\" para incluir el primer item.", aboutTitle: "Acerca", aboutText: "Plataforma de catalogo de casos de uso con filtros por area, tecnologia, fase y tema. Cualquier colaborador puede crear y editar casos. Eliminar solo para administradores.", metrics: ["Casos documentados", "Tecnologias cubiertas", "Colaboradores"], explainers: [["Busqueda y filtros","Encuentra casos por autor, tema, tecnologia, fase o palabra clave."],["Conocimiento compartido","Consolida aprendizajes de distintos paises y equipos en un solo lugar."],["Catalogo de casos de uso","Documenta problemas, enfoques y resultados para acelerar nuevas iniciativas."]], modalNew: "Nuevo caso de uso", modalEdit: "Editar caso de uso", labels: { title: "Titulo *", category: "Categoria", area: "Area", technology: "Tecnologia", phase: "Fase SPM", theme: "Tema SPM", author: "Autor", project: "Skill/Proyecto", tags: "Etiquetas (separadas por coma)", description: "Descripcion", password: "Contrasena" }, cancel: "Cancelar", saveCase: "Guardar caso", loginTitle: "Login administrador", loginBtn: "Ingresar", fallback: { noAuthor: "Sin autor", noProject: "Sin proyecto", noArea: "Sin area", noTechnology: "Sin tecnologia", noPhase: "Sin fase", noTheme: "Sin tema", noCategory: "Sin categoria" }, actions: { favorite: "Favorito", favoriteOn: "Favorito", edit: "Editar", delete: "Eliminar", image: "Imagen" }, confirmDelete: "Eliminar este caso de uso?" },
+      en: { tabs: { home: "🏠 Home", catalog: "📖 Catalog", favorites: "⭐ Favorites", about: "❓ About" }, authIn: "Sign in", authOut: "Sign out", addCase: "+ Add case", homeTitle: "AI CoE ProServ", homeDesc: "Centralize and share AI applied knowledge across the organization.", catalogTitle: "Use Case Catalog", caseCountOne: "documented case", caseCountMany: "documented cases", allAreas: "All areas", allTechnologies: "All technologies", allPhases: "All SPM phases", allThemes: "All SPM themes", recent: "Most recent", oldest: "Oldest", all: "All", onlyFavorites: "Only favorites", emptyTitle: "Your catalog is empty", emptyDesc: "Click \"+ Add case\" to include your first item.", aboutTitle: "About", aboutText: "Use case catalog platform with filters by area, technology, phase, and theme. Any collaborator can create and edit cases. Delete is admin-only.", metrics: ["Documented cases", "Technologies covered", "Contributors"], explainers: [["Search and filters","Find cases by author, theme, technology, phase, or keyword."],["Shared knowledge","Consolidate learnings from countries and teams in one place."],["Use case catalog","Document problems, approaches, and outcomes to accelerate initiatives."]], modalNew: "New use case", modalEdit: "Edit use case", labels: { title: "Title *", category: "Category", area: "Area", technology: "Technology", phase: "SPM Phase", theme: "SPM Theme", author: "Author", project: "Skill/Project", tags: "Tags (comma separated)", description: "Description", password: "Password" }, cancel: "Cancel", saveCase: "Save case", loginTitle: "Admin login", loginBtn: "Sign in", fallback: { noAuthor: "No author", noProject: "No project", noArea: "No area", noTechnology: "No technology", noPhase: "No phase", noTheme: "No theme", noCategory: "No category" }, actions: { favorite: "Favorite", favoriteOn: "Favorited", edit: "Edit", delete: "Delete", image: "Image" }, confirmDelete: "Delete this use case?" }
     };
 
     const flagCloud = document.getElementById("flagCloud");
@@ -686,6 +813,19 @@
     const authorBtnText = document.getElementById("authorBtnText");
     const authorListEl = document.getElementById("authorList");
     const statusEl = document.getElementById("status");
+    const detailWrap = document.getElementById("detailWrap");
+    const closeDetailBtn = document.getElementById("closeDetailBtn");
+    const detailCategoryEl = document.getElementById("detailCategory");
+    const detailTitleEl = document.getElementById("detailTitle");
+    const detailTagsEl = document.getElementById("detailTags");
+    const detailDescEl = document.getElementById("detailDesc");
+    const detailAvatarEl = document.getElementById("detailAvatar");
+    const detailAuthorNameEl = document.getElementById("detailAuthorName");
+    const detailProjectEl = document.getElementById("detailProject");
+    const detailDateEl = document.getElementById("detailDate");
+    const detailAreaEl = document.getElementById("detailArea");
+    const detailTechEl = document.getElementById("detailTech");
+    const detailSpmEl = document.getElementById("detailSpm");
 
     let allCases = [];
     let isAuthenticated = false;
@@ -755,6 +895,27 @@
 
     function getStatusLabel(status) {
       return status === "completed" ? "Concluido" : "Em andamento";
+    }
+
+    function formatDate(dateValue) {
+      const date = new Date(dateValue);
+      if (Number.isNaN(date.getTime())) return "-";
+      return date.toLocaleDateString("pt-BR");
+    }
+
+    function openCaseDetail(item) {
+      detailCategoryEl.textContent = (item.category || t().fallback.noCategory).toUpperCase();
+      detailTitleEl.textContent = item.title || "-";
+      detailTagsEl.innerHTML = (item.tags || []).map((tag) => `<span class="chip">${tag}</span>`).join("");
+      detailDescEl.textContent = item.description || "-";
+      detailAvatarEl.innerHTML = getAuthorAvatarMarkup(item.author_name || "");
+      detailAuthorNameEl.textContent = item.author_name || t().fallback.noAuthor;
+      detailProjectEl.textContent = item.skill_name || t().fallback.noProject;
+      detailDateEl.textContent = formatDate(item.created_at);
+      detailAreaEl.textContent = item.area || t().fallback.noArea;
+      detailTechEl.textContent = item.technology || t().fallback.noTechnology;
+      detailSpmEl.textContent = `${item.phase || t().fallback.noPhase} • ${item.theme || t().fallback.noTheme}`;
+      detailWrap.style.display = "flex";
     }
 
     function saveAuthors() {
@@ -927,6 +1088,21 @@
       document.getElementById("emptyDesc").textContent = i.emptyDesc;
       document.getElementById("aboutTitle").textContent = i.aboutTitle;
       document.getElementById("aboutText").textContent = i.aboutText;
+      document.getElementById("aboutMissionText").textContent = 'Reduzir o tempo entre "consultor alocado" e "consultor produtivo" de semanas para horas, capturando e compartilhando o conhecimento de IA do time LATAM.';
+      document.getElementById("aboutVisionText").textContent = "Que cada novo consultor no LATAM chegue ao primeiro dia de um engagement com a mesma clareza operacional de um colega que está há meses no projeto.";
+      document.getElementById("aboutHowTitle").textContent = "Como fazemos";
+      document.getElementById("aboutHow1Title").textContent = "Compartilhar";
+      document.getElementById("aboutHow1Text").textContent = "Documentamos cada caso de uso reutilizável e o tornamos pesquisável.";
+      document.getElementById("aboutHow2Title").textContent = "Medir";
+      document.getElementById("aboutHow2Text").textContent = "Cada solução vem com métrica de impacto e indicadores de risco.";
+      document.getElementById("aboutHow3Title").textContent = "Escalar";
+      document.getElementById("aboutHow3Text").textContent = "Pensado regionalmente, construído para escalar globalmente.";
+      document.getElementById("aboutPrinciplesTitle").textContent = "Princípios";
+      document.getElementById("aboutP1").textContent = "O que se documenta, se reutiliza.";
+      document.getElementById("aboutP2").textContent = "Toda melhoria precisa de uma métrica.";
+      document.getElementById("aboutP3").textContent = "O idioma do usuário nunca deve ser uma barreira.";
+      document.getElementById("aboutP4").textContent = "A confidencialidade do cliente é não-negociável.";
+      document.getElementById("aboutP5").textContent = "Melhor pequeno, real e compartilhado do que grande, perfeito e secreto.";
       document.getElementById("authTitle").textContent = i.loginTitle;
       document.getElementById("loginBtn").textContent = i.loginBtn;
       document.getElementById("saveCaseBtn").textContent = i.saveCase;
