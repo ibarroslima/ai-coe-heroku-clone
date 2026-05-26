@@ -35,6 +35,12 @@
         radial-gradient(800px 300px at 85% 10%, rgba(6, 106, 254, 0.13), transparent 65%),
         linear-gradient(180deg, #cef9fe 0%, #d9f4ff 45%, #eef9ff 100%);
     }
+    body.dark {
+      background:
+        radial-gradient(1000px 520px at 12% -8%, rgba(61, 96, 255, 0.22), transparent 65%),
+        radial-gradient(820px 380px at 88% 6%, rgba(0, 180, 255, 0.16), transparent 70%),
+        linear-gradient(180deg, #0c1330 0%, #0f1a3d 55%, #101b42 100%);
+    }
     .container { width: min(1280px, 94%); margin: 0 auto; }
     .topbar { padding: 18px 0 10px; border-bottom: 1px solid var(--line); }
     .row { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
@@ -82,6 +88,9 @@
     .tabs { margin-top: 18px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; text-align: center; }
     .tab { padding-bottom: 10px; font-weight: 700; font-size: 14px; color: #66729e; cursor: pointer; border-bottom: 3px solid transparent; }
     .tab.active { color: #066afe; border-bottom-color: #066afe; }
+    body.dark .topbar { border-bottom-color: #2a3a71; }
+    body.dark .tab { color: #9fb0df; }
+    body.dark .tab.active { color: #7dc3ff; border-bottom-color: #63b7ff; }
     main { padding: 24px 0 36px; }
     h1 { margin: 0; font-size: clamp(30px, 3.5vw, 44px); letter-spacing: -0.8px; line-height: 1.08; }
     .sub { margin: 6px 0 18px; color: var(--muted); font-size: 18px; }
@@ -314,6 +323,24 @@
       color: #e7edff;
       border-color: #31467f;
     }
+    body.dark .lang-menu { background: #14224d; border-color: #31467f; }
+    body.dark .cloud {
+      background: #1a2b5f;
+      border-color: #37508f;
+      color: #7dc3ff;
+    }
+    body.dark .brand-text small { color: #7dc3ff; }
+    body.dark .hero-badge { color: #8cc8ff; }
+    body.dark .kicker { color: #85c3ff; }
+    body.dark .recent-link { color: #8cc8ff; }
+    body.dark .explainer { border-top-color: #54b6ff; }
+    body.dark .explainer-icon { background: linear-gradient(135deg, #4f8bff, #00b5ff); }
+    body.dark .empty {
+      border-color: #3d5292;
+      background: #162655;
+      color: #b4c4eb;
+    }
+    body.dark .modal-wrap { background: rgba(2, 8, 26, 0.62); }
     textarea { min-height: 92px; resize: vertical; }
     .actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; }
     .hidden { display: none !important; }
