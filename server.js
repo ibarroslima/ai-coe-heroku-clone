@@ -92,10 +92,26 @@ async function ensureSchema() {
     ALTER TABLE use_cases
     ADD COLUMN IF NOT EXISTS theme TEXT DEFAULT ''
   `);
+  await pool.query(`
+    ALTER TABLE use_cases
+    ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'in_progress'
+  `);
 }
 
 function toTrimmedText(value) {
   return String(value || "").trim();
+}
+
+function normalizeStatus(value) {
+  return String(value || "").trim() === "completed" ? "completed" : "in_progress";
+}
+
+function toCsvValue(value) {
+  const text = String(value ?? "");
+  if (/[",\n]/.test(text)) {
+    return `"${text.replace(/"/g, "\"\"")}"`;
+  }
+  return text;
 }
 
 app.get("/api/auth/status", (req, res) => {
@@ -143,6 +159,7 @@ app.post("/api/use-cases", async (req, res) => {
     skillName = "",
     description = "",
     tags = [],
+    status = "in_progress",
   } = req.body || {};
 
   if (!toTrimmedText(title)) {
@@ -162,6 +179,7 @@ app.post("/api/use-cases", async (req, res) => {
     tags: Array.isArray(tags)
       ? tags.map((tag) => toTrimmedText(tag)).filter(Boolean)
       : [],
+    status: normalizeStatus(status),
   };
 
   if (!hasDatabase) {
@@ -170,6 +188,7 @@ app.post("/api/use-cases", async (req, res) => {
       ...payload,
       image_data: "",
       is_favorite: false,
+      status: payload.status,
       created_at: Date.now(),
     };
     memoryCases.push(item);
@@ -178,8 +197,8 @@ app.post("/api/use-cases", async (req, res) => {
 
   try {
     const { rows } = await pool.query(
-      `INSERT INTO use_cases (title, category, area, technology, phase, theme, author_name, skill_name, description, tags)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+      `INSERT INTO use_cases (title, category, area, technology, phase, theme, author_name, skill_name, description, tags, status)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
        RETURNING *`,
       [
         payload.title,
@@ -192,6 +211,7 @@ app.post("/api/use-cases", async (req, res) => {
         payload.skill_name,
         payload.description,
         payload.tags,
+        payload.status,
       ]
     );
     return res.status(201).json(rows[0]);
@@ -213,6 +233,7 @@ app.put("/api/use-cases/:id", async (req, res) => {
     skillName = "",
     description = "",
     tags = [],
+    status = "in_progress",
   } = req.body || {};
   if (!toTrimmedText(title)) {
     return res.status(400).json({ error: "Titulo e obrigatorio." });
@@ -234,6 +255,7 @@ app.put("/api/use-cases/:id", async (req, res) => {
     found.tags = Array.isArray(tags)
       ? tags.map((tag) => toTrimmedText(tag)).filter(Boolean)
       : [];
+    found.status = normalizeStatus(status);
     return res.json(found);
   }
 
@@ -241,8 +263,8 @@ app.put("/api/use-cases/:id", async (req, res) => {
     const { rows } = await pool.query(
       `UPDATE use_cases
        SET title = $1, category = $2, area = $3, technology = $4, phase = $5, theme = $6,
-           author_name = $7, skill_name = $8, description = $9, tags = $10
-       WHERE id = $11
+           author_name = $7, skill_name = $8, description = $9, tags = $10, status = $11
+       WHERE id = $12
        RETURNING *`,
       [
         toTrimmedText(title),
@@ -255,6 +277,7 @@ app.put("/api/use-cases/:id", async (req, res) => {
         toTrimmedText(skillName),
         toTrimmedText(description),
         Array.isArray(tags) ? tags.map((tag) => toTrimmedText(tag)).filter(Boolean) : [],
+        normalizeStatus(status),
         req.params.id,
       ]
     );
@@ -325,6 +348,84 @@ app.post("/api/use-cases/:id/favorite", async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Erro ao favoritar caso." });
+  }
+});
+
+app.post("/api/use-cases/:id/status", async (req, res) => {
+  const nextStatus = normalizeStatus(req.body?.status);
+  if (!hasDatabase) {
+    const id = Number(req.params.id);
+    const found = memoryCases.find((item) => item.id === id);
+    if (!found) return res.status(404).json({ error: "Caso nao encontrado." });
+    found.status = nextStatus;
+    return res.json(found);
+  }
+
+  try {
+    const { rows } = await pool.query(
+      `UPDATE use_cases SET status = $1 WHERE id = $2 RETURNING *`,
+      [nextStatus, req.params.id]
+    );
+    if (!rows.length) return res.status(404).json({ error: "Caso nao encontrado." });
+    return res.json(rows[0]);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Erro ao atualizar status do caso." });
+  }
+});
+
+app.get("/api/use-cases/export.csv", requireAuth, async (_req, res) => {
+  try {
+    const rows = !hasDatabase
+      ? [...memoryCases].sort((a, b) => b.created_at - a.created_at)
+      : (await pool.query("SELECT * FROM use_cases ORDER BY created_at DESC")).rows;
+
+    const headers = [
+      "id",
+      "status",
+      "title",
+      "category",
+      "area",
+      "technology",
+      "phase",
+      "theme",
+      "author_name",
+      "skill_name",
+      "description",
+      "tags",
+      "is_favorite",
+      "created_at",
+    ];
+
+    const csvBody = rows
+      .map((row) =>
+        [
+          row.id,
+          row.status || "in_progress",
+          row.title,
+          row.category,
+          row.area,
+          row.technology,
+          row.phase,
+          row.theme,
+          row.author_name,
+          row.skill_name,
+          row.description,
+          Array.isArray(row.tags) ? row.tags.join(" | ") : "",
+          row.is_favorite,
+          row.created_at,
+        ]
+          .map(toCsvValue)
+          .join(",")
+      )
+      .join("\n");
+
+    res.setHeader("Content-Type", "text/csv; charset=utf-8");
+    res.setHeader("Content-Disposition", "attachment; filename=\"use-cases-export.csv\"");
+    return res.send(`${headers.join(",")}\n${csvBody}`);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Erro ao exportar CSV." });
   }
 });
 

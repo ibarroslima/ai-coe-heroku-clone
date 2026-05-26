@@ -52,6 +52,8 @@
       display: block;
     }
     .top-actions { display: flex; gap: 10px; align-items: center; }
+    .admin-only { display: none; }
+    .admin-only.show { display: inline-flex; }
     .pill-btn { border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--text); font-weight: 700; padding: 10px 14px; cursor: pointer; transition: 0.2s ease; }
     .pill-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow); }
     .pill-btn.primary { border: none; color: #fff; background: linear-gradient(90deg, #0b3bff, #066afe); box-shadow: 0 8px 18px rgba(6, 106, 254, 0.32); }
@@ -185,6 +187,20 @@
     .search { width: 100%; border: 1px solid #e5eaff; border-radius: 14px; padding: 13px 14px; background: #fcfdff; font-size: 15px; color: #435189; outline: none; }
     .filter-row { margin-top: 10px; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; }
     .select { width: 100%; border: 1px solid #dde4ff; border-radius: 999px; background: #fff; color: #4b5a90; font-size: 13px; font-weight: 700; padding: 10px 12px; }
+    .status-sections { display: grid; gap: 16px; margin-top: 16px; }
+    .status-section-title { margin: 0; font-size: 18px; color: var(--text); }
+    .status-empty { color: var(--muted); font-size: 13px; padding: 8px 2px; }
+    .status-chip {
+      display: inline-block;
+      border-radius: 999px;
+      font-size: 11px;
+      padding: 4px 8px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      margin-top: 8px;
+    }
+    .status-chip.in-progress { background: #fff2d8; color: #995c00; }
+    .status-chip.completed { background: #dff8e7; color: #166534; }
     .cards { margin-top: 16px; display: grid; gap: 14px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .card { background: var(--surface); border: 1px solid var(--line); border-top: 3px solid #00b3ff; border-radius: 18px; padding: 16px; box-shadow: var(--shadow); }
     .kicker { font-size: 11px; letter-spacing: 2px; font-weight: 800; color: #0b3bff; }
@@ -218,6 +234,86 @@
     .field.full { grid-column: 1 / -1; }
     label { font-size: 13px; font-weight: 700; color: var(--text); }
     input, textarea { border: 1px solid #dde5ff; border-radius: 12px; padding: 10px 12px; font: inherit; }
+    .author-picker { position: relative; }
+    .author-btn {
+      width: 100%;
+      border: 1px solid #dde5ff;
+      border-radius: 12px;
+      padding: 9px 10px;
+      background: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      color: var(--text);
+    }
+    .author-btn-main { display: flex; align-items: center; gap: 8px; min-width: 0; }
+    .author-list {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      right: 0;
+      max-height: 240px;
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      z-index: 8;
+      display: none;
+    }
+    .author-list.show { display: block; }
+    .author-option {
+      width: 100%;
+      border: none;
+      border-bottom: 1px solid #eef3ff;
+      background: transparent;
+      padding: 8px 10px;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text);
+    }
+    .author-option:last-child { border-bottom: none; }
+    .author-avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: inline-grid;
+      place-items: center;
+      font-size: 10px;
+      font-weight: 800;
+      color: #fff;
+      background: linear-gradient(135deg, #0b3bff, #00b3ff);
+      flex: 0 0 auto;
+    }
+    body.dark .author-btn { background: #182652; border-color: #31467f; color: #e7edff; }
+    body.dark .author-list { border-color: #31467f; }
+    body.dark .author-option { border-bottom-color: #263a70; color: #e7edff; }
+    body.dark .status-empty { color: #afbddf; }
+    body.dark .status-chip.in-progress { background: #503f1f; color: #ffd894; }
+    body.dark .status-chip.completed { background: #1e4a35; color: #9de3b7; }
+    body.dark .search,
+    body.dark .select,
+    body.dark input,
+    body.dark textarea {
+      background: #182652;
+      color: #e7edff;
+      border-color: #31467f;
+    }
+    body.dark .mini {
+      background: #1a2a5e;
+      color: #e7edff;
+      border-color: #31467f;
+    }
+    body.dark .pill-btn:not(.primary) {
+      background: #1a2a5e;
+      color: #e7edff;
+      border-color: #31467f;
+    }
     textarea { min-height: 92px; resize: vertical; }
     .actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; }
     .hidden { display: none !important; }
@@ -256,6 +352,7 @@
           </div>
         </div>
         <button id="themeBtn" class="pill-btn icon-btn" title="Tema">☀️</button>
+        <button id="exportCsvBtn" class="pill-btn admin-only">Exportar CSV</button>
         <button id="authBtn" class="pill-btn">Entrar/ADM</button>
       </div>
     </div>
@@ -321,11 +418,12 @@
           <select id="technologyFilter" class="select"><option value="">Todas as tecnologias</option></select>
           <select id="phaseFilter" class="select"><option value="">Todas as fases SPM</option></select>
           <select id="themeFilter" class="select"><option value="">Todos os temas SPM</option></select>
+          <select id="statusFilter" class="select"><option value="">Todos os status</option><option value="in_progress">Em andamento</option><option value="completed">Concluidos</option></select>
           <select id="sortFilter" class="select"><option value="recent">Mais recentes</option><option value="oldest">Mais antigos</option></select>
           <select id="favoriteFilter" class="select"><option value="all">Todos</option><option value="only">Apenas favoritos</option></select>
         </div>
       </section>
-      <section id="cards" class="cards"></section>
+      <section id="cards" class="status-sections"></section>
       <section id="empty" class="empty"><strong id="emptyTitle">Seu catálogo está vazio</strong><br /><span id="emptyDesc">Clique em "+ Adicionar caso" para incluir o primeiro item.</span></section>
     </div>
     <div id="aboutView" class="container hidden">
@@ -348,8 +446,22 @@
           <div class="field"><label id="labelTechnology" for="technology">Tecnologia</label><input id="technology" /></div>
           <div class="field"><label id="labelPhase" for="phase">Fase SPM</label><input id="phase" /></div>
           <div class="field"><label id="labelTheme" for="theme">Tema SPM</label><input id="theme" /></div>
-          <div class="field"><label id="labelAuthor" for="authorName">Autor</label><input id="authorName" /></div>
+          <div class="field">
+            <label id="labelAuthor" for="authorName">Autor</label>
+            <input id="authorName" type="hidden" />
+            <div class="author-picker">
+              <button id="authorBtn" class="author-btn" type="button">
+                <span class="author-btn-main">
+                  <span id="authorBtnAvatar" class="author-avatar">--</span>
+                  <span id="authorBtnText">Selecione um autor</span>
+                </span>
+                <span>▾</span>
+              </button>
+              <div id="authorList" class="author-list"></div>
+            </div>
+          </div>
           <div class="field"><label id="labelProject" for="skillName">Skill/Projeto</label><input id="skillName" /></div>
+          <div class="field"><label for="status">Status</label><select id="status" class="select"><option value="in_progress">Em andamento</option><option value="completed">Concluido</option></select></div>
           <div class="field full"><label id="labelTags" for="tags">Tags (separadas por virgula)</label><input id="tags" /></div>
           <div class="field full"><label id="labelDescription" for="description">Descricao</label><textarea id="description"></textarea></div>
         </div>
@@ -408,6 +520,7 @@
     const technologyFilterEl = document.getElementById("technologyFilter");
     const phaseFilterEl = document.getElementById("phaseFilter");
     const themeFilterEl = document.getElementById("themeFilter");
+    const statusFilterEl = document.getElementById("statusFilter");
     const sortFilterEl = document.getElementById("sortFilter");
     const favoriteFilterEl = document.getElementById("favoriteFilter");
     const modalWrap = document.getElementById("modalWrap");
@@ -418,6 +531,7 @@
     const editingIdEl = document.getElementById("editingId");
     const caseModalTitleEl = document.getElementById("caseModalTitle");
     const authBtn = document.getElementById("authBtn");
+    const exportCsvBtn = document.getElementById("exportCsvBtn");
     const authForm = document.getElementById("authForm");
     const closeAuthBtn = document.getElementById("closeAuth");
     const tabs = Array.from(document.querySelectorAll(".tab"));
@@ -433,13 +547,82 @@
     const langMenu = document.getElementById("langMenu");
     const langItems = Array.from(document.querySelectorAll(".lang-item"));
     const themeBtn = document.getElementById("themeBtn");
+    const authorNameEl = document.getElementById("authorName");
+    const authorBtn = document.getElementById("authorBtn");
+    const authorBtnAvatar = document.getElementById("authorBtnAvatar");
+    const authorBtnText = document.getElementById("authorBtnText");
+    const authorListEl = document.getElementById("authorList");
+    const statusEl = document.getElementById("status");
 
     let allCases = [];
     let isAuthenticated = false;
     let currentTab = "home";
     let currentLang = "pt";
 
+    const AUTHORS = [
+      "Alejandra Acuña",
+      "Amanda Basilio",
+      "Christian Salazar",
+      "Cleri Inhauser",
+      "Diego Castro",
+      "Diego da Fonseca",
+      "Egberto Peretti",
+      "Emmanuel Moreno",
+      "Fabio Tamaki",
+      "Igor Barros Lima",
+      "Irineu Silva",
+      "Ixchel Saucedo",
+      "Juan Schunck",
+      "Julio Carmo",
+      "Luis M. Pacheco",
+      "Luis Resende",
+      "Nelson Stebulatis",
+      "Regina Garrido",
+      "Sandro Thomas",
+      "Thais Ishii",
+    ];
+
     function t() { return I18N[currentLang]; }
+
+    function getInitials(name) {
+      return String(name || "")
+        .split(" ")
+        .filter(Boolean)
+        .slice(0, 2)
+        .map((part) => part[0]?.toUpperCase() || "")
+        .join("");
+    }
+
+    function getStatusLabel(status) {
+      return status === "completed" ? "Concluido" : "Em andamento";
+    }
+
+    function setSelectedAuthor(name) {
+      const value = String(name || "");
+      authorNameEl.value = value;
+      if (value) {
+        authorBtnAvatar.textContent = getInitials(value);
+        authorBtnText.textContent = value;
+      } else {
+        authorBtnAvatar.textContent = "--";
+        authorBtnText.textContent = "Selecione um autor";
+      }
+    }
+
+    function buildAuthorOptions() {
+      authorListEl.innerHTML = "";
+      AUTHORS.forEach((name) => {
+        const option = document.createElement("button");
+        option.type = "button";
+        option.className = "author-option";
+        option.innerHTML = `<span class="author-avatar">${getInitials(name)}</span><span>${name}</span>`;
+        option.addEventListener("click", () => {
+          setSelectedAuthor(name);
+          authorListEl.classList.remove("show");
+        });
+        authorListEl.appendChild(option);
+      });
+    }
 
     function updateMetrics() {
       const tech = new Set(allCases.map((c) => (c.technology || "").trim()).filter(Boolean)).size;
@@ -539,6 +722,7 @@
     function updateAuthLabel() {
       authBtn.textContent = isAuthenticated ? t().authOut : t().authIn;
       openModalBtn.textContent = t().addCase;
+      exportCsvBtn.classList.toggle("show", isAuthenticated);
     }
 
     function updateCaseModalTitle() {
@@ -557,10 +741,11 @@
         technology: document.getElementById("technology").value,
         phase: document.getElementById("phase").value,
         theme: document.getElementById("theme").value,
-        authorName: document.getElementById("authorName").value,
+        authorName: authorNameEl.value,
         skillName: document.getElementById("skillName").value,
         description: document.getElementById("description").value,
         tags: document.getElementById("tags").value.split(",").map((tag) => tag.trim()).filter(Boolean),
+        status: statusEl.value || "in_progress",
       };
     }
 
@@ -601,6 +786,9 @@
       const favValue = favoriteFilterEl.value || "all";
       favoriteFilterEl.innerHTML = `<option value="all">${i.all}</option><option value="only">${i.onlyFavorites}</option>`;
       favoriteFilterEl.value = favValue;
+      const statusValue = statusFilterEl.value || "";
+      statusFilterEl.innerHTML = `<option value="">Todos os status</option><option value="in_progress">Em andamento</option><option value="completed">Concluidos</option>`;
+      statusFilterEl.value = statusValue;
     }
 
     function render(cases) {
@@ -608,26 +796,60 @@
       cardsEl.innerHTML = "";
       counterEl.textContent = formatCaseCount(cases.length);
       emptyEl.classList.toggle("hidden", Boolean(cases.length));
-      cases.forEach((item) => {
-        const card = document.createElement("article");
-        card.className = "card";
-        const adminDelete = isAuthenticated ? `<button class="mini delete" data-id="${item.id}">${i.actions.delete}</button>` : "";
-        card.innerHTML = `
-          ${item.image_data ? `<img class="card-image" src="${item.image_data}" alt="case image" />` : ""}
-          <div class="kicker">${(item.category || i.fallback.noCategory).toUpperCase()}</div>
-          <h2 class="title">${item.title}</h2>
-          <div class="meta"><strong>${item.author_name || i.fallback.noAuthor}</strong> - ${item.skill_name || i.fallback.noProject}</div>
-          <div class="meta">${item.area || i.fallback.noArea} | ${item.technology || i.fallback.noTechnology} | ${item.phase || i.fallback.noPhase} | ${item.theme || i.fallback.noTheme}</div>
-          <div class="chips">${(item.tags || []).map((tag) => `<span class="chip">${tag}</span>`).join("")}</div>
-          <p class="desc">${item.description || ""}</p>
-          <div class="card-actions">
-            <button class="mini fav" data-id="${item.id}">${item.is_favorite ? i.actions.favoriteOn : i.actions.favorite}</button>
-            <button class="mini edit" data-id="${item.id}">${i.actions.edit}</button>
-            ${adminDelete}
-          </div>
-        `;
-        cardsEl.appendChild(card);
-      });
+      const inProgress = cases.filter((item) => (item.status || "in_progress") !== "completed");
+      const completed = cases.filter((item) => (item.status || "in_progress") === "completed");
+
+      const renderSection = (title, items) => {
+        const section = document.createElement("section");
+        const titleEl = document.createElement("h3");
+        titleEl.className = "status-section-title";
+        titleEl.textContent = `${title} (${items.length})`;
+        section.appendChild(titleEl);
+
+        if (!items.length) {
+          const empty = document.createElement("div");
+          empty.className = "status-empty";
+          empty.textContent = "Nenhum caso nesta seção.";
+          section.appendChild(empty);
+          cardsEl.appendChild(section);
+          return;
+        }
+
+        const grid = document.createElement("div");
+        grid.className = "cards";
+        items.forEach((item) => {
+          const card = document.createElement("article");
+          card.className = "card";
+          const adminDelete = isAuthenticated ? `<button class="mini delete" data-id="${item.id}">${i.actions.delete}</button>` : "";
+          const status = item.status || "in_progress";
+          const statusAction = status === "completed"
+            ? `<button class="mini set-status" data-id="${item.id}" data-status="in_progress">Reabrir</button>`
+            : `<button class="mini set-status" data-id="${item.id}" data-status="completed">Marcar concluido</button>`;
+          card.innerHTML = `
+            ${item.image_data ? `<img class="card-image" src="${item.image_data}" alt="case image" />` : ""}
+            <div class="kicker">${(item.category || i.fallback.noCategory).toUpperCase()}</div>
+            <h2 class="title">${item.title}</h2>
+            <div class="meta"><strong>${item.author_name || i.fallback.noAuthor}</strong> - ${item.skill_name || i.fallback.noProject}</div>
+            <div class="meta">${item.area || i.fallback.noArea} | ${item.technology || i.fallback.noTechnology} | ${item.phase || i.fallback.noPhase} | ${item.theme || i.fallback.noTheme}</div>
+            <span class="status-chip ${status === "completed" ? "completed" : "in-progress"}">${getStatusLabel(status)}</span>
+            <div class="chips">${(item.tags || []).map((tag) => `<span class="chip">${tag}</span>`).join("")}</div>
+            <p class="desc">${item.description || ""}</p>
+            <div class="card-actions">
+              <button class="mini fav" data-id="${item.id}">${item.is_favorite ? i.actions.favoriteOn : i.actions.favorite}</button>
+              <button class="mini edit" data-id="${item.id}">${i.actions.edit}</button>
+              ${statusAction}
+              ${adminDelete}
+            </div>
+          `;
+          grid.appendChild(card);
+        });
+        section.appendChild(grid);
+        cardsEl.appendChild(section);
+      };
+
+      renderSection("Em andamento", inProgress);
+      renderSection("Concluidos", completed);
+
       document.querySelectorAll(".fav").forEach((btn) => btn.addEventListener("click", async () => { await request(`/api/use-cases/${btn.dataset.id}/favorite`, { method: "POST" }); await loadCases(); }));
       document.querySelectorAll(".edit").forEach((btn) => btn.addEventListener("click", () => {
         const item = allCases.find((caseItem) => String(caseItem.id) === String(btn.dataset.id));
@@ -640,11 +862,20 @@
         document.getElementById("technology").value = item.technology || "";
         document.getElementById("phase").value = item.phase || "";
         document.getElementById("theme").value = item.theme || "";
-        document.getElementById("authorName").value = item.author_name || "";
+        setSelectedAuthor(item.author_name || "");
         document.getElementById("skillName").value = item.skill_name || "";
         document.getElementById("description").value = item.description || "";
         document.getElementById("tags").value = (item.tags || []).join(", ");
+        statusEl.value = item.status || "in_progress";
         modalWrap.style.display = "flex";
+      }));
+      document.querySelectorAll(".set-status").forEach((btn) => btn.addEventListener("click", async () => {
+        await request(`/api/use-cases/${btn.dataset.id}/status`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status: btn.dataset.status }),
+        });
+        await loadCases();
       }));
       document.querySelectorAll(".delete").forEach((btn) => btn.addEventListener("click", async () => {
         if (!confirm(t().confirmDelete)) return;
@@ -673,6 +904,7 @@
       if (technologyFilterEl.value) result = result.filter((item) => item.technology === technologyFilterEl.value);
       if (phaseFilterEl.value) result = result.filter((item) => item.phase === phaseFilterEl.value);
       if (themeFilterEl.value) result = result.filter((item) => item.theme === themeFilterEl.value);
+      if (statusFilterEl.value) result = result.filter((item) => (item.status || "in_progress") === statusFilterEl.value);
       if (favoriteFilterEl.value === "only") result = result.filter((item) => item.is_favorite);
       result = [...result].sort((a, b) => (sortFilterEl.value === "oldest" ? new Date(a.created_at) - new Date(b.created_at) : new Date(b.created_at) - new Date(a.created_at)));
       render(result);
@@ -702,6 +934,8 @@
       modalWrap.style.display = "none";
       form.reset();
       editingIdEl.value = "";
+      setSelectedAuthor("");
+      statusEl.value = "in_progress";
       updateCaseModalTitle();
     }
 
@@ -715,8 +949,13 @@
     technologyFilterEl.addEventListener("change", applySearch);
     phaseFilterEl.addEventListener("change", applySearch);
     themeFilterEl.addEventListener("change", applySearch);
+    statusFilterEl.addEventListener("change", applySearch);
     sortFilterEl.addEventListener("change", applySearch);
     favoriteFilterEl.addEventListener("change", applySearch);
+
+    authorBtn.addEventListener("click", () => {
+      authorListEl.classList.toggle("show");
+    });
 
     authBtn.addEventListener("click", async () => {
       if (isAuthenticated) {
@@ -742,8 +981,14 @@
 
     langBtn.addEventListener("click", () => { langMenu.style.display = langMenu.style.display === "block" ? "none" : "block"; });
     langItems.forEach((item) => item.addEventListener("click", () => { currentLang = item.dataset.lang; langMenu.style.display = "none"; updateStaticTranslations(); switchTab(currentTab); }));
-    document.addEventListener("click", (event) => { if (!langMenu.contains(event.target) && !langBtn.contains(event.target)) { langMenu.style.display = "none"; } });
+    document.addEventListener("click", (event) => {
+      if (!langMenu.contains(event.target) && !langBtn.contains(event.target)) { langMenu.style.display = "none"; }
+      if (!authorListEl.contains(event.target) && !authorBtn.contains(event.target)) { authorListEl.classList.remove("show"); }
+    });
     themeBtn.addEventListener("click", () => { document.body.classList.toggle("dark"); themeBtn.textContent = document.body.classList.contains("dark") ? "🌙" : "☀️"; });
+    exportCsvBtn.addEventListener("click", () => {
+      window.open("/api/use-cases/export.csv", "_blank");
+    });
 
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
@@ -762,7 +1007,15 @@
 
     tabs.forEach((tabEl) => tabEl.addEventListener("click", () => switchTab(tabEl.dataset.tab)));
     recentViewAllEl.addEventListener("click", () => switchTab("catalog"));
-    (async function bootstrap() { await checkAuth(); await loadCases(); updateStaticTranslations(); switchTab("home"); })();
+    (async function bootstrap() {
+      buildAuthorOptions();
+      setSelectedAuthor("");
+      statusEl.value = "in_progress";
+      await checkAuth();
+      await loadCases();
+      updateStaticTranslations();
+      switchTab("home");
+    })();
   </script>
 </body>
 </html>
