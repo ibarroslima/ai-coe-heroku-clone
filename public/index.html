@@ -220,6 +220,20 @@
     .card-image { width: 100%; border-radius: 12px; border: 1px solid #e2e8ff; margin-bottom: 10px; }
     .card-actions { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 8px; }
     .mini { border: 1px solid #dce3ff; border-radius: 10px; background: #fff; cursor: pointer; padding: 6px 10px; font-size: 12px; font-weight: 700; color: #2e3f8f; }
+    .set-status.complete-action {
+      background: #fff2cc;
+      border-color: #f5b942;
+      color: #7a4b00;
+    }
+    .set-status.complete-action:hover {
+      background: #ffe8a3;
+      box-shadow: 0 4px 12px rgba(245, 185, 66, 0.35);
+    }
+    .set-status.reopen-action {
+      background: #e5f3ff;
+      border-color: #7cb8ff;
+      color: #0d4e9f;
+    }
     .empty { margin-top: 18px; background: var(--surface); border: 1px dashed #cad6ff; border-radius: 18px; text-align: center; color: var(--muted); padding: 32px 16px; }
     .about { margin-top: 16px; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); box-shadow: var(--shadow); padding: 18px; color: var(--muted); line-height: 1.5; }
     .about-layout { margin-top: 16px; display: flex; align-items: center; gap: 16px; }
@@ -324,6 +338,20 @@
       background: #1a2a5e;
       color: #e7edff;
       border-color: #31467f;
+    }
+    body.dark .set-status.complete-action {
+      background: #5a4311;
+      border-color: #f2ba43;
+      color: #ffe2a2;
+    }
+    body.dark .set-status.complete-action:hover {
+      background: #725517;
+      box-shadow: 0 4px 12px rgba(242, 186, 67, 0.38);
+    }
+    body.dark .set-status.reopen-action {
+      background: #1f3c6b;
+      border-color: #6fb4ff;
+      color: #d5ebff;
     }
     body.dark .pill-btn:not(.primary) {
       background: #1a2a5e;
@@ -1042,8 +1070,8 @@
           const adminDelete = isAuthenticated ? `<button class="mini delete" data-id="${item.id}">${i.actions.delete}</button>` : "";
           const status = item.status || "in_progress";
           const statusAction = status === "completed"
-            ? `<button class="mini set-status" data-id="${item.id}" data-status="in_progress">Reabrir</button>`
-            : `<button class="mini set-status" data-id="${item.id}" data-status="completed">Marcar concluido</button>`;
+            ? `<button class="mini set-status reopen-action" data-id="${item.id}" data-status="in_progress">Reabrir</button>`
+            : `<button class="mini set-status complete-action" data-id="${item.id}" data-status="completed">Marcar concluido</button>`;
           card.innerHTML = `
             ${item.image_data ? `<img class="card-image" src="${item.image_data}" alt="case image" />` : ""}
             <div class="kicker">${(item.category || i.fallback.noCategory).toUpperCase()}</div>
@@ -1189,11 +1217,7 @@
       newAuthorPhotoEl.value = "";
     });
     manageUsersWrap.addEventListener("click", (event) => {
-      if (event.target === manageUsersWrap) {
-        manageUsersWrap.style.display = "none";
-        newAuthorNameEl.value = "";
-        newAuthorPhotoEl.value = "";
-      }
+      if (event.target === manageUsersWrap) return;
     });
     addAuthorBtn.addEventListener("click", async () => {
       const name = String(newAuthorNameEl.value || "").trim();
@@ -1231,7 +1255,7 @@
       }
     });
     closeAuthBtn.addEventListener("click", () => { authWrap.style.display = "none"; authForm.reset(); });
-    authWrap.addEventListener("click", (e) => { if (e.target === authWrap) { authWrap.style.display = "none"; authForm.reset(); } });
+    authWrap.addEventListener("click", (e) => { if (e.target === authWrap) return; });
     authForm.addEventListener("submit", async (event) => {
       event.preventDefault();
       try {
