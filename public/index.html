@@ -754,8 +754,15 @@
         langCopy.labels.phase = langCopy === I18N.en ? "Pre-sales Phase" : "Fase Pre-sales";
         langCopy.labels.theme = langCopy === I18N.en ? "Pre-sales Theme" : "Tema Pre-sales";
       }
-      if (!langCopy.hero) langCopy.hero = {};
-      const currentBadge = langCopy.hero.badge || "• Centro de excelência em IA • LATAM";
+      const defaultHero = {
+        badge: "• Centro de excelência em IA • LATAM",
+        title: "O repositório de conhecimento do time de IA",
+        desc: "Documente, descubra e reutilize casos de uso de inteligência artificial criados pela sua organização. Pensado regionalmente, construído para escalar globalmente.",
+        viewCatalog: "Ver catálogo",
+        addCase: "Adicionar caso de uso",
+      };
+      langCopy.hero = { ...defaultHero, ...(langCopy.hero || {}) };
+      const currentBadge = langCopy.hero.badge;
       langCopy.hero.badge = currentBadge.replace("LATAM", "LATAM GTM");
     });
 
