@@ -1468,6 +1468,17 @@
     exportCsvBtn.addEventListener("click", () => {
       window.open("/api/use-cases/export.csv", "_blank");
     });
+    closeDetailBtn.addEventListener("click", () => {
+      detailWrap.style.display = "none";
+    });
+    detailWrap.addEventListener("click", (event) => {
+      if (event.target === detailWrap) return;
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && detailWrap.style.display === "flex") {
+        detailWrap.style.display = "none";
+      }
+    });
 
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
