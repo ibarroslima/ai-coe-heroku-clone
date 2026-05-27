@@ -7,10 +7,17 @@ const { Pool } = require("pg");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123";
-const SESSION_SECRET = process.env.SESSION_SECRET || "change-me";
+const isProduction = process.env.NODE_ENV === "production";
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || (isProduction ? "" : "admin123");
+const SESSION_SECRET = process.env.SESSION_SECRET || (isProduction ? "" : "change-me");
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY || "";
 const OPENAI_MODEL = process.env.OPENAI_MODEL || "gpt-4o-mini";
+
+if (isProduction && (!ADMIN_PASSWORD || !SESSION_SECRET)) {
+  throw new Error(
+    "Missing required environment variables in production: ADMIN_PASSWORD and SESSION_SECRET."
+  );
+}
 
 const hasDatabase = Boolean(process.env.DATABASE_URL);
 const pool = hasDatabase
