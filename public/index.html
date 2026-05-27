@@ -657,11 +657,11 @@
           <div class="field"><label id="labelTitle" for="title">Titulo *</label><input id="title" required /></div>
           <div class="field"><label id="labelCategory" for="category">Categoria</label><input id="category" /></div>
           <div class="field"><label id="labelArea" for="area">Area</label><input id="area" /></div>
-          <div class="field"><label id="labelTechnology" for="technology">Tecnologia</label><input id="technology" /></div>
+          <div class="field"><label id="labelTechnology" for="technology">Tecnologia *</label><input id="technology" required /></div>
           <div class="field"><label id="labelPhase" for="phase">Fase SPM</label><input id="phase" /></div>
           <div class="field"><label id="labelTheme" for="theme">Tema SPM</label><input id="theme" /></div>
           <div class="field">
-            <label id="labelAuthor" for="authorName">Autor</label>
+            <label id="labelAuthor" for="authorName">Autor *</label>
             <input id="authorName" type="hidden" />
             <div class="author-picker">
               <button id="authorBtn" class="author-btn" type="button">
@@ -677,7 +677,7 @@
           <div class="field"><label id="labelProject" for="skillName">Skill/Projeto</label><input id="skillName" /></div>
           <div class="field"><label for="status">Status</label><select id="status" class="select"><option value="in_progress">Em andamento</option><option value="completed">Concluido</option></select></div>
           <div class="field full"><label id="labelTags" for="tags">Tags (separadas por virgula)</label><input id="tags" /></div>
-          <div class="field full"><label id="labelDescription" for="description">Descricao</label><textarea id="description"></textarea></div>
+          <div class="field full"><label id="labelDescription" for="description">Descricao *</label><textarea id="description" required></textarea></div>
         </div>
         <div class="actions"><button type="button" class="pill-btn" id="closeModal">Cancelar</button><button type="submit" class="pill-btn primary" id="saveCaseBtn">Salvar caso</button></div>
       </form>
@@ -1276,10 +1276,11 @@
       document.getElementById("labelTechnology").textContent = i.labels.technology;
       document.getElementById("labelPhase").textContent = i.labels.phase;
       document.getElementById("labelTheme").textContent = i.labels.theme;
-      document.getElementById("labelAuthor").textContent = i.labels.author;
+      document.getElementById("labelAuthor").textContent = `${i.labels.author} *`;
       document.getElementById("labelProject").textContent = i.labels.project;
       document.getElementById("labelTags").textContent = i.labels.tags;
-      document.getElementById("labelDescription").textContent = i.labels.description;
+      document.getElementById("labelDescription").textContent = `${i.labels.description} *`;
+      document.getElementById("labelTechnology").textContent = `${i.labels.technology} *`;
       document.getElementById("labelPassword").textContent = i.labels.password;
       document.getElementById("metricCasesLabel").textContent = i.metrics[0];
       document.getElementById("metricTechLabel").textContent = i.metrics[1];
@@ -1627,6 +1628,16 @@
     exportCsvBtn.addEventListener("click", () => {
       window.open("/api/use-cases/export.csv", "_blank");
     });
+    translateAllBtn.addEventListener("click", async () => {
+      if (!isAuthenticated) return;
+      try {
+        const data = await request("/api/use-cases/translate-all", { method: "POST" });
+        await loadCases();
+        alert(`Traducao concluida. Casos atualizados: ${data.updated || 0}`);
+      } catch (error) {
+        alert(error.message);
+      }
+    });
     closeDetailBtn.addEventListener("click", () => {
       detailWrap.style.display = "none";
     });
@@ -1644,6 +1655,18 @@
       try {
         const editingId = editingIdEl.value;
         const payload = getPayloadFromForm();
+        if (!payload.authorName) {
+          alert("Autor e obrigatorio.");
+          return;
+        }
+        if (!payload.technology) {
+          alert("Tecnologia e obrigatoria.");
+          return;
+        }
+        if (!payload.description) {
+          alert("Descricao e obrigatoria.");
+          return;
+        }
         if (editingId) {
           await request(`/api/use-cases/${editingId}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
         } else {

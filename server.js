@@ -151,6 +151,25 @@ function toCsvValue(value) {
   return text;
 }
 
+async function translateViaGoogle(text, sourceLanguage, targetLanguage) {
+  const clean = toTrimmedText(text);
+  if (!clean) return "";
+  try {
+    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${encodeURIComponent(
+      sourceLanguage
+    )}&tl=${encodeURIComponent(targetLanguage)}&dt=t&q=${encodeURIComponent(clean)}`;
+    const response = await fetch(url);
+    if (!response.ok) return clean;
+    const data = await response.json();
+    const translated = Array.isArray(data?.[0])
+      ? data[0].map((part) => (Array.isArray(part) ? part[0] : "")).join("")
+      : clean;
+    return toTrimmedText(translated) || clean;
+  } catch (_error) {
+    return clean;
+  }
+}
+
 async function translateUseCaseText({ sourceLanguage, title, description }) {
   const src = normalizeSourceLanguage(sourceLanguage);
   const cleanTitle = toTrimmedText(title);
@@ -165,6 +184,11 @@ async function translateUseCaseText({ sourceLanguage, title, description }) {
   };
 
   if (!OPENAI_API_KEY) {
+    const targets = ["pt", "es", "en"].filter((lang) => lang !== src);
+    for (const lang of targets) {
+      localized[`title_${lang}`] = await translateViaGoogle(cleanTitle, src, lang);
+      localized[`description_${lang}`] = await translateViaGoogle(cleanDescription, src, lang);
+    }
     if (!localized.title_pt) localized.title_pt = cleanTitle;
     if (!localized.title_es) localized.title_es = cleanTitle;
     if (!localized.title_en) localized.title_en = cleanTitle;
@@ -290,6 +314,15 @@ app.post("/api/use-cases", async (req, res) => {
   if (!toTrimmedText(title)) {
     return res.status(400).json({ error: "Titulo e obrigatorio." });
   }
+  if (!toTrimmedText(authorName)) {
+    return res.status(400).json({ error: "Autor e obrigatorio." });
+  }
+  if (!toTrimmedText(technology)) {
+    return res.status(400).json({ error: "Tecnologia e obrigatoria." });
+  }
+  if (!toTrimmedText(description)) {
+    return res.status(400).json({ error: "Descricao e obrigatoria." });
+  }
 
   const payload = {
     title: toTrimmedText(title),
@@ -377,6 +410,15 @@ app.put("/api/use-cases/:id", async (req, res) => {
   } = req.body || {};
   if (!toTrimmedText(title)) {
     return res.status(400).json({ error: "Titulo e obrigatorio." });
+  }
+  if (!toTrimmedText(authorName)) {
+    return res.status(400).json({ error: "Autor e obrigatorio." });
+  }
+  if (!toTrimmedText(technology)) {
+    return res.status(400).json({ error: "Tecnologia e obrigatoria." });
+  }
+  if (!toTrimmedText(description)) {
+    return res.status(400).json({ error: "Descricao e obrigatoria." });
   }
 
   const sourceLanguageNormalized = normalizeSourceLanguage(sourceLanguage);
