@@ -8,6 +8,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123";
 const SESSION_SECRET = process.env.SESSION_SECRET || "change-me";
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY || "";
+const OPENAI_MODEL = process.env.OPENAI_MODEL || "gpt-4o-mini";
 
 const hasDatabase = Boolean(process.env.DATABASE_URL);
 const pool = hasDatabase
@@ -96,6 +98,34 @@ async function ensureSchema() {
     ALTER TABLE use_cases
     ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'in_progress'
   `);
+  await pool.query(`
+    ALTER TABLE use_cases
+    ADD COLUMN IF NOT EXISTS source_language TEXT DEFAULT 'pt'
+  `);
+  await pool.query(`
+    ALTER TABLE use_cases
+    ADD COLUMN IF NOT EXISTS title_pt TEXT DEFAULT ''
+  `);
+  await pool.query(`
+    ALTER TABLE use_cases
+    ADD COLUMN IF NOT EXISTS title_es TEXT DEFAULT ''
+  `);
+  await pool.query(`
+    ALTER TABLE use_cases
+    ADD COLUMN IF NOT EXISTS title_en TEXT DEFAULT ''
+  `);
+  await pool.query(`
+    ALTER TABLE use_cases
+    ADD COLUMN IF NOT EXISTS description_pt TEXT DEFAULT ''
+  `);
+  await pool.query(`
+    ALTER TABLE use_cases
+    ADD COLUMN IF NOT EXISTS description_es TEXT DEFAULT ''
+  `);
+  await pool.query(`
+    ALTER TABLE use_cases
+    ADD COLUMN IF NOT EXISTS description_en TEXT DEFAULT ''
+  `);
 }
 
 function toTrimmedText(value) {
@@ -106,12 +136,106 @@ function normalizeStatus(value) {
   return String(value || "").trim() === "completed" ? "completed" : "in_progress";
 }
 
+function normalizeSourceLanguage(value) {
+  const lang = String(value || "").trim().toLowerCase();
+  if (lang === "es") return "es";
+  if (lang === "en") return "en";
+  return "pt";
+}
+
 function toCsvValue(value) {
   const text = String(value ?? "");
   if (/[",\n]/.test(text)) {
     return `"${text.replace(/"/g, "\"\"")}"`;
   }
   return text;
+}
+
+async function translateUseCaseText({ sourceLanguage, title, description }) {
+  const src = normalizeSourceLanguage(sourceLanguage);
+  const cleanTitle = toTrimmedText(title);
+  const cleanDescription = toTrimmedText(description);
+  const localized = {
+    title_pt: src === "pt" ? cleanTitle : "",
+    title_es: src === "es" ? cleanTitle : "",
+    title_en: src === "en" ? cleanTitle : "",
+    description_pt: src === "pt" ? cleanDescription : "",
+    description_es: src === "es" ? cleanDescription : "",
+    description_en: src === "en" ? cleanDescription : "",
+  };
+
+  if (!OPENAI_API_KEY) {
+    if (!localized.title_pt) localized.title_pt = cleanTitle;
+    if (!localized.title_es) localized.title_es = cleanTitle;
+    if (!localized.title_en) localized.title_en = cleanTitle;
+    if (!localized.description_pt) localized.description_pt = cleanDescription;
+    if (!localized.description_es) localized.description_es = cleanDescription;
+    if (!localized.description_en) localized.description_en = cleanDescription;
+    return localized;
+  }
+
+  const targets = ["pt", "es", "en"].filter((lang) => lang !== src);
+  if (!targets.length) return localized;
+
+  try {
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${OPENAI_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: OPENAI_MODEL,
+        temperature: 0.1,
+        response_format: { type: "json_object" },
+        messages: [
+          {
+            role: "system",
+            content:
+              "You are a translator for enterprise software catalog entries. Return only JSON with keys as requested.",
+          },
+          {
+            role: "user",
+            content: JSON.stringify({
+              instruction:
+                "Translate title and description to requested target languages. Keep technical terms and product names unchanged when appropriate.",
+              source_language: src,
+              targets,
+              title: cleanTitle,
+              description: cleanDescription,
+              response_schema: {
+                title_pt: "string",
+                title_es: "string",
+                title_en: "string",
+                description_pt: "string",
+                description_es: "string",
+                description_en: "string",
+              },
+            }),
+          },
+        ],
+      }),
+    });
+    if (!response.ok) throw new Error("translator unavailable");
+    const data = await response.json();
+    const raw = data?.choices?.[0]?.message?.content || "{}";
+    const parsed = JSON.parse(raw);
+    ["pt", "es", "en"].forEach((lang) => {
+      const tk = `title_${lang}`;
+      const dk = `description_${lang}`;
+      if (!localized[tk]) localized[tk] = toTrimmedText(parsed[tk] || cleanTitle);
+      if (!localized[dk]) localized[dk] = toTrimmedText(parsed[dk] || cleanDescription);
+    });
+    return localized;
+  } catch (_error) {
+    ["pt", "es", "en"].forEach((lang) => {
+      const tk = `title_${lang}`;
+      const dk = `description_${lang}`;
+      if (!localized[tk]) localized[tk] = cleanTitle;
+      if (!localized[dk]) localized[dk] = cleanDescription;
+    });
+    return localized;
+  }
 }
 
 app.get("/api/auth/status", (req, res) => {
@@ -160,6 +284,7 @@ app.post("/api/use-cases", async (req, res) => {
     description = "",
     tags = [],
     status = "in_progress",
+    sourceLanguage = "pt",
   } = req.body || {};
 
   if (!toTrimmedText(title)) {
@@ -180,12 +305,19 @@ app.post("/api/use-cases", async (req, res) => {
       ? tags.map((tag) => toTrimmedText(tag)).filter(Boolean)
       : [],
     status: normalizeStatus(status),
+    source_language: normalizeSourceLanguage(sourceLanguage),
   };
+  const localized = await translateUseCaseText({
+    sourceLanguage: payload.source_language,
+    title: payload.title,
+    description: payload.description,
+  });
 
   if (!hasDatabase) {
     const item = {
       id: memoryId++,
       ...payload,
+      ...localized,
       image_data: "",
       is_favorite: false,
       status: payload.status,
@@ -197,8 +329,8 @@ app.post("/api/use-cases", async (req, res) => {
 
   try {
     const { rows } = await pool.query(
-      `INSERT INTO use_cases (title, category, area, technology, phase, theme, author_name, skill_name, description, tags, status)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+      `INSERT INTO use_cases (title, category, area, technology, phase, theme, author_name, skill_name, description, tags, status, source_language, title_pt, title_es, title_en, description_pt, description_es, description_en)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
        RETURNING *`,
       [
         payload.title,
@@ -212,6 +344,13 @@ app.post("/api/use-cases", async (req, res) => {
         payload.description,
         payload.tags,
         payload.status,
+        payload.source_language,
+        localized.title_pt,
+        localized.title_es,
+        localized.title_en,
+        localized.description_pt,
+        localized.description_es,
+        localized.description_en,
       ]
     );
     return res.status(201).json(rows[0]);
@@ -234,10 +373,18 @@ app.put("/api/use-cases/:id", async (req, res) => {
     description = "",
     tags = [],
     status = "in_progress",
+    sourceLanguage = "pt",
   } = req.body || {};
   if (!toTrimmedText(title)) {
     return res.status(400).json({ error: "Titulo e obrigatorio." });
   }
+
+  const sourceLanguageNormalized = normalizeSourceLanguage(sourceLanguage);
+  const localized = await translateUseCaseText({
+    sourceLanguage: sourceLanguageNormalized,
+    title: toTrimmedText(title),
+    description: toTrimmedText(description),
+  });
 
   if (!hasDatabase) {
     const id = Number(req.params.id);
@@ -256,6 +403,13 @@ app.put("/api/use-cases/:id", async (req, res) => {
       ? tags.map((tag) => toTrimmedText(tag)).filter(Boolean)
       : [];
     found.status = normalizeStatus(status);
+    found.source_language = sourceLanguageNormalized;
+    found.title_pt = localized.title_pt;
+    found.title_es = localized.title_es;
+    found.title_en = localized.title_en;
+    found.description_pt = localized.description_pt;
+    found.description_es = localized.description_es;
+    found.description_en = localized.description_en;
     return res.json(found);
   }
 
@@ -263,8 +417,10 @@ app.put("/api/use-cases/:id", async (req, res) => {
     const { rows } = await pool.query(
       `UPDATE use_cases
        SET title = $1, category = $2, area = $3, technology = $4, phase = $5, theme = $6,
-           author_name = $7, skill_name = $8, description = $9, tags = $10, status = $11
-       WHERE id = $12
+           author_name = $7, skill_name = $8, description = $9, tags = $10, status = $11,
+           source_language = $12, title_pt = $13, title_es = $14, title_en = $15,
+           description_pt = $16, description_es = $17, description_en = $18
+       WHERE id = $19
        RETURNING *`,
       [
         toTrimmedText(title),
@@ -278,6 +434,13 @@ app.put("/api/use-cases/:id", async (req, res) => {
         toTrimmedText(description),
         Array.isArray(tags) ? tags.map((tag) => toTrimmedText(tag)).filter(Boolean) : [],
         normalizeStatus(status),
+        sourceLanguageNormalized,
+        localized.title_pt,
+        localized.title_es,
+        localized.title_en,
+        localized.description_pt,
+        localized.description_es,
+        localized.description_en,
         req.params.id,
       ]
     );
