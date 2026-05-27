@@ -1,4 +1,5 @@
 const path = require("path");
+const https = require("https");
 const express = require("express");
 const session = require("express-session");
 const multer = require("multer");
@@ -151,6 +152,31 @@ function toCsvValue(value) {
   return text;
 }
 
+function getJson(url) {
+  return new Promise((resolve, reject) => {
+    https
+      .get(url, (response) => {
+        let body = "";
+        response.setEncoding("utf8");
+        response.on("data", (chunk) => {
+          body += chunk;
+        });
+        response.on("end", () => {
+          if (response.statusCode < 200 || response.statusCode >= 300) {
+            reject(new Error(`HTTP ${response.statusCode}`));
+            return;
+          }
+          try {
+            resolve(JSON.parse(body));
+          } catch (error) {
+            reject(error);
+          }
+        });
+      })
+      .on("error", reject);
+  });
+}
+
 async function translateViaGoogle(text, sourceLanguage, targetLanguage) {
   const clean = toTrimmedText(text);
   if (!clean) return "";
@@ -158,9 +184,7 @@ async function translateViaGoogle(text, sourceLanguage, targetLanguage) {
     const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${encodeURIComponent(
       sourceLanguage
     )}&tl=${encodeURIComponent(targetLanguage)}&dt=t&q=${encodeURIComponent(clean)}`;
-    const response = await fetch(url);
-    if (!response.ok) return clean;
-    const data = await response.json();
+    const data = await getJson(url);
     const translated = Array.isArray(data?.[0])
       ? data[0].map((part) => (Array.isArray(part) ? part[0] : "")).join("")
       : clean;

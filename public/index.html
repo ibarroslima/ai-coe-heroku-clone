@@ -1040,7 +1040,8 @@
       const localizedKey = `${baseField}_${lang}`;
       const sourceLang = item.source_language || "pt";
       const sourceKey = `${baseField}_${sourceLang}`;
-      return item[localizedKey] || item[sourceKey] || item[baseField] || "";
+      const ptKey = `${baseField}_pt`;
+      return item[localizedKey] || item[sourceKey] || item[ptKey] || item[baseField] || "";
     }
 
     function formatDate(dateValue) {
@@ -1198,7 +1199,7 @@
         el.className = "recent-card clickable-case";
         el.innerHTML = `
           <div class="kicker">${(item.category || i.fallback.noCategory).toUpperCase()}</div>
-          <h4>${item.title}</h4>
+          <h4>${getLocalizedField(item, "title") || item.title}</h4>
           <div class="recent-meta">${item.author_name || i.fallback.noAuthor} • ${item.skill_name || i.fallback.noProject}</div>
         `;
         el.addEventListener("click", () => openCaseDetail(item));
@@ -1418,12 +1419,12 @@
           card.innerHTML = `
             ${item.image_data ? `<img class="card-image" src="${item.image_data}" alt="case image" />` : ""}
             <div class="kicker">${(item.category || i.fallback.noCategory).toUpperCase()}</div>
-            <h2 class="title">${item.title}</h2>
+            <h2 class="title">${getLocalizedField(item, "title") || item.title}</h2>
             <div class="meta"><strong>${item.author_name || i.fallback.noAuthor}</strong> - ${item.skill_name || i.fallback.noProject}</div>
             <div class="meta">${item.area || i.fallback.noArea} | ${item.technology || i.fallback.noTechnology} | ${item.phase || i.fallback.noPhase} | ${item.theme || i.fallback.noTheme}</div>
             <span class="status-chip ${status === "completed" ? "completed" : "in-progress"}">${getStatusLabel(status)}</span>
             <div class="chips">${(item.tags || []).map((tag) => `<span class="chip">${tag}</span>`).join("")}</div>
-            <p class="desc">${item.description || ""}</p>
+            <p class="desc">${getLocalizedField(item, "description") || item.description || ""}</p>
             <div class="card-actions">
               <button class="mini fav" data-id="${item.id}">${item.is_favorite ? i.actions.favoriteOn : i.actions.favorite}</button>
               <button class="mini edit" data-id="${item.id}">${i.actions.edit}</button>
@@ -1452,7 +1453,7 @@
         if (!item) return;
         editingIdEl.value = item.id;
         updateCaseModalTitle();
-        document.getElementById("title").value = item.title || "";
+        document.getElementById("title").value = getLocalizedField(item, "title") || item.title || "";
         document.getElementById("category").value = item.category || "";
         document.getElementById("area").value = item.area || "";
         document.getElementById("technology").value = item.technology || "";
@@ -1460,7 +1461,7 @@
         document.getElementById("theme").value = item.theme || "";
         setSelectedAuthor(item.author_name || "");
         document.getElementById("skillName").value = item.skill_name || "";
-        document.getElementById("description").value = item.description || "";
+        document.getElementById("description").value = getLocalizedField(item, "description") || item.description || "";
         document.getElementById("tags").value = (item.tags || []).join(", ");
         statusEl.value = item.status || "in_progress";
         modalWrap.style.display = "flex";
@@ -1493,7 +1494,17 @@
     function applySearch() {
       const term = searchEl.value.trim().toLowerCase();
       let result = allCases.filter((item) =>
-        [item.title, item.author_name, item.skill_name, item.description, item.category, item.area, item.technology, item.phase, item.theme]
+        [
+          getLocalizedField(item, "title"),
+          item.author_name,
+          item.skill_name,
+          getLocalizedField(item, "description"),
+          item.category,
+          item.area,
+          item.technology,
+          item.phase,
+          item.theme,
+        ]
           .join(" ")
           .toLowerCase()
           .includes(term)
