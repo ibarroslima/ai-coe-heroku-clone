@@ -539,6 +539,7 @@
         </div>
         <button id="themeBtn" class="pill-btn icon-btn" title="Tema">☀️</button>
         <button id="exportCsvBtn" class="pill-btn admin-only">Exportar CSV</button>
+        <button id="translateAllBtn" class="pill-btn admin-only">Traduzir tudo</button>
         <button id="manageUsersBtn" class="pill-btn admin-only">Gerenciar usuarios</button>
         <button id="authBtn" class="pill-btn">Entrar/ADM</button>
       </div>
@@ -674,7 +675,6 @@
             </div>
           </div>
           <div class="field"><label id="labelProject" for="skillName">Skill/Projeto</label><input id="skillName" /></div>
-          <div class="field"><label id="labelSourceLanguage" for="sourceLanguage">Idioma original</label><select id="sourceLanguage" class="select"><option value="pt">Português</option><option value="es">Español</option></select></div>
           <div class="field"><label for="status">Status</label><select id="status" class="select"><option value="in_progress">Em andamento</option><option value="completed">Concluido</option></select></div>
           <div class="field full"><label id="labelTags" for="tags">Tags (separadas por virgula)</label><input id="tags" /></div>
           <div class="field full"><label id="labelDescription" for="description">Descricao</label><textarea id="description"></textarea></div>
@@ -792,6 +792,7 @@
     const caseModalTitleEl = document.getElementById("caseModalTitle");
     const authBtn = document.getElementById("authBtn");
     const exportCsvBtn = document.getElementById("exportCsvBtn");
+    const translateAllBtn = document.getElementById("translateAllBtn");
     const manageUsersBtn = document.getElementById("manageUsersBtn");
     const authForm = document.getElementById("authForm");
     const closeAuthBtn = document.getElementById("closeAuth");
@@ -820,7 +821,6 @@
     const authorBtnText = document.getElementById("authorBtnText");
     const authorListEl = document.getElementById("authorList");
     const statusEl = document.getElementById("status");
-    const sourceLanguageEl = document.getElementById("sourceLanguage");
     const detailWrap = document.getElementById("detailWrap");
     const closeDetailBtn = document.getElementById("closeDetailBtn");
     const detailCategoryEl = document.getElementById("detailCategory");
@@ -928,6 +928,7 @@
         detailTech: "Tecnologia:",
         detailSpm: "SPM:",
         manageUsersBtn: "Gerenciar usuarios",
+        translateAllBtn: "Traduzir tudo",
         manageUsersTitle: "Gerenciar usuarios (autores)",
         manageUsersNamePlaceholder: "Nome do usuario",
         manageUsersPhotoLabel: "Foto do usuario (opcional)",
@@ -969,6 +970,7 @@
         detailTech: "Tecnologia:",
         detailSpm: "SPM:",
         manageUsersBtn: "Gestionar usuarios",
+        translateAllBtn: "Traducir todo",
         manageUsersTitle: "Gestionar usuarios (autores)",
         manageUsersNamePlaceholder: "Nombre del usuario",
         manageUsersPhotoLabel: "Foto del usuario (opcional)",
@@ -1010,6 +1012,7 @@
         detailTech: "Technology:",
         detailSpm: "SPM:",
         manageUsersBtn: "Manage users",
+        translateAllBtn: "Translate all",
         manageUsersTitle: "Manage users (authors)",
         manageUsersNamePlaceholder: "User name",
         manageUsersPhotoLabel: "User photo (optional)",
@@ -1304,6 +1307,7 @@
       authBtn.textContent = isAuthenticated ? t().authOut : t().authIn;
       openModalBtn.textContent = t().addCase;
       exportCsvBtn.classList.toggle("show", isAuthenticated);
+      translateAllBtn.classList.toggle("show", isAuthenticated);
       manageUsersBtn.classList.toggle("show", isAuthenticated);
     }
 
@@ -1328,7 +1332,7 @@
         description: document.getElementById("description").value,
         tags: document.getElementById("tags").value.split(",").map((tag) => tag.trim()).filter(Boolean),
         status: statusEl.value || "in_progress",
-        sourceLanguage: sourceLanguageEl.value || "pt",
+        sourceLanguage: currentLang === "es" ? "es" : "pt",
       };
     }
 

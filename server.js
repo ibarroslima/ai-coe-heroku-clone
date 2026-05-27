@@ -537,6 +537,54 @@ app.post("/api/use-cases/:id/status", async (req, res) => {
   }
 });
 
+app.post("/api/use-cases/translate-all", requireAuth, async (_req, res) => {
+  try {
+    if (!hasDatabase) {
+      let updated = 0;
+      for (const item of memoryCases) {
+        const localized = await translateUseCaseText({
+          sourceLanguage: item.source_language || "pt",
+          title: item.title,
+          description: item.description,
+        });
+        Object.assign(item, localized);
+        updated += 1;
+      }
+      return res.json({ ok: true, updated });
+    }
+
+    const { rows } = await pool.query("SELECT * FROM use_cases ORDER BY created_at DESC");
+    let updated = 0;
+    for (const row of rows) {
+      const localized = await translateUseCaseText({
+        sourceLanguage: row.source_language || "pt",
+        title: row.title,
+        description: row.description,
+      });
+      await pool.query(
+        `UPDATE use_cases
+         SET title_pt = $1, title_es = $2, title_en = $3,
+             description_pt = $4, description_es = $5, description_en = $6
+         WHERE id = $7`,
+        [
+          localized.title_pt,
+          localized.title_es,
+          localized.title_en,
+          localized.description_pt,
+          localized.description_es,
+          localized.description_en,
+          row.id,
+        ]
+      );
+      updated += 1;
+    }
+    return res.json({ ok: true, updated });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Erro ao traduzir casos." });
+  }
+});
+
 app.get("/api/use-cases/export.csv", requireAuth, async (_req, res) => {
   try {
     const rows = !hasDatabase
