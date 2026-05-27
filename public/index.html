@@ -622,11 +622,11 @@
       <section class="about-framework">
         <div class="about-mv">
           <article class="about-box">
-            <p class="about-kicker">Missao</p>
+            <p id="aboutMissionKicker" class="about-kicker">Missao</p>
             <p id="aboutMissionText">Reduzir o tempo entre "consultor alocado" e "consultor produtivo" de semanas para horas, capturando e compartilhando o conhecimento de IA do time LATAM.</p>
           </article>
           <article class="about-box">
-            <p class="about-kicker">Visao</p>
+            <p id="aboutVisionKicker" class="about-kicker">Visao</p>
             <p id="aboutVisionText">Que cada novo consultor no LATAM chegue ao primeiro dia de um engagement com a mesma clareza operacional de um colega que esta ha meses no projeto.</p>
           </article>
         </div>
@@ -693,13 +693,13 @@
   </div>
   <div id="manageUsersWrap" class="modal-wrap">
     <div class="modal" style="max-width:560px;">
-      <h3>Gerenciar usuarios (autores)</h3>
+      <h3 id="manageUsersTitle">Gerenciar usuarios (autores)</h3>
       <div class="manage-inline">
         <input id="newAuthorName" placeholder="Nome do usuario" />
         <button id="addAuthorBtn" class="pill-btn primary" type="button">Adicionar</button>
       </div>
       <div class="field" style="margin-top: 8px;">
-        <label for="newAuthorPhoto">Foto do usuario (opcional)</label>
+        <label id="newAuthorPhotoLabel" for="newAuthorPhoto">Foto do usuario (opcional)</label>
         <input id="newAuthorPhoto" type="file" accept="image/*" />
       </div>
       <div id="manageUsersList" class="manage-users-list"></div>
@@ -721,7 +721,7 @@
           <p id="detailDesc" class="detail-desc"></p>
         </section>
         <aside class="detail-side">
-          <h4>Autor</h4>
+          <h4 id="detailAuthorLabel">Autor</h4>
           <div class="detail-author">
             <span id="detailAvatar" class="author-avatar">--</span>
             <div>
@@ -729,10 +729,10 @@
               <div id="detailProject" class="detail-meta-item"></div>
             </div>
           </div>
-          <div class="detail-meta-item"><strong>Data:</strong> <span id="detailDate"></span></div>
-          <div class="detail-meta-item"><strong>Area:</strong> <span id="detailArea"></span></div>
-          <div class="detail-meta-item"><strong>Tecnologia:</strong> <span id="detailTech"></span></div>
-          <div class="detail-meta-item"><strong>SPM:</strong> <span id="detailSpm"></span></div>
+          <div class="detail-meta-item"><strong id="detailDateLabel">Data:</strong> <span id="detailDate"></span></div>
+          <div class="detail-meta-item"><strong id="detailAreaLabel">Area:</strong> <span id="detailArea"></span></div>
+          <div class="detail-meta-item"><strong id="detailTechLabel">Tecnologia:</strong> <span id="detailTech"></span></div>
+          <div class="detail-meta-item"><strong id="detailSpmLabel">SPM:</strong> <span id="detailSpm"></span></div>
         </aside>
       </div>
     </div>
@@ -889,6 +889,133 @@
     let authorPhotos = { ...AUTHOR_PHOTOS };
 
     function t() { return I18N[currentLang]; }
+    function tx() { return EXTRA_COPY[currentLang] || EXTRA_COPY.pt; }
+
+    const EXTRA_COPY = {
+      pt: {
+        selectAuthor: "Selecione um autor",
+        aboutMissionKicker: "Missao",
+        aboutVisionKicker: "Visao",
+        aboutMissionText: 'Reduzir o tempo entre "consultor alocado" e "consultor produtivo" de semanas para horas, capturando e compartilhando o conhecimento de IA do time LATAM.',
+        aboutVisionText: "Que cada novo consultor no LATAM chegue ao primeiro dia de um engagement com a mesma clareza operacional de um colega que esta ha meses no projeto.",
+        aboutHowTitle: "Como fazemos",
+        aboutHow1Title: "Compartilhar",
+        aboutHow1Text: "Documentamos cada caso de uso reutilizavel e o tornamos pesquisavel.",
+        aboutHow2Title: "Medir",
+        aboutHow2Text: "Cada solucao vem com metrica de impacto e indicadores de risco.",
+        aboutHow3Title: "Escalar",
+        aboutHow3Text: "Pensado regionalmente, construido para escalar globalmente.",
+        aboutPrinciplesTitle: "Principios",
+        aboutP1: "O que se documenta, se reutiliza.",
+        aboutP2: "Toda melhoria precisa de uma metrica.",
+        aboutP3: "O idioma do usuario nunca deve ser uma barreira.",
+        aboutP4: "A confidencialidade do cliente e nao-negociavel.",
+        aboutP5: "Melhor pequeno, real e compartilhado do que grande, perfeito e secreto.",
+        statusInProgress: "Em andamento",
+        statusCompleted: "Concluido",
+        statusAll: "Todos os status",
+        sectionInProgress: "Em andamento",
+        sectionCompleted: "Concluidos",
+        sectionEmpty: "Nenhum caso nesta secao.",
+        actionComplete: "Marcar concluido",
+        actionReopen: "Reabrir",
+        detailBack: "← Voltar ao catalogo",
+        detailAuthor: "Autor",
+        detailDate: "Data:",
+        detailArea: "Area:",
+        detailTech: "Tecnologia:",
+        detailSpm: "SPM:",
+        manageUsersBtn: "Gerenciar usuarios",
+        manageUsersTitle: "Gerenciar usuarios (autores)",
+        manageUsersNamePlaceholder: "Nome do usuario",
+        manageUsersPhotoLabel: "Foto do usuario (opcional)",
+        manageUsersAdd: "Adicionar",
+        manageUsersClose: "Fechar",
+        manageUsersDelete: "Excluir",
+      },
+      es: {
+        selectAuthor: "Seleccione un autor",
+        aboutMissionKicker: "Mision",
+        aboutVisionKicker: "Vision",
+        aboutMissionText: 'Reducir el tiempo entre "consultor asignado" y "consultor productivo" de semanas a horas, capturando y compartiendo el conocimiento de IA del equipo LATAM.',
+        aboutVisionText: "Que cada nuevo consultor en LATAM llegue a su primer dia de engagement con la misma claridad operativa que un colega con meses en el proyecto.",
+        aboutHowTitle: "Como trabajamos",
+        aboutHow1Title: "Compartir",
+        aboutHow1Text: "Documentamos cada caso de uso reutilizable y lo hacemos buscable.",
+        aboutHow2Title: "Medir",
+        aboutHow2Text: "Cada solucion incluye metricas de impacto e indicadores de riesgo.",
+        aboutHow3Title: "Escalar",
+        aboutHow3Text: "Pensado regionalmente, construido para escalar globalmente.",
+        aboutPrinciplesTitle: "Principios",
+        aboutP1: "Lo que se documenta, se reutiliza.",
+        aboutP2: "Toda mejora necesita una metrica.",
+        aboutP3: "El idioma del usuario nunca debe ser una barrera.",
+        aboutP4: "La confidencialidad del cliente es innegociable.",
+        aboutP5: "Mejor pequeno, real y compartido que grande, perfecto y secreto.",
+        statusInProgress: "En curso",
+        statusCompleted: "Completado",
+        statusAll: "Todos los estados",
+        sectionInProgress: "En curso",
+        sectionCompleted: "Completados",
+        sectionEmpty: "No hay casos en esta seccion.",
+        actionComplete: "Marcar completado",
+        actionReopen: "Reabrir",
+        detailBack: "← Volver al catalogo",
+        detailAuthor: "Autor",
+        detailDate: "Fecha:",
+        detailArea: "Area:",
+        detailTech: "Tecnologia:",
+        detailSpm: "SPM:",
+        manageUsersBtn: "Gestionar usuarios",
+        manageUsersTitle: "Gestionar usuarios (autores)",
+        manageUsersNamePlaceholder: "Nombre del usuario",
+        manageUsersPhotoLabel: "Foto del usuario (opcional)",
+        manageUsersAdd: "Agregar",
+        manageUsersClose: "Cerrar",
+        manageUsersDelete: "Eliminar",
+      },
+      en: {
+        selectAuthor: "Select an author",
+        aboutMissionKicker: "Mission",
+        aboutVisionKicker: "Vision",
+        aboutMissionText: 'Reduce the time from "staffed consultant" to "productive consultant" from weeks to hours by capturing and sharing LATAM AI team knowledge.',
+        aboutVisionText: "Every new LATAM consultant starts their first engagement with the same operational clarity as a colleague who has been on the project for months.",
+        aboutHowTitle: "How we work",
+        aboutHow1Title: "Share",
+        aboutHow1Text: "We document each reusable use case and make it searchable.",
+        aboutHow2Title: "Measure",
+        aboutHow2Text: "Every solution includes impact metrics and risk indicators.",
+        aboutHow3Title: "Scale",
+        aboutHow3Text: "Designed regionally, built to scale globally.",
+        aboutPrinciplesTitle: "Principles",
+        aboutP1: "What gets documented gets reused.",
+        aboutP2: "Every improvement needs a metric.",
+        aboutP3: "User language should never be a barrier.",
+        aboutP4: "Client confidentiality is non-negotiable.",
+        aboutP5: "Better small, real, and shared than big, perfect, and secret.",
+        statusInProgress: "In progress",
+        statusCompleted: "Completed",
+        statusAll: "All statuses",
+        sectionInProgress: "In progress",
+        sectionCompleted: "Completed",
+        sectionEmpty: "No cases in this section.",
+        actionComplete: "Mark completed",
+        actionReopen: "Reopen",
+        detailBack: "← Back to catalog",
+        detailAuthor: "Author",
+        detailDate: "Date:",
+        detailArea: "Area:",
+        detailTech: "Technology:",
+        detailSpm: "SPM:",
+        manageUsersBtn: "Manage users",
+        manageUsersTitle: "Manage users (authors)",
+        manageUsersNamePlaceholder: "User name",
+        manageUsersPhotoLabel: "User photo (optional)",
+        manageUsersAdd: "Add",
+        manageUsersClose: "Close",
+        manageUsersDelete: "Delete",
+      },
+    };
 
     function getInitials(name) {
       return String(name || "")
@@ -900,7 +1027,7 @@
     }
 
     function getStatusLabel(status) {
-      return status === "completed" ? "Concluido" : "Em andamento";
+      return status === "completed" ? tx().statusCompleted : tx().statusInProgress;
     }
 
     function formatDate(dateValue) {
@@ -990,7 +1117,7 @@
         authorBtnText.textContent = value;
       } else {
         authorBtnAvatar.innerHTML = "--";
-        authorBtnText.textContent = "Selecione um autor";
+        authorBtnText.textContent = tx().selectAuthor;
       }
     }
 
@@ -1019,7 +1146,7 @@
             <span class="author-avatar">${getAuthorAvatarMarkup(name)}</span>
             <span class="manage-user-name">${name}</span>
           </div>
-          <button class="mini delete-author" data-name="${name}">Excluir</button>
+          <button class="mini delete-author" data-name="${name}">${tx().manageUsersDelete}</button>
         `;
         manageUsersList.appendChild(row);
       });
@@ -1071,6 +1198,7 @@
 
     function updateStaticTranslations() {
       const i = t();
+      const x = tx();
       const hero = i.hero || {
         badge: "• Centro de excelência em IA • LATAM",
         title: "O repositório de conhecimento do time de IA",
@@ -1095,21 +1223,35 @@
       document.getElementById("emptyDesc").textContent = i.emptyDesc;
       document.getElementById("aboutTitle").textContent = i.aboutTitle;
       document.getElementById("aboutText").textContent = i.aboutText;
-      document.getElementById("aboutMissionText").textContent = 'Reduzir o tempo entre "consultor alocado" e "consultor produtivo" de semanas para horas, capturando e compartilhando o conhecimento de IA do time LATAM.';
-      document.getElementById("aboutVisionText").textContent = "Que cada novo consultor no LATAM chegue ao primeiro dia de um engagement com a mesma clareza operacional de um colega que está há meses no projeto.";
-      document.getElementById("aboutHowTitle").textContent = "Como fazemos";
-      document.getElementById("aboutHow1Title").textContent = "Compartilhar";
-      document.getElementById("aboutHow1Text").textContent = "Documentamos cada caso de uso reutilizável e o tornamos pesquisável.";
-      document.getElementById("aboutHow2Title").textContent = "Medir";
-      document.getElementById("aboutHow2Text").textContent = "Cada solução vem com métrica de impacto e indicadores de risco.";
-      document.getElementById("aboutHow3Title").textContent = "Escalar";
-      document.getElementById("aboutHow3Text").textContent = "Pensado regionalmente, construído para escalar globalmente.";
-      document.getElementById("aboutPrinciplesTitle").textContent = "Princípios";
-      document.getElementById("aboutP1").textContent = "O que se documenta, se reutiliza.";
-      document.getElementById("aboutP2").textContent = "Toda melhoria precisa de uma métrica.";
-      document.getElementById("aboutP3").textContent = "O idioma do usuário nunca deve ser uma barreira.";
-      document.getElementById("aboutP4").textContent = "A confidencialidade do cliente é não-negociável.";
-      document.getElementById("aboutP5").textContent = "Melhor pequeno, real e compartilhado do que grande, perfeito e secreto.";
+      document.getElementById("aboutMissionKicker").textContent = x.aboutMissionKicker;
+      document.getElementById("aboutVisionKicker").textContent = x.aboutVisionKicker;
+      document.getElementById("aboutMissionText").textContent = x.aboutMissionText;
+      document.getElementById("aboutVisionText").textContent = x.aboutVisionText;
+      document.getElementById("aboutHowTitle").textContent = x.aboutHowTitle;
+      document.getElementById("aboutHow1Title").textContent = x.aboutHow1Title;
+      document.getElementById("aboutHow1Text").textContent = x.aboutHow1Text;
+      document.getElementById("aboutHow2Title").textContent = x.aboutHow2Title;
+      document.getElementById("aboutHow2Text").textContent = x.aboutHow2Text;
+      document.getElementById("aboutHow3Title").textContent = x.aboutHow3Title;
+      document.getElementById("aboutHow3Text").textContent = x.aboutHow3Text;
+      document.getElementById("aboutPrinciplesTitle").textContent = x.aboutPrinciplesTitle;
+      document.getElementById("aboutP1").textContent = x.aboutP1;
+      document.getElementById("aboutP2").textContent = x.aboutP2;
+      document.getElementById("aboutP3").textContent = x.aboutP3;
+      document.getElementById("aboutP4").textContent = x.aboutP4;
+      document.getElementById("aboutP5").textContent = x.aboutP5;
+      document.getElementById("closeDetailBtn").textContent = x.detailBack;
+      document.getElementById("detailAuthorLabel").textContent = x.detailAuthor;
+      document.getElementById("detailDateLabel").textContent = x.detailDate;
+      document.getElementById("detailAreaLabel").textContent = x.detailArea;
+      document.getElementById("detailTechLabel").textContent = x.detailTech;
+      document.getElementById("detailSpmLabel").textContent = x.detailSpm;
+      document.getElementById("manageUsersBtn").textContent = x.manageUsersBtn;
+      document.getElementById("manageUsersTitle").textContent = x.manageUsersTitle;
+      document.getElementById("newAuthorName").placeholder = x.manageUsersNamePlaceholder;
+      document.getElementById("newAuthorPhotoLabel").textContent = x.manageUsersPhotoLabel;
+      document.getElementById("addAuthorBtn").textContent = x.manageUsersAdd;
+      document.getElementById("closeManageUsers").textContent = x.manageUsersClose;
       document.getElementById("authTitle").textContent = i.loginTitle;
       document.getElementById("loginBtn").textContent = i.loginBtn;
       document.getElementById("saveCaseBtn").textContent = i.saveCase;
@@ -1206,6 +1348,7 @@
 
     function updateFilters() {
       const i = t();
+      const x = tx();
       repopulateSelect(areaFilterEl, uniqueValues("area"), i.allAreas);
       repopulateSelect(technologyFilterEl, uniqueValues("technology"), i.allTechnologies);
       repopulateSelect(phaseFilterEl, uniqueValues("phase"), i.allPhases);
@@ -1217,12 +1360,13 @@
       favoriteFilterEl.innerHTML = `<option value="all">${i.all}</option><option value="only">${i.onlyFavorites}</option>`;
       favoriteFilterEl.value = favValue;
       const statusValue = statusFilterEl.value || "";
-      statusFilterEl.innerHTML = `<option value="">Todos os status</option><option value="in_progress">Em andamento</option><option value="completed">Concluidos</option>`;
+      statusFilterEl.innerHTML = `<option value="">${x.statusAll}</option><option value="in_progress">${x.statusInProgress}</option><option value="completed">${x.statusCompleted}</option>`;
       statusFilterEl.value = statusValue;
     }
 
     function render(cases) {
       const i = t();
+      const x = tx();
       cardsEl.innerHTML = "";
       counterEl.textContent = formatCaseCount(cases.length);
       emptyEl.classList.toggle("hidden", Boolean(cases.length));
@@ -1239,7 +1383,7 @@
         if (!items.length) {
           const empty = document.createElement("div");
           empty.className = "status-empty";
-          empty.textContent = "Nenhum caso nesta seção.";
+          empty.textContent = x.sectionEmpty;
           section.appendChild(empty);
           cardsEl.appendChild(section);
           return;
@@ -1253,8 +1397,8 @@
           const adminDelete = isAuthenticated ? `<button class="mini delete" data-id="${item.id}">${i.actions.delete}</button>` : "";
           const status = item.status || "in_progress";
           const statusAction = status === "completed"
-            ? `<button class="mini set-status reopen-action" data-id="${item.id}" data-status="in_progress">Reabrir</button>`
-            : `<button class="mini set-status complete-action" data-id="${item.id}" data-status="completed">Marcar concluido</button>`;
+            ? `<button class="mini set-status reopen-action" data-id="${item.id}" data-status="in_progress">${x.actionReopen}</button>`
+            : `<button class="mini set-status complete-action" data-id="${item.id}" data-status="completed">${x.actionComplete}</button>`;
           card.innerHTML = `
             ${item.image_data ? `<img class="card-image" src="${item.image_data}" alt="case image" />` : ""}
             <div class="kicker">${(item.category || i.fallback.noCategory).toUpperCase()}</div>
@@ -1278,8 +1422,8 @@
         cardsEl.appendChild(section);
       };
 
-      renderSection("Em andamento", inProgress);
-      renderSection("Concluidos", completed);
+      renderSection(x.sectionInProgress, inProgress);
+      renderSection(x.sectionCompleted, completed);
 
       document.querySelectorAll(".fav").forEach((btn) => btn.addEventListener("click", async (event) => {
         event.stopPropagation();
