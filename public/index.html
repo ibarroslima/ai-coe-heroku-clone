@@ -212,6 +212,7 @@
     .status-chip.completed { background: #dff8e7; color: #166534; }
     .cards { margin-top: 16px; display: grid; gap: 14px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .card { background: var(--surface); border: 1px solid var(--line); border-top: 3px solid #00b3ff; border-radius: 18px; padding: 16px; box-shadow: var(--shadow); }
+    .clickable-case { cursor: pointer; }
     .kicker { font-size: 11px; letter-spacing: 2px; font-weight: 800; color: #0b3bff; }
     .title { margin: 8px 0; font-size: 20px; line-height: 1.18; }
     .meta, .desc { color: var(--muted); }
@@ -302,6 +303,11 @@
     .recent-link { color: #066afe; font-weight: 700; cursor: pointer; }
     .recent-cards { margin-top: 10px; display: grid; gap: 12px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .recent-card { border: 1px solid var(--line); border-top: 3px solid #066afe; border-radius: 16px; background: var(--surface); padding: 14px; box-shadow: var(--shadow); }
+    .recent-card.clickable-case:hover,
+    .card.clickable-case:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 24px rgba(6, 60, 140, 0.18);
+    }
     .recent-card h4 { margin: 6px 0; font-size: 26px; line-height: 1.15; letter-spacing: -0.3px; }
     .recent-meta { color: var(--muted); font-size: 14px; }
     .modal-wrap { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(8, 15, 56, 0.35); z-index: 4; padding: 16px; }
@@ -1049,12 +1055,13 @@
       recentCardsEl.innerHTML = "";
       recentItems.forEach((item) => {
         const el = document.createElement("article");
-        el.className = "recent-card";
+        el.className = "recent-card clickable-case";
         el.innerHTML = `
           <div class="kicker">${(item.category || i.fallback.noCategory).toUpperCase()}</div>
           <h4>${item.title}</h4>
           <div class="recent-meta">${item.author_name || i.fallback.noAuthor} • ${item.skill_name || i.fallback.noProject}</div>
         `;
+        el.addEventListener("click", () => openCaseDetail(item));
         recentCardsEl.appendChild(el);
       });
       if (!recentItems.length) {
@@ -1242,7 +1249,7 @@
         grid.className = "cards";
         items.forEach((item) => {
           const card = document.createElement("article");
-          card.className = "card";
+          card.className = "card clickable-case";
           const adminDelete = isAuthenticated ? `<button class="mini delete" data-id="${item.id}">${i.actions.delete}</button>` : "";
           const status = item.status || "in_progress";
           const statusAction = status === "completed"
@@ -1264,6 +1271,7 @@
               ${adminDelete}
             </div>
           `;
+          card.addEventListener("click", () => openCaseDetail(item));
           grid.appendChild(card);
         });
         section.appendChild(grid);
@@ -1273,8 +1281,13 @@
       renderSection("Em andamento", inProgress);
       renderSection("Concluidos", completed);
 
-      document.querySelectorAll(".fav").forEach((btn) => btn.addEventListener("click", async () => { await request(`/api/use-cases/${btn.dataset.id}/favorite`, { method: "POST" }); await loadCases(); }));
-      document.querySelectorAll(".edit").forEach((btn) => btn.addEventListener("click", () => {
+      document.querySelectorAll(".fav").forEach((btn) => btn.addEventListener("click", async (event) => {
+        event.stopPropagation();
+        await request(`/api/use-cases/${btn.dataset.id}/favorite`, { method: "POST" });
+        await loadCases();
+      }));
+      document.querySelectorAll(".edit").forEach((btn) => btn.addEventListener("click", (event) => {
+        event.stopPropagation();
         const item = allCases.find((caseItem) => String(caseItem.id) === String(btn.dataset.id));
         if (!item) return;
         editingIdEl.value = item.id;
@@ -1292,7 +1305,8 @@
         statusEl.value = item.status || "in_progress";
         modalWrap.style.display = "flex";
       }));
-      document.querySelectorAll(".set-status").forEach((btn) => btn.addEventListener("click", async () => {
+      document.querySelectorAll(".set-status").forEach((btn) => btn.addEventListener("click", async (event) => {
+        event.stopPropagation();
         await request(`/api/use-cases/${btn.dataset.id}/status`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -1300,7 +1314,8 @@
         });
         await loadCases();
       }));
-      document.querySelectorAll(".delete").forEach((btn) => btn.addEventListener("click", async () => {
+      document.querySelectorAll(".delete").forEach((btn) => btn.addEventListener("click", async (event) => {
+        event.stopPropagation();
         if (!confirm(t().confirmDelete)) return;
         await request(`/api/use-cases/${btn.dataset.id}`, { method: "DELETE" });
         await loadCases();
