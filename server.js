@@ -78,6 +78,7 @@ async function ensureSchema() {
       description TEXT DEFAULT '',
       tags TEXT[] DEFAULT ARRAY[]::TEXT[],
       image_data TEXT DEFAULT '',
+      video_url TEXT DEFAULT '',
       is_favorite BOOLEAN DEFAULT FALSE,
       created_at TIMESTAMPTZ DEFAULT NOW()
     )
@@ -85,6 +86,10 @@ async function ensureSchema() {
   await pool.query(`
     ALTER TABLE use_cases
     ADD COLUMN IF NOT EXISTS image_data TEXT DEFAULT ''
+  `);
+  await pool.query(`
+    ALTER TABLE use_cases
+    ADD COLUMN IF NOT EXISTS video_url TEXT DEFAULT ''
   `);
   await pool.query(`
     ALTER TABLE use_cases
@@ -340,6 +345,8 @@ app.post("/api/use-cases", async (req, res) => {
     tags = [],
     status = "in_progress",
     sourceLanguage = "pt",
+    imageData = "",
+    videoUrl = "",
   } = req.body || {};
 
   if (!toTrimmedText(title)) {
@@ -370,6 +377,10 @@ app.post("/api/use-cases", async (req, res) => {
       : [],
     status: normalizeStatus(status),
     source_language: normalizeSourceLanguage(sourceLanguage),
+    image_data: String(imageData || "").startsWith("data:image/")
+      ? String(imageData)
+      : "",
+    video_url: toTrimmedText(videoUrl),
   };
   const localized = await translateUseCaseText({
     sourceLanguage: payload.source_language,
@@ -382,7 +393,6 @@ app.post("/api/use-cases", async (req, res) => {
       id: memoryId++,
       ...payload,
       ...localized,
-      image_data: "",
       is_favorite: false,
       status: payload.status,
       created_at: Date.now(),
@@ -393,8 +403,8 @@ app.post("/api/use-cases", async (req, res) => {
 
   try {
     const { rows } = await pool.query(
-      `INSERT INTO use_cases (title, category, area, technology, phase, theme, author_name, skill_name, description, tags, status, source_language, title_pt, title_es, title_en, description_pt, description_es, description_en)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
+      `INSERT INTO use_cases (title, category, area, technology, phase, theme, author_name, skill_name, description, tags, status, source_language, image_data, video_url, title_pt, title_es, title_en, description_pt, description_es, description_en)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20)
        RETURNING *`,
       [
         payload.title,
@@ -409,6 +419,8 @@ app.post("/api/use-cases", async (req, res) => {
         payload.tags,
         payload.status,
         payload.source_language,
+        payload.image_data,
+        payload.video_url,
         localized.title_pt,
         localized.title_es,
         localized.title_en,
@@ -438,6 +450,8 @@ app.put("/api/use-cases/:id", async (req, res) => {
     tags = [],
     status = "in_progress",
     sourceLanguage = "pt",
+    imageData = "",
+    videoUrl = "",
   } = req.body || {};
   if (!toTrimmedText(title)) {
     return res.status(400).json({ error: "Titulo e obrigatorio." });
@@ -483,6 +497,10 @@ app.put("/api/use-cases/:id", async (req, res) => {
     found.description_pt = localized.description_pt;
     found.description_es = localized.description_es;
     found.description_en = localized.description_en;
+    found.image_data = String(imageData || "").startsWith("data:image/")
+      ? String(imageData)
+      : found.image_data || "";
+    found.video_url = toTrimmedText(videoUrl);
     return res.json(found);
   }
 
@@ -492,8 +510,9 @@ app.put("/api/use-cases/:id", async (req, res) => {
        SET title = $1, category = $2, area = $3, technology = $4, phase = $5, theme = $6,
            author_name = $7, skill_name = $8, description = $9, tags = $10, status = $11,
            source_language = $12, title_pt = $13, title_es = $14, title_en = $15,
-           description_pt = $16, description_es = $17, description_en = $18
-       WHERE id = $19
+           description_pt = $16, description_es = $17, description_en = $18,
+           image_data = $19, video_url = $20
+       WHERE id = $21
        RETURNING *`,
       [
         toTrimmedText(title),
@@ -514,6 +533,8 @@ app.put("/api/use-cases/:id", async (req, res) => {
         localized.description_pt,
         localized.description_es,
         localized.description_en,
+        String(imageData || "").startsWith("data:image/") ? String(imageData) : "",
+        toTrimmedText(videoUrl),
         req.params.id,
       ]
     );
@@ -676,6 +697,7 @@ app.get("/api/use-cases/export.csv", requireAuth, async (_req, res) => {
       "author_name",
       "skill_name",
       "description",
+      "video_url",
       "tags",
       "is_favorite",
       "created_at",
@@ -695,6 +717,7 @@ app.get("/api/use-cases/export.csv", requireAuth, async (_req, res) => {
           row.author_name,
           row.skill_name,
           row.description,
+          row.video_url || "",
           Array.isArray(row.tags) ? row.tags.join(" | ") : "",
           row.is_favorite,
           row.created_at,
