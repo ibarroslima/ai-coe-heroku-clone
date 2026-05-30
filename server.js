@@ -34,6 +34,7 @@ const upload = multer({
 
 let memoryCases = [];
 let memoryId = 1;
+const memoryFavoritesByClient = new Map();
 
 app.set("trust proxy", 1);
 app.disable("etag");
@@ -139,6 +140,14 @@ async function ensureSchema() {
     ALTER TABLE use_cases
     ADD COLUMN IF NOT EXISTS description_en TEXT DEFAULT ''
   `);
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS user_favorites (
+      use_case_id INTEGER NOT NULL REFERENCES use_cases(id) ON DELETE CASCADE,
+      client_id TEXT NOT NULL,
+      created_at TIMESTAMPTZ DEFAULT NOW(),
+      PRIMARY KEY (use_case_id, client_id)
+    )
+  `);
 }
 
 function toTrimmedText(value) {
@@ -147,6 +156,10 @@ function toTrimmedText(value) {
 
 function normalizeStatus(value) {
   return String(value || "").trim() === "completed" ? "completed" : "in_progress";
+}
+
+function getClientId(req) {
+  return String(req.headers["x-client-id"] || "").trim();
 }
 
 function normalizeSourceLanguage(value) {
@@ -318,13 +331,41 @@ app.post("/api/auth/logout", (req, res) => {
   });
 });
 
-app.get("/api/use-cases", async (_req, res) => {
+app.get("/api/use-cases", async (req, res) => {
+  const clientId = getClientId(req);
   if (!hasDatabase) {
-    return res.json([...memoryCases].sort((a, b) => b.created_at - a.created_at));
+    const rows = [...memoryCases]
+      .sort((a, b) => b.created_at - a.created_at)
+      .map((item) => ({
+        ...item,
+        is_favorite: clientId
+          ? (memoryFavoritesByClient.get(clientId) || new Set()).has(item.id)
+          : false,
+      }));
+    return res.json(rows);
   }
   try {
-    const { rows } = await pool.query("SELECT * FROM use_cases ORDER BY created_at DESC");
-    return res.json(rows);
+    const { rows } = await pool.query(
+      `SELECT uc.*,
+              CASE
+                WHEN $1 = '' THEN FALSE
+                ELSE EXISTS (
+                  SELECT 1
+                  FROM user_favorites uf
+                  WHERE uf.use_case_id = uc.id
+                    AND uf.client_id = $1
+                )
+              END AS is_favorite_user
+       FROM use_cases uc
+       ORDER BY uc.created_at DESC`,
+      [clientId]
+    );
+    return res.json(
+      rows.map((row) => ({
+        ...row,
+        is_favorite: Boolean(row.is_favorite_user),
+      }))
+    );
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Erro ao listar casos." });
@@ -550,6 +591,9 @@ app.delete("/api/use-cases/:id", requireAuth, async (req, res) => {
   if (!hasDatabase) {
     const id = Number(req.params.id);
     memoryCases = memoryCases.filter((item) => item.id !== id);
+    for (const favoriteSet of memoryFavoritesByClient.values()) {
+      favoriteSet.delete(id);
+    }
     return res.json({ ok: true });
   }
   try {
@@ -587,21 +631,43 @@ app.post("/api/use-cases/:id/image", requireAuth, upload.single("image"), async 
 });
 
 app.post("/api/use-cases/:id/favorite", async (req, res) => {
+  const clientId = getClientId(req);
+  if (!clientId) {
+    return res.status(400).json({ error: "Cliente nao identificado." });
+  }
   if (!hasDatabase) {
     const id = Number(req.params.id);
     const found = memoryCases.find((item) => item.id === id);
     if (!found) return res.status(404).json({ error: "Caso nao encontrado." });
-    found.is_favorite = !found.is_favorite;
-    return res.json(found);
+    const favorites = memoryFavoritesByClient.get(clientId) || new Set();
+    if (favorites.has(id)) favorites.delete(id);
+    else favorites.add(id);
+    memoryFavoritesByClient.set(clientId, favorites);
+    return res.json({ ok: true, is_favorite: favorites.has(id) });
   }
 
   try {
-    const { rows } = await pool.query(
-      `UPDATE use_cases SET is_favorite = NOT is_favorite WHERE id = $1 RETURNING *`,
-      [req.params.id]
+    const id = Number(req.params.id);
+    const existsCase = await pool.query("SELECT id FROM use_cases WHERE id = $1", [id]);
+    if (!existsCase.rows.length) {
+      return res.status(404).json({ error: "Caso nao encontrado." });
+    }
+    const existsFavorite = await pool.query(
+      "SELECT 1 FROM user_favorites WHERE use_case_id = $1 AND client_id = $2",
+      [id, clientId]
     );
-    if (!rows.length) return res.status(404).json({ error: "Caso nao encontrado." });
-    return res.json(rows[0]);
+    if (existsFavorite.rows.length) {
+      await pool.query(
+        "DELETE FROM user_favorites WHERE use_case_id = $1 AND client_id = $2",
+        [id, clientId]
+      );
+      return res.json({ ok: true, is_favorite: false });
+    }
+    await pool.query(
+      "INSERT INTO user_favorites (use_case_id, client_id) VALUES ($1, $2)",
+      [id, clientId]
+    );
+    return res.json({ ok: true, is_favorite: true });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Erro ao favoritar caso." });

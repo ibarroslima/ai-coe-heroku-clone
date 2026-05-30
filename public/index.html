@@ -907,6 +907,7 @@
 
     const AUTHORS_STORAGE_KEY = "ai_coe_authors_v1";
     const AUTHOR_PHOTOS_STORAGE_KEY = "ai_coe_author_photos_v1";
+    const CLIENT_ID_STORAGE_KEY = "ai_coe_client_id_v1";
     const DEFAULT_AUTHORS = [
       "Alejandra Acuña",
       "Amanda Basilio",
@@ -954,6 +955,15 @@
       "Thais Ishii": "/assets/authors/thais-ishii.png",
     };
     let authorPhotos = { ...AUTHOR_PHOTOS };
+    const clientId = (() => {
+      const fromStorage = localStorage.getItem(CLIENT_ID_STORAGE_KEY);
+      if (fromStorage) return fromStorage;
+      const generated =
+        (window.crypto && window.crypto.randomUUID && window.crypto.randomUUID()) ||
+        `client-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+      localStorage.setItem(CLIENT_ID_STORAGE_KEY, generated);
+      return generated;
+    })();
 
     function t() { return I18N[currentLang]; }
     function tx() { return EXTRA_COPY[currentLang] || EXTRA_COPY.pt; }
@@ -1456,7 +1466,8 @@
     }
 
     async function request(url, options = {}) {
-      const response = await fetch(url, options);
+      const headers = { ...(options.headers || {}), "x-client-id": clientId };
+      const response = await fetch(url, { ...options, headers });
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));
         throw new Error(data.error || "Request error.");
