@@ -215,12 +215,25 @@
     .clickable-case { cursor: pointer; }
     .kicker { font-size: 11px; letter-spacing: 2px; font-weight: 800; color: #0b3bff; }
     .title { margin: 8px 0; font-size: 20px; line-height: 1.18; }
+    .title-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .title-fav-star {
+      font-size: 16px;
+      line-height: 1;
+      color: #f5b942;
+      filter: drop-shadow(0 1px 2px rgba(245, 185, 66, 0.35));
+    }
     .meta, .desc { color: var(--muted); }
     .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0; }
     .chip { border: 1px solid #e3e8ff; background: var(--chip); border-radius: 999px; padding: 4px 10px; font-size: 12px; font-weight: 700; color: #31418b; }
     .card-image { width: 100%; border-radius: 12px; border: 1px solid #e2e8ff; margin-bottom: 10px; }
     .card-actions { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 8px; }
     .mini { border: 1px solid #dce3ff; border-radius: 10px; background: #fff; cursor: pointer; padding: 6px 10px; font-size: 12px; font-weight: 700; color: #2e3f8f; }
+    .mini.fav.is-on {
+      background: #fff7d6;
+      border-color: #f5b942;
+      color: #8a5a00;
+      box-shadow: 0 4px 12px rgba(245, 185, 66, 0.28);
+    }
     .set-status.complete-action {
       background: #fff2cc;
       border-color: #f5b942;
@@ -398,6 +411,11 @@
       background: #1a2a5e;
       color: #e7edff;
       border-color: #31467f;
+    }
+    body.dark .mini.fav.is-on {
+      background: #5b4512;
+      border-color: #f5b942;
+      color: #ffe7a6;
     }
     body.dark .set-status.complete-action {
       background: #5a4311;
@@ -775,6 +793,10 @@
       if (langCopy.labels) {
         langCopy.labels.phase = langCopy === I18N.en ? "Pre-sales Phase" : "Fase Pre-sales";
         langCopy.labels.theme = langCopy === I18N.en ? "Pre-sales Theme" : "Tema Pre-sales";
+      }
+      if (langCopy.actions) {
+        langCopy.actions.favoriteOn =
+          lang === "es" ? "Favoritado" : lang === "en" ? "Favorited" : "Favoritado";
       }
       const defaultHero =
         lang === "es"
@@ -1547,14 +1569,17 @@
           card.innerHTML = `
             ${item.image_data ? `<img class="card-image" src="${item.image_data}" alt="case image" />` : ""}
             <div class="kicker">${(item.category || i.fallback.noCategory).toUpperCase()}</div>
-            <h2 class="title">${getLocalizedField(item, "title") || item.title}</h2>
+            <div class="title-row">
+              <h2 class="title">${getLocalizedField(item, "title") || item.title}</h2>
+              ${item.is_favorite ? '<span class="title-fav-star" aria-label="favorito">⭐</span>' : ""}
+            </div>
             <div class="meta"><strong>${item.author_name || i.fallback.noAuthor}</strong> - ${item.skill_name || i.fallback.noProject}</div>
             <div class="meta">${item.area || i.fallback.noArea} | ${item.technology || i.fallback.noTechnology} | ${item.phase || i.fallback.noPhase} | ${item.theme || i.fallback.noTheme}</div>
             <span class="status-chip ${status === "completed" ? "completed" : "in-progress"}">${getStatusLabel(status)}</span>
             <div class="chips">${(item.tags || []).map((tag) => `<span class="chip">${tag}</span>`).join("")}</div>
             <p class="desc">${getLocalizedField(item, "description") || item.description || ""}</p>
             <div class="card-actions">
-              <button class="mini fav" data-id="${item.id}">${item.is_favorite ? i.actions.favoriteOn : i.actions.favorite}</button>
+              <button class="mini fav ${item.is_favorite ? "is-on" : ""}" data-id="${item.id}">${item.is_favorite ? i.actions.favoriteOn : i.actions.favorite}</button>
               <button class="mini edit" data-id="${item.id}">${i.actions.edit}</button>
               ${statusAction}
               ${adminDelete}
