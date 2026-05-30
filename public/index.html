@@ -1124,6 +1124,22 @@
       return item[localizedKey] || item[sourceKey] || item[ptKey] || item[baseField] || "";
     }
 
+    function escapeHtml(value) {
+      return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function linkifyText(value) {
+      const escaped = escapeHtml(value);
+      return escaped
+        .replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>')
+        .replace(/\n/g, "<br>");
+    }
+
     function formatDate(dateValue) {
       const date = new Date(dateValue);
       if (Number.isNaN(date.getTime())) return "-";
@@ -1134,7 +1150,7 @@
       detailCategoryEl.textContent = (item.category || t().fallback.noCategory).toUpperCase();
       detailTitleEl.textContent = getLocalizedField(item, "title") || "-";
       detailTagsEl.innerHTML = (item.tags || []).map((tag) => `<span class="chip">${tag}</span>`).join("");
-      detailDescEl.textContent = getLocalizedField(item, "description") || "-";
+      detailDescEl.innerHTML = linkifyText(getLocalizedField(item, "description") || "-");
       detailAvatarEl.innerHTML = getAuthorAvatarMarkup(item.author_name || "");
       detailAuthorNameEl.textContent = item.author_name || t().fallback.noAuthor;
       detailProjectEl.textContent = item.skill_name || t().fallback.noProject;
