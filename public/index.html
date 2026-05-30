@@ -1776,14 +1776,10 @@
       detailWrap.style.display = "none";
     });
     detailWrap.addEventListener("click", (event) => {
-      if (event.target === detailWrap) return;
-    });
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape" && detailWrap.style.display === "flex") {
+      if (event.target === detailWrap) {
         detailWrap.style.display = "none";
       }
     });
-
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
       try {
