@@ -11,7 +11,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "ensure:web": "node scripts/ensure-web-dyno.js"
   },
   "engines": {
     "node": "22.x"
