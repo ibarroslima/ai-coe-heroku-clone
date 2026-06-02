@@ -311,6 +311,135 @@ async function translateUseCaseText({ sourceLanguage, title, description }) {
   }
 }
 
+function normalizeUiLanguage(value) {
+  const lang = String(value || "").trim().toLowerCase();
+  if (lang === "es") return "es";
+  if (lang === "en") return "en";
+  return "pt";
+}
+
+function localizedCaseField(item, baseField, uiLanguage) {
+  const lang = normalizeUiLanguage(uiLanguage);
+  const sourceLang = normalizeSourceLanguage(item.source_language || "pt");
+  const localized = toTrimmedText(item[`${baseField}_${lang}`]);
+  const fromSource = toTrimmedText(item[`${baseField}_${sourceLang}`]);
+  const fromPt = toTrimmedText(item[`${baseField}_pt`]);
+  const generic = toTrimmedText(item[baseField]);
+  return localized || fromSource || fromPt || generic || "";
+}
+
+async function loadUseCasesForAiContext(limit = 40) {
+  if (!hasDatabase) {
+    return [...memoryCases]
+      .sort((a, b) => b.created_at - a.created_at)
+      .slice(0, limit);
+  }
+  const { rows } = await pool.query(
+    `SELECT id, title, category, area, technology, phase, theme, author_name, description, status,
+            source_language, title_pt, title_es, title_en, description_pt, description_es, description_en,
+            created_at
+     FROM use_cases
+     ORDER BY created_at DESC
+     LIMIT $1`,
+    [limit]
+  );
+  return rows;
+}
+
+function buildCatalogContextForAi(useCases, uiLanguage) {
+  const lines = useCases.map((item, index) => {
+    const title = localizedCaseField(item, "title", uiLanguage) || "Sem titulo";
+    const description = localizedCaseField(item, "description", uiLanguage)
+      .replace(/\s+/g, " ")
+      .slice(0, 300);
+    const status = normalizeStatus(item.status);
+    return `${index + 1}. [${status}] ${title} | Tech: ${toTrimmedText(
+      item.technology
+    )} | Area: ${toTrimmedText(item.area)} | Autor: ${toTrimmedText(
+      item.author_name
+    )} | Desc: ${description}`;
+  });
+  return lines.join("\n");
+}
+
+function buildAiSystemPrompt(uiLanguage) {
+  const lang = normalizeUiLanguage(uiLanguage);
+  if (lang === "es") {
+    return "Eres el asistente AI CoE Guide para un catalogo interno de casos de uso de IA. Responde en espanol LATAM, de forma clara y accionable, con tono profesional y amistoso. Si no sabes algo del catalogo, dilo con honestidad y ofrece un proximo paso.";
+  }
+  if (lang === "en") {
+    return "You are the AI CoE Guide assistant for an internal AI use case catalog. Reply in clear, concise English with practical guidance. If catalog data is insufficient, say so and suggest next steps.";
+  }
+  return "Voce e o assistente AI CoE Guide de um catalogo interno de casos de uso de IA. Responda em portugues do Brasil, de forma clara e pratica. Se faltar informacao no catalogo, diga isso e sugira o proximo passo.";
+}
+
+app.post("/api/ai-guide/chat", async (req, res) => {
+  const uiLanguage = normalizeUiLanguage(req.body?.lang || "pt");
+  const message = toTrimmedText(req.body?.message);
+  const history = Array.isArray(req.body?.history) ? req.body.history : [];
+
+  if (!message) {
+    return res.status(400).json({ error: "Mensagem obrigatoria." });
+  }
+  if (!OPENAI_API_KEY) {
+    return res.status(503).json({
+      error:
+        uiLanguage === "es"
+          ? "Configura OPENAI_API_KEY para activar respuestas inteligentes."
+          : uiLanguage === "en"
+            ? "Configure OPENAI_API_KEY to enable intelligent answers."
+            : "Configure OPENAI_API_KEY para ativar respostas inteligentes.",
+    });
+  }
+
+  try {
+    const useCases = await loadUseCasesForAiContext(40);
+    const catalogContext = buildCatalogContextForAi(useCases, uiLanguage);
+    const safeHistory = history
+      .slice(-8)
+      .map((item) => ({
+        role: item?.role === "assistant" ? "assistant" : "user",
+        content: toTrimmedText(item?.content).slice(0, 1200),
+      }))
+      .filter((item) => item.content);
+
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${OPENAI_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: OPENAI_MODEL,
+        temperature: 0.3,
+        messages: [
+          { role: "system", content: buildAiSystemPrompt(uiLanguage) },
+          {
+            role: "system",
+            content: `Contexto do catalogo (casos mais recentes):\n${catalogContext || "Sem casos cadastrados."}`,
+          },
+          ...safeHistory,
+          { role: "user", content: message },
+        ],
+      }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("AI chat error:", response.status, errorText);
+      return res.status(502).json({ error: "Falha ao consultar IA." });
+    }
+
+    const data = await response.json();
+    const reply = toTrimmedText(data?.choices?.[0]?.message?.content);
+    if (!reply) return res.status(502).json({ error: "Resposta vazia da IA." });
+    return res.json({ reply });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Erro ao processar chat de IA." });
+  }
+});
+
 app.get("/api/auth/status", (req, res) => {
   res.json({ authenticated: Boolean(req.session && req.session.isAuthenticated) });
 });

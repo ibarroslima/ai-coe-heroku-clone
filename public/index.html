@@ -516,38 +516,128 @@
     }
     .ai-guide-fab {
       position: fixed;
-      right: 18px;
-      bottom: 18px;
-      z-index: 6;
-      border: none;
+      right: 16px;
+      top: 84px;
+      z-index: 9;
+      width: 48px;
+      height: 48px;
+      border: 1px solid #d9e8ff;
       border-radius: 999px;
-      padding: 10px 14px;
-      font-weight: 800;
-      color: #fff;
-      background: linear-gradient(90deg, #0b3bff, #00a4ff);
-      box-shadow: 0 12px 24px rgba(6, 106, 254, 0.34);
+      background: #fff;
+      box-shadow: 0 10px 24px rgba(6, 60, 140, 0.2);
+      font-size: 22px;
       cursor: pointer;
     }
-    .ai-guide-fab:hover { transform: translateY(-1px); }
-    .ai-guide-modal { max-width: 560px; }
-    .ai-guide-sub { margin: 0 0 10px; color: var(--muted); font-size: 14px; line-height: 1.4; }
-    .ai-guide-list {
-      margin: 0;
-      padding-left: 18px;
-      display: grid;
-      gap: 6px;
-      color: var(--text);
-      font-size: 14px;
-      line-height: 1.4;
+    .ai-guide-panel {
+      position: fixed;
+      top: 124px;
+      right: 16px;
+      width: min(500px, calc(100vw - 24px));
+      height: min(700px, calc(100vh - 140px));
+      z-index: 10;
+      border: 1px solid #d9e8ff;
+      border-radius: 20px;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 24px 44px rgba(6, 60, 140, 0.26);
+      display: flex;
+      flex-direction: column;
     }
-    .ai-guide-actions {
-      margin-top: 12px;
+    .ai-guide-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 14px 16px;
+      background: linear-gradient(90deg, #2d35ff, #4d50ff);
+      color: #fff;
+    }
+    .ai-guide-head-left { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .ai-guide-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+    }
+    .ai-guide-head-title { margin: 0; font-size: 38px; line-height: 1; }
+    .ai-guide-head-subtitle { margin: 2px 0 0; opacity: 0.9; font-size: 12px; }
+    .ai-guide-head-actions { display: flex; gap: 6px; }
+    .ai-guide-head-btn {
+      width: 28px;
+      height: 28px;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      font-size: 14px;
+    }
+    .ai-guide-body {
+      flex: 1;
+      overflow: auto;
+      padding: 16px;
+      background: linear-gradient(180deg, #f9fcff 0%, #ffffff 100%);
+      display: grid;
+      gap: 10px;
+      align-content: start;
+    }
+    .ai-guide-msg {
+      max-width: 90%;
+      border-radius: 14px;
+      padding: 12px 14px;
+      line-height: 1.35;
+      font-size: 15px;
+      border: 1px solid #e6eefc;
+      white-space: pre-wrap;
+    }
+    .ai-guide-msg.bot { background: #fff; color: #2d3e63; justify-self: start; }
+    .ai-guide-msg.user { background: #edf2ff; color: #20356d; justify-self: end; border-color: #c9d7ff; }
+    .ai-guide-foot {
+      padding: 10px 12px 14px;
+      background: #fff;
+      border-top: 1px solid #e8efff;
       display: flex;
       gap: 8px;
-      flex-wrap: wrap;
+      align-items: center;
+    }
+    .ai-guide-input {
+      flex: 1;
+      border: 2px solid #8ea9ff;
+      border-radius: 999px;
+      padding: 12px 16px;
+      font-size: 16px;
+      outline: none;
+    }
+    .ai-guide-send {
+      width: 54px;
+      height: 54px;
+      border: none;
+      border-radius: 999px;
+      background: #8f9cff;
+      color: #fff;
+      font-size: 24px;
+      cursor: pointer;
     }
     body.dark .ai-guide-fab {
+      background: #1a2a5e;
+      border-color: #31467f;
       box-shadow: 0 14px 26px rgba(0, 0, 0, 0.48);
+    }
+    body.dark .ai-guide-panel { background: #101b42; border-color: #31467f; }
+    body.dark .ai-guide-body { background: linear-gradient(180deg, #101d49 0%, #101b42 100%); }
+    body.dark .ai-guide-msg.bot { background: #182a61; border-color: #324a8f; color: #e7edff; }
+    body.dark .ai-guide-msg.user { background: #1b366f; border-color: #3e5d9d; color: #e7edff; }
+    body.dark .ai-guide-foot { background: #101b42; border-top-color: #31467f; }
+    body.dark .ai-guide-input {
+      background: #162655;
+      color: #e7edff;
+      border-color: #4f72c2;
     }
     body.dark .manage-user-row {
       background: #182652;
@@ -571,8 +661,14 @@
       .about-mv, .how-grid, .principles-grid, .detail-body { grid-template-columns: 1fr; }
       .detail-title { font-size: 34px; }
       .ai-guide-fab {
-        right: 12px;
-        bottom: 12px;
+        right: 10px;
+        top: 76px;
+      }
+      .ai-guide-panel {
+        right: 10px;
+        top: 130px;
+        width: calc(100vw - 20px);
+        height: calc(100vh - 144px);
       }
     }
   </style>
@@ -817,22 +913,27 @@
       </div>
     </div>
   </div>
-  <button id="aiGuideFab" class="ai-guide-fab" type="button">🤖 AI Guide</button>
-  <div id="aiGuideWrap" class="modal-wrap">
-    <div class="modal ai-guide-modal">
-      <h3 id="aiGuideTitle">AI Guide</h3>
-      <p id="aiGuideSubtitle" class="ai-guide-sub">Dicas rapidas para usar o catalogo.</p>
-      <ul id="aiGuideTips" class="ai-guide-list"></ul>
-      <div class="ai-guide-actions">
-        <button id="aiGuideGoCatalog" class="pill-btn" type="button">Abrir catalogo</button>
-        <button id="aiGuideGoFavorites" class="pill-btn" type="button">Abrir favoritos</button>
-        <button id="aiGuideGoAdd" class="pill-btn primary" type="button">Adicionar caso</button>
+  <button id="aiGuideFab" class="ai-guide-fab" type="button" title="Abrir assistente IA">🤖</button>
+  <section id="aiGuideWrap" class="ai-guide-panel hidden">
+    <header class="ai-guide-head">
+      <div class="ai-guide-head-left">
+        <div class="ai-guide-avatar">🤖</div>
+        <div>
+          <h3 id="aiGuideTitle" class="ai-guide-head-title">AI CoE Guide</h3>
+          <p id="aiGuideSubtitle" class="ai-guide-head-subtitle">Asistente do site</p>
+        </div>
       </div>
-      <div class="actions">
-        <button id="aiGuideClose" class="pill-btn" type="button">Fechar</button>
+      <div class="ai-guide-head-actions">
+        <button id="aiGuideMinBtn" class="ai-guide-head-btn" type="button">▢</button>
+        <button id="aiGuideCloseBtn" class="ai-guide-head-btn" type="button">✕</button>
       </div>
-    </div>
-  </div>
+    </header>
+    <div id="aiGuideMessages" class="ai-guide-body"></div>
+    <footer class="ai-guide-foot">
+      <input id="aiGuideInput" class="ai-guide-input" type="text" placeholder="Digite sua dúvida..." />
+      <button id="aiGuideSendBtn" class="ai-guide-send" type="button">➤</button>
+    </footer>
+  </section>
   <script>
     const I18N = {
       pt: { tabs: { home: "🏠 Home", catalog: "📖 Catalogo", favorites: "⭐ Favoritos", about: "❓ Sobre" }, authIn: "Entrar/ADM", authOut: "Sair/ADM", addCase: "+ Adicionar caso", homeTitle: "AI CoE ProServ", homeDesc: "Centralize e compartilhe conhecimento aplicado em IA para toda a organizacao.", catalogTitle: "Catalogo de Casos de Uso", favoritesTitle: "Favoritos", caseCountOne: "caso documentado", caseCountMany: "casos documentados", allAreas: "Todas as areas", allTechnologies: "Todas as tecnologias", allPhases: "Todas as fases SPM", allThemes: "Todos os temas SPM", recent: "Mais recentes", oldest: "Mais antigos", all: "Todos", onlyFavorites: "Apenas favoritos", emptyTitle: "Seu catalogo esta vazio", emptyDesc: "Clique em \"+ Adicionar caso\" para incluir o primeiro item.", aboutTitle: "Sobre", aboutText: "Plataforma de catalogo de casos de uso com filtros por area, tecnologia, fase e tema. Qualquer colaborador pode criar e editar casos. Remocao e permitida somente para administradores.", recentSectionTitle: "Mais recentes", recentViewAll: "Ver todos >", metrics: ["Casos documentados", "Tecnologias cobertas", "Contribuidores", "Areas de negocio"], explainers: [["Catalogo de Casos de Uso","Explore todos os projetos de IA documentados pela equipe, com tecnologias, repositorios e contatos."],["Busca e filtros","Encontre rapidamente casos por tecnologia, projeto, area de negocio ou data."],["Conhecimento Compartilhado","Evite duplicar esforcos. Aprenda com o que o time ja fez e construa em cima disso."]], hero: { badge: "• Centro de excelência em IA • LATAM", title: "O repositório de conhecimento do time de IA", desc: "Documente, descubra e reutilize casos de uso de inteligência artificial criados pela sua organização. Pensado regionalmente, construído para escalar globalmente.", viewCatalog: "Ver catálogo", addCase: "Adicionar caso de uso" }, modalNew: "Novo caso de uso", modalEdit: "Editar caso de uso", labels: { title: "Titulo *", category: "Categoria", area: "Area", technology: "Tecnologia", phase: "Fase SPM", theme: "Tema SPM", author: "Autor", project: "Skill/Projeto", tags: "Tags (separadas por virgula)", description: "Descricao", password: "Senha" }, cancel: "Cancelar", saveCase: "Salvar caso", loginTitle: "Login administrador", loginBtn: "Entrar", fallback: { noAuthor: "Sem autor", noProject: "Sem projeto", noArea: "Sem area", noTechnology: "Sem tecnologia", noPhase: "Sem fase", noTheme: "Sem tema", noCategory: "Sem categoria" }, actions: { favorite: "Favoritar", favoriteOn: "Favorito", edit: "Editar", delete: "Excluir", image: "Imagem" }, confirmDelete: "Excluir este caso de uso?" },
@@ -978,11 +1079,11 @@
     const existingImageDataEl = document.getElementById("existingImageData");
     const aiGuideFab = document.getElementById("aiGuideFab");
     const aiGuideWrap = document.getElementById("aiGuideWrap");
-    const aiGuideTipsEl = document.getElementById("aiGuideTips");
-    const aiGuideGoCatalogBtn = document.getElementById("aiGuideGoCatalog");
-    const aiGuideGoFavoritesBtn = document.getElementById("aiGuideGoFavorites");
-    const aiGuideGoAddBtn = document.getElementById("aiGuideGoAdd");
-    const aiGuideCloseBtn = document.getElementById("aiGuideClose");
+    const aiGuideMessagesEl = document.getElementById("aiGuideMessages");
+    const aiGuideInputEl = document.getElementById("aiGuideInput");
+    const aiGuideSendBtn = document.getElementById("aiGuideSendBtn");
+    const aiGuideMinBtn = document.getElementById("aiGuideMinBtn");
+    const aiGuideCloseBtn = document.getElementById("aiGuideCloseBtn");
 
     let allCases = [];
     let isAuthenticated = false;
@@ -1099,21 +1200,17 @@
         manageUsersAdd: "Adicionar",
         manageUsersClose: "Fechar",
         manageUsersDelete: "Excluir",
-        aiGuideFab: "🤖 IA Guide",
+        aiGuideFabTitle: "Abrir assistente IA",
         aiGuideTitle: "AI CoE Guide",
-        aiGuideSubtitle: "Dicas praticas para navegar no catalogo e contribuir com novos casos.",
-        aiGuideGoCatalog: "Abrir catalogo",
-        aiGuideGoFavorites: "Abrir favoritos",
-        aiGuideGoAdd: "Adicionar caso",
-        aiGuideClose: "Fechar",
-        aiGuideTip1: "Use busca e filtros para localizar casos por tecnologia, tema e status.",
-        aiGuideTip2: "Favoritos sao por navegador/dispositivo: cada pessoa monta sua propria lista.",
-        aiGuideTip3: "Campos obrigatorios ao salvar: Titulo, Autor, Tecnologia, Descricao e Status.",
-        aiGuideTip4: "Links no campo de descricao viram hiperlink clicavel no detalhe do caso.",
-        aiGuideFocusHome: "Na Home, voce acompanha metricas e acessa rapidamente os casos recentes.",
-        aiGuideFocusCatalog: "No Catalogo, clique em um card para abrir o detalhe completo do caso.",
-        aiGuideFocusFavorites: "Em Favoritos, voce ve apenas os casos que marcou com estrela.",
-        aiGuideFocusAbout: "Em Sobre, voce encontra missao, visao e principios do time LATAM GTM.",
+        aiGuideSubtitle: "Assistente do site",
+        aiGuideInputPlaceholder: "Digite sua duvida...",
+        aiGuideWelcome: "Ola. Sou o assistente do site AI CoE LATAM GTM. Posso te orientar pelo catalogo, favoritos, secao Sobre e envio de caso. Como posso ajudar?",
+        aiGuideCatalog: "Para explorar o catalogo: use busca, filtros de tecnologia/fase/tema e clique no card para abrir o detalhe completo.",
+        aiGuideFavorites: "Favoritos sao individuais por navegador/dispositivo. Se outro colega abrir no computador dele, a lista dele sera diferente.",
+        aiGuideCreate: "Para adicionar um caso: clique em + Adicionar caso e preencha os campos obrigatorios Titulo, Autor, Tecnologia, Descricao e Status.",
+        aiGuideAbout: "Na secao Sobre voce encontra missao, visao, como fazemos e principios do time LATAM GTM.",
+        aiGuideLanguage: "Voce pode trocar idioma no botao PT/ES/EN no topo. O conteudo do app se adapta automaticamente.",
+        aiGuideDefault: "Posso te ajudar com: catalogo, favoritos, criacao de caso, secao Sobre e idiomas. Digite um desses temas.",
       },
       es: {
         selectAuthor: "Seleccione un autor",
@@ -1161,21 +1258,17 @@
         manageUsersAdd: "Agregar",
         manageUsersClose: "Cerrar",
         manageUsersDelete: "Eliminar",
-        aiGuideFab: "🤖 IA Guide",
+        aiGuideFabTitle: "Abrir asistente IA",
         aiGuideTitle: "AI CoE Guide",
-        aiGuideSubtitle: "Consejos practicos para navegar el catalogo y contribuir con nuevos casos.",
-        aiGuideGoCatalog: "Abrir catalogo",
-        aiGuideGoFavorites: "Abrir favoritos",
-        aiGuideGoAdd: "Agregar caso",
-        aiGuideClose: "Cerrar",
-        aiGuideTip1: "Usa busqueda y filtros para encontrar casos por tecnologia, tema y estado.",
-        aiGuideTip2: "Favoritos son por navegador/dispositivo: cada persona arma su propia lista.",
-        aiGuideTip3: "Campos obligatorios al guardar: Titulo, Autor, Tecnologia, Descripcion y Estado.",
-        aiGuideTip4: "Los enlaces en descripcion se convierten en hipervinculos clicables en el detalle.",
-        aiGuideFocusHome: "En Inicio, sigues metricas y accedes rapido a los casos mas recientes.",
-        aiGuideFocusCatalog: "En Catalogo, haz clic en una tarjeta para abrir el detalle completo.",
-        aiGuideFocusFavorites: "En Favoritos, ves solo los casos que marcaste con estrella.",
-        aiGuideFocusAbout: "En Acerca, encuentras mision, vision y principios del equipo LATAM GTM.",
+        aiGuideSubtitle: "Asistente del sitio",
+        aiGuideInputPlaceholder: "Escribe tu duda...",
+        aiGuideWelcome: "Hola. Soy el asistente del sitio AI CoE LATAM GTM. Puedo orientarte sobre catalogo, favoritos, seccion Acerca y como enviar un caso. Como te ayudo?",
+        aiGuideCatalog: "Para explorar el catalogo: usa busqueda, filtros de tecnologia/fase/tema y haz clic en la tarjeta para abrir el detalle completo.",
+        aiGuideFavorites: "Favoritos es individual por navegador/dispositivo. Si otro colega entra desde su equipo, vera su propia lista.",
+        aiGuideCreate: "Para agregar un caso: haz clic en + Agregar caso y completa los obligatorios Titulo, Autor, Tecnologia, Descripcion y Estado.",
+        aiGuideAbout: "En Acerca encuentras mision, vision, como trabajamos y principios del equipo LATAM GTM.",
+        aiGuideLanguage: "Puedes cambiar idioma en el boton PT/ES/EN de arriba. El contenido se adapta automaticamente.",
+        aiGuideDefault: "Puedo ayudarte con: catalogo, favoritos, creacion de caso, seccion Acerca e idiomas. Escribe uno de esos temas.",
       },
       en: {
         selectAuthor: "Select an author",
@@ -1223,36 +1316,75 @@
         manageUsersAdd: "Add",
         manageUsersClose: "Close",
         manageUsersDelete: "Delete",
-        aiGuideFab: "🤖 AI Guide",
+        aiGuideFabTitle: "Open AI assistant",
         aiGuideTitle: "AI CoE Guide",
-        aiGuideSubtitle: "Practical tips to navigate the catalog and add new use cases.",
-        aiGuideGoCatalog: "Open catalog",
-        aiGuideGoFavorites: "Open favorites",
-        aiGuideGoAdd: "Add case",
-        aiGuideClose: "Close",
-        aiGuideTip1: "Use search and filters to find cases by technology, theme, and status.",
-        aiGuideTip2: "Favorites are browser/device-specific: each person has their own list.",
-        aiGuideTip3: "Required fields to save: Title, Author, Technology, Description, and Status.",
-        aiGuideTip4: "Links in description become clickable hyperlinks in case detail.",
-        aiGuideFocusHome: "On Home, you can track metrics and quickly open recent cases.",
-        aiGuideFocusCatalog: "In Catalog, click a card to open the full case detail.",
-        aiGuideFocusFavorites: "In Favorites, you see only the cases you starred.",
-        aiGuideFocusAbout: "In About, you can review mission, vision, and LATAM GTM principles.",
+        aiGuideSubtitle: "Site assistant",
+        aiGuideInputPlaceholder: "Type your question...",
+        aiGuideWelcome: "Hi. I am the AI CoE LATAM GTM site assistant. I can guide you through catalog, favorites, About section, and how to submit a case. How can I help?",
+        aiGuideCatalog: "To explore the catalog, use search and technology/phase/theme filters, then click a card to open full detail.",
+        aiGuideFavorites: "Favorites are browser/device specific. Each teammate has an independent favorites list.",
+        aiGuideCreate: "To add a case, click + Add case and fill required fields: Title, Author, Technology, Description, and Status.",
+        aiGuideAbout: "In About, you can review mission, vision, how we work, and LATAM GTM principles.",
+        aiGuideLanguage: "You can switch language using the PT/ES/EN button at the top. App content updates automatically.",
+        aiGuideDefault: "I can help with: catalog, favorites, creating a case, About section, and languages. Type one of these topics.",
       },
     };
+    let aiGuideLastLang = "pt";
+    let aiGuideHistory = [];
 
-    function getGuideFocusKey() {
-      if (currentTab === "favorites") return "aiGuideFocusFavorites";
-      if (currentTab === "catalog") return "aiGuideFocusCatalog";
-      if (currentTab === "about") return "aiGuideFocusAbout";
-      return "aiGuideFocusHome";
+    function resetAiGuideConversation() {
+      aiGuideMessagesEl.innerHTML = "";
+      addAiGuideMessage(tx().aiGuideWelcome, "bot");
+      aiGuideHistory = [{ role: "assistant", content: tx().aiGuideWelcome }];
+      aiGuideLastLang = currentLang;
     }
 
-    function renderGuideTips() {
-      const x = tx();
-      const focusTip = x[getGuideFocusKey()];
-      const tips = [x.aiGuideTip1, x.aiGuideTip2, x.aiGuideTip3, x.aiGuideTip4, focusTip].filter(Boolean);
-      aiGuideTipsEl.innerHTML = tips.map((tip) => `<li>${tip}</li>`).join("");
+    function addAiGuideMessage(text, role) {
+      const bubble = document.createElement("div");
+      bubble.className = `ai-guide-msg ${role}`;
+      bubble.textContent = text;
+      aiGuideMessagesEl.appendChild(bubble);
+      aiGuideMessagesEl.scrollTop = aiGuideMessagesEl.scrollHeight;
+    }
+
+    function getAiGuideReply(question) {
+      const q = String(question || "").toLowerCase();
+      if (/catalog|cat[aá]logo|buscar|busca|filtro|filter/.test(q)) return tx().aiGuideCatalog;
+      if (/favorit|estrela|star/.test(q)) return tx().aiGuideFavorites;
+      if (/adicionar|agregar|add|create|criar|crear|form/.test(q)) return tx().aiGuideCreate;
+      if (/sobre|about|acerca|mision|mission|vision|visao/.test(q)) return tx().aiGuideAbout;
+      if (/idioma|language|lengua|ingl[eê]s|english|espanol|espa[nñ]ol|portugu[eê]s/.test(q)) return tx().aiGuideLanguage;
+      return tx().aiGuideDefault;
+    }
+
+    async function sendAiGuideMessage() {
+      const question = String(aiGuideInputEl.value || "").trim();
+      if (!question) return;
+      aiGuideSendBtn.disabled = true;
+      addAiGuideMessage(question, "user");
+      aiGuideHistory.push({ role: "user", content: question });
+      aiGuideInputEl.value = "";
+      try {
+        const data = await request("/api/ai-guide/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            lang: currentLang,
+            message: question,
+            history: aiGuideHistory.slice(-8),
+          }),
+        });
+        const reply = String(data?.reply || "").trim() || getAiGuideReply(question);
+        addAiGuideMessage(reply, "bot");
+        aiGuideHistory.push({ role: "assistant", content: reply });
+      } catch (error) {
+        const fallback = getAiGuideReply(question);
+        addAiGuideMessage(fallback, "bot");
+        aiGuideHistory.push({ role: "assistant", content: fallback });
+      } finally {
+        aiGuideSendBtn.disabled = false;
+        aiGuideInputEl.focus();
+      }
     }
 
     function getInitials(name) {
@@ -1526,14 +1658,13 @@
       document.getElementById("newAuthorPhotoLabel").textContent = x.manageUsersPhotoLabel;
       document.getElementById("addAuthorBtn").textContent = x.manageUsersAdd;
       document.getElementById("closeManageUsers").textContent = x.manageUsersClose;
-      aiGuideFab.textContent = x.aiGuideFab;
+      aiGuideFab.title = x.aiGuideFabTitle;
       document.getElementById("aiGuideTitle").textContent = x.aiGuideTitle;
       document.getElementById("aiGuideSubtitle").textContent = x.aiGuideSubtitle;
-      aiGuideGoCatalogBtn.textContent = x.aiGuideGoCatalog;
-      aiGuideGoFavoritesBtn.textContent = x.aiGuideGoFavorites;
-      aiGuideGoAddBtn.textContent = x.aiGuideGoAdd;
-      aiGuideCloseBtn.textContent = x.aiGuideClose;
-      renderGuideTips();
+      aiGuideInputEl.placeholder = x.aiGuideInputPlaceholder;
+      if (!aiGuideMessagesEl.children.length || aiGuideLastLang !== currentLang) {
+        resetAiGuideConversation();
+      }
       document.getElementById("authTitle").textContent = i.loginTitle;
       document.getElementById("loginBtn").textContent = i.loginBtn;
       document.getElementById("saveCaseBtn").textContent = i.saveCase;
@@ -1822,7 +1953,6 @@
         catalogAstroEl.src = "/assets/catalog-mascot.png";
         catalogAstroEl.alt = "Catalog mascot";
       }
-      renderGuideTips();
     }
 
     function closeModal() {
@@ -1947,26 +2077,25 @@
       }
     });
     aiGuideFab.addEventListener("click", () => {
-      renderGuideTips();
-      aiGuideWrap.style.display = "flex";
+      aiGuideWrap.classList.remove("hidden");
+      if (!aiGuideMessagesEl.children.length) {
+        resetAiGuideConversation();
+      }
+      aiGuideInputEl.focus();
+    });
+    aiGuideMinBtn.addEventListener("click", () => {
+      aiGuideWrap.classList.add("hidden");
     });
     aiGuideCloseBtn.addEventListener("click", () => {
-      aiGuideWrap.style.display = "none";
+      aiGuideWrap.classList.add("hidden");
+      resetAiGuideConversation();
     });
-    aiGuideGoCatalogBtn.addEventListener("click", () => {
-      aiGuideWrap.style.display = "none";
-      switchTab("catalog");
-    });
-    aiGuideGoFavoritesBtn.addEventListener("click", () => {
-      aiGuideWrap.style.display = "none";
-      switchTab("favorites");
-    });
-    aiGuideGoAddBtn.addEventListener("click", () => {
-      aiGuideWrap.style.display = "none";
-      modalWrap.style.display = "flex";
-    });
-    aiGuideWrap.addEventListener("click", (event) => {
-      if (event.target === aiGuideWrap) return;
+    aiGuideSendBtn.addEventListener("click", sendAiGuideMessage);
+    aiGuideInputEl.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        sendAiGuideMessage();
+      }
     });
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
