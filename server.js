@@ -515,6 +515,20 @@ function buildAiSystemPrompt(uiLanguage) {
   return "Voce e o assistente AI CoE Guide de um catalogo interno de casos de uso de IA. Responda em portugues do Brasil, claro e pratico. Quando pedirem para procurar/recomendar casos, use apenas os casos do contexto e cite os titulos exatos. Se nao houver correspondencia, diga isso explicitamente.";
 }
 
+function detectFindIntent(message) {
+  const text = String(message || "").toLowerCase();
+  const directFind =
+    /buscar|busco|procura|procurar|encontrar|find|search|recommend|recomendar|recomienda|sugerir|sugere/.test(
+      text
+    );
+  const caseRequest =
+    /(caso|casos|caso de uso|casos de uso|use case|use cases)/.test(text) &&
+    /(necesito|quiero|dame|mostrame|muestrame|mu[eé]strame|need|i need|show me|me mostra|me mostre|preciso|quero)/.test(
+      text
+    );
+  return directFind || caseRequest;
+}
+
 app.post("/api/ai-guide/chat", async (req, res) => {
   const uiLanguage = normalizeUiLanguage(req.body?.lang || "pt");
   const message = toTrimmedText(req.body?.message);
@@ -525,9 +539,7 @@ app.post("/api/ai-guide/chat", async (req, res) => {
   }
   try {
     const useCases = await loadUseCasesForAiContext(40);
-    const isFindIntent = /buscar|procura|procurar|encontrar|find|search|recommend|recomendar/i.test(
-      message
-    );
+    const isFindIntent = detectFindIntent(message);
     const relevantCases = isFindIntent
       ? findRelevantUseCases(useCases, message, uiLanguage, 8)
       : useCases.slice(0, 20);
