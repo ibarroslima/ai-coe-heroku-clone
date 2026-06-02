@@ -515,18 +515,22 @@
       margin-top: 10px;
     }
     .ai-guide-fab {
-      position: fixed;
-      right: 16px;
-      top: 84px;
-      z-index: 9;
-      width: 48px;
-      height: 48px;
+      position: relative;
+      width: 42px;
+      height: 42px;
       border: 1px solid #d9e8ff;
       border-radius: 999px;
       background: #fff;
-      box-shadow: 0 10px 24px rgba(6, 60, 140, 0.2);
-      font-size: 22px;
+      box-shadow: 0 6px 14px rgba(6, 60, 140, 0.16);
+      padding: 0;
       cursor: pointer;
+    }
+    .ai-guide-fab-img {
+      width: 30px;
+      height: 30px;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto;
     }
     .ai-guide-panel {
       position: fixed;
@@ -562,6 +566,12 @@
       font-size: 20px;
       background: rgba(255, 255, 255, 0.2);
       border: 1px solid rgba(255, 255, 255, 0.4);
+    }
+    .ai-guide-avatar-img {
+      width: 30px;
+      height: 30px;
+      object-fit: contain;
+      display: block;
     }
     .ai-guide-head-title { margin: 0; font-size: 38px; line-height: 1; }
     .ai-guide-head-subtitle { margin: 2px 0 0; opacity: 0.9; font-size: 12px; }
@@ -660,10 +670,6 @@
       .about-mascot { width: 116px; }
       .about-mv, .how-grid, .principles-grid, .detail-body { grid-template-columns: 1fr; }
       .detail-title { font-size: 34px; }
-      .ai-guide-fab {
-        right: 10px;
-        top: 76px;
-      }
       .ai-guide-panel {
         right: 10px;
         top: 130px;
@@ -682,6 +688,9 @@
       </div>
       <div class="top-actions">
         <button id="openModal" class="pill-btn primary">+ Adicionar caso</button>
+        <button id="aiGuideFab" class="ai-guide-fab" type="button" title="Abrir assistente IA">
+          <img id="aiGuideFabImg" class="ai-guide-fab-img" src="/assets/ai-guide-avatar.png" alt="AI Guide avatar" />
+        </button>
         <div class="lang-wrap">
           <button id="langBtn" class="pill-btn lang-btn" title="Idioma"><span><strong id="langBtnCode">PT</strong></span><span>▾</span></button>
           <div id="langMenu" class="lang-menu">
@@ -913,11 +922,12 @@
       </div>
     </div>
   </div>
-  <button id="aiGuideFab" class="ai-guide-fab" type="button" title="Abrir assistente IA">🤖</button>
   <section id="aiGuideWrap" class="ai-guide-panel hidden">
     <header class="ai-guide-head">
       <div class="ai-guide-head-left">
-        <div class="ai-guide-avatar">🤖</div>
+        <div class="ai-guide-avatar">
+          <img id="aiGuideAvatarImg" class="ai-guide-avatar-img" src="/assets/ai-guide-avatar.png" alt="AI Guide avatar" />
+        </div>
         <div>
           <h3 id="aiGuideTitle" class="ai-guide-head-title">AI CoE Guide</h3>
           <p id="aiGuideSubtitle" class="ai-guide-head-subtitle">Asistente do site</p>
