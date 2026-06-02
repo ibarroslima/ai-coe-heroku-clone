@@ -934,7 +934,6 @@
         </div>
       </div>
       <div class="ai-guide-head-actions">
-        <button id="aiGuideMinBtn" class="ai-guide-head-btn" type="button">▢</button>
         <button id="aiGuideCloseBtn" class="ai-guide-head-btn" type="button">✕</button>
       </div>
     </header>
@@ -1092,7 +1091,6 @@
     const aiGuideMessagesEl = document.getElementById("aiGuideMessages");
     const aiGuideInputEl = document.getElementById("aiGuideInput");
     const aiGuideSendBtn = document.getElementById("aiGuideSendBtn");
-    const aiGuideMinBtn = document.getElementById("aiGuideMinBtn");
     const aiGuideCloseBtn = document.getElementById("aiGuideCloseBtn");
 
     let allCases = [];
@@ -1221,6 +1219,7 @@
         aiGuideAbout: "Na secao Sobre voce encontra missao, visao, como fazemos e principios do time LATAM GTM.",
         aiGuideLanguage: "Voce pode trocar idioma no botao PT/ES/EN no topo. O conteudo do app se adapta automaticamente.",
         aiGuideDefault: "Posso te ajudar com: catalogo, favoritos, criacao de caso, secao Sobre e idiomas. Digite um desses temas.",
+        aiGuideUnavailable: "Nao consegui consultar a IA agora. Verifique a configuracao de OPENAI_API_KEY no servidor e tente novamente.",
       },
       es: {
         selectAuthor: "Seleccione un autor",
@@ -1279,6 +1278,7 @@
         aiGuideAbout: "En Acerca encuentras mision, vision, como trabajamos y principios del equipo LATAM GTM.",
         aiGuideLanguage: "Puedes cambiar idioma en el boton PT/ES/EN de arriba. El contenido se adapta automaticamente.",
         aiGuideDefault: "Puedo ayudarte con: catalogo, favoritos, creacion de caso, seccion Acerca e idiomas. Escribe uno de esos temas.",
+        aiGuideUnavailable: "No pude consultar la IA ahora. Verifica la configuracion de OPENAI_API_KEY en el servidor e intenta de nuevo.",
       },
       en: {
         selectAuthor: "Select an author",
@@ -1337,6 +1337,7 @@
         aiGuideAbout: "In About, you can review mission, vision, how we work, and LATAM GTM principles.",
         aiGuideLanguage: "You can switch language using the PT/ES/EN button at the top. App content updates automatically.",
         aiGuideDefault: "I can help with: catalog, favorites, creating a case, About section, and languages. Type one of these topics.",
+        aiGuideUnavailable: "I could not reach the AI service right now. Check OPENAI_API_KEY on the server and try again.",
       },
     };
     let aiGuideLastLang = "pt";
@@ -1388,9 +1389,9 @@
         addAiGuideMessage(reply, "bot");
         aiGuideHistory.push({ role: "assistant", content: reply });
       } catch (error) {
-        const fallback = getAiGuideReply(question);
-        addAiGuideMessage(fallback, "bot");
-        aiGuideHistory.push({ role: "assistant", content: fallback });
+        const failureMessage = tx().aiGuideUnavailable;
+        addAiGuideMessage(failureMessage, "bot");
+        aiGuideHistory.push({ role: "assistant", content: failureMessage });
       } finally {
         aiGuideSendBtn.disabled = false;
         aiGuideInputEl.focus();
@@ -2092,9 +2093,6 @@
         resetAiGuideConversation();
       }
       aiGuideInputEl.focus();
-    });
-    aiGuideMinBtn.addEventListener("click", () => {
-      aiGuideWrap.classList.add("hidden");
     });
     aiGuideCloseBtn.addEventListener("click", () => {
       aiGuideWrap.classList.add("hidden");

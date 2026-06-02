@@ -362,15 +362,58 @@ function buildCatalogContextForAi(useCases, uiLanguage) {
   return lines.join("\n");
 }
 
+function tokenizeSearchText(value) {
+  return String(value || "")
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}\s]/gu, " ")
+    .split(/\s+/)
+    .map((token) => token.trim())
+    .filter((token) => token.length >= 2);
+}
+
+function scoreUseCaseAgainstQuery(item, queryTokens, uiLanguage) {
+  const title = localizedCaseField(item, "title", uiLanguage).toLowerCase();
+  const description = localizedCaseField(item, "description", uiLanguage).toLowerCase();
+  const technology = toTrimmedText(item.technology).toLowerCase();
+  const area = toTrimmedText(item.area).toLowerCase();
+  const phase = toTrimmedText(item.phase).toLowerCase();
+  const theme = toTrimmedText(item.theme).toLowerCase();
+  const author = toTrimmedText(item.author_name).toLowerCase();
+
+  let score = 0;
+  queryTokens.forEach((token) => {
+    if (title.includes(token)) score += 5;
+    if (technology.includes(token)) score += 4;
+    if (theme.includes(token) || phase.includes(token)) score += 3;
+    if (area.includes(token) || author.includes(token)) score += 2;
+    if (description.includes(token)) score += 1;
+  });
+  return score;
+}
+
+function findRelevantUseCases(useCases, query, uiLanguage, limit = 8) {
+  const tokens = tokenizeSearchText(query);
+  if (!tokens.length) return [];
+  return useCases
+    .map((item) => ({
+      item,
+      score: scoreUseCaseAgainstQuery(item, tokens, uiLanguage),
+    }))
+    .filter((entry) => entry.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, limit)
+    .map((entry) => entry.item);
+}
+
 function buildAiSystemPrompt(uiLanguage) {
   const lang = normalizeUiLanguage(uiLanguage);
   if (lang === "es") {
-    return "Eres el asistente AI CoE Guide para un catalogo interno de casos de uso de IA. Responde en espanol LATAM, de forma clara y accionable, con tono profesional y amistoso. Si no sabes algo del catalogo, dilo con honestidad y ofrece un proximo paso.";
+    return "Eres el asistente AI CoE Guide para un catalogo interno de casos de uso de IA. Responde en espanol LATAM, claro y accionable. Cuando el usuario pida buscar/recomendar casos, usa solo casos del contexto y cita titulos exactos. Si no hay coincidencias, dilo explicitamente.";
   }
   if (lang === "en") {
-    return "You are the AI CoE Guide assistant for an internal AI use case catalog. Reply in clear, concise English with practical guidance. If catalog data is insufficient, say so and suggest next steps.";
+    return "You are the AI CoE Guide assistant for an internal AI use case catalog. Reply clearly and practically. When asked to find or recommend use cases, use only items from provided context and quote exact titles. If there are no matches, state that explicitly.";
   }
-  return "Voce e o assistente AI CoE Guide de um catalogo interno de casos de uso de IA. Responda em portugues do Brasil, de forma clara e pratica. Se faltar informacao no catalogo, diga isso e sugira o proximo passo.";
+  return "Voce e o assistente AI CoE Guide de um catalogo interno de casos de uso de IA. Responda em portugues do Brasil, claro e pratico. Quando pedirem para procurar/recomendar casos, use apenas os casos do contexto e cite os titulos exatos. Se nao houver correspondencia, diga isso explicitamente.";
 }
 
 app.post("/api/ai-guide/chat", async (req, res) => {
@@ -394,7 +437,16 @@ app.post("/api/ai-guide/chat", async (req, res) => {
 
   try {
     const useCases = await loadUseCasesForAiContext(40);
-    const catalogContext = buildCatalogContextForAi(useCases, uiLanguage);
+    const isFindIntent = /buscar|procura|procurar|encontrar|find|search|recommend|recomendar/i.test(
+      message
+    );
+    const relevantCases = isFindIntent
+      ? findRelevantUseCases(useCases, message, uiLanguage, 8)
+      : useCases.slice(0, 20);
+    const catalogContext = buildCatalogContextForAi(
+      relevantCases.length ? relevantCases : useCases.slice(0, 20),
+      uiLanguage
+    );
     const safeHistory = history
       .slice(-8)
       .map((item) => ({
@@ -416,7 +468,15 @@ app.post("/api/ai-guide/chat", async (req, res) => {
           { role: "system", content: buildAiSystemPrompt(uiLanguage) },
           {
             role: "system",
-            content: `Contexto do catalogo (casos mais recentes):\n${catalogContext || "Sem casos cadastrados."}`,
+            content: `Contexto do catalogo:\n${catalogContext || "Sem casos cadastrados."}`,
+          },
+          {
+            role: "system",
+            content: isFindIntent
+              ? relevantCases.length
+                ? `A consulta do usuario parece busca de casos. Foram encontrados ${relevantCases.length} casos relevantes no catalogo. Priorize essa lista e cite titulos literalmente.`
+                : "A consulta do usuario parece busca de casos, mas nao houve correspondencia clara no catalogo. Informe isso explicitamente e sugira filtros."
+              : "Responda com base no catalogo e no funcionamento do app.",
           },
           ...safeHistory,
           { role: "user", content: message },
