@@ -12,6 +12,9 @@ const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || (isProduction ? "" : "admin
 const SESSION_SECRET = process.env.SESSION_SECRET || (isProduction ? "" : "change-me");
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY || "";
 const OPENAI_MODEL = process.env.OPENAI_MODEL || "gpt-4o-mini";
+const LLM_GATEWAY_URL = process.env.LLM_GATEWAY_URL || "";
+const LLM_GATEWAY_TOKEN = process.env.LLM_GATEWAY_TOKEN || "";
+const LLM_GATEWAY_MODEL = process.env.LLM_GATEWAY_MODEL || "claude-sonnet-4";
 
 if (isProduction && (!ADMIN_PASSWORD || !SESSION_SECRET)) {
   throw new Error(
@@ -405,6 +408,102 @@ function findRelevantUseCases(useCases, query, uiLanguage, limit = 8) {
     .map((entry) => entry.item);
 }
 
+function statusLabelForLang(status, uiLanguage) {
+  const normalized = normalizeStatus(status);
+  const lang = normalizeUiLanguage(uiLanguage);
+  if (lang === "es") return normalized === "completed" ? "completado" : "en curso";
+  if (lang === "en") return normalized === "completed" ? "completed" : "in progress";
+  return normalized === "completed" ? "concluido" : "em andamento";
+}
+
+function buildFindReply(useCases, uiLanguage) {
+  const lang = normalizeUiLanguage(uiLanguage);
+  if (!useCases.length) {
+    if (lang === "es") {
+      return "No encontré casos con esos términos en el catálogo ahora mismo. Prueba buscar por tecnologia, tema, autor o estado (por ejemplo: Agentforce, Discovery, completado).";
+    }
+    if (lang === "en") {
+      return "I could not find matching use cases with those terms right now. Try searching by technology, theme, author, or status (for example: Agentforce, Discovery, completed).";
+    }
+    return "Nao encontrei casos com esses termos no catalogo agora. Tente buscar por tecnologia, tema, autor ou status (ex.: Agentforce, Discovery, concluido).";
+  }
+
+  const top = useCases.slice(0, 5);
+  const lines = top.map((item, index) => {
+    const title = localizedCaseField(item, "title", uiLanguage) || "Sem titulo";
+    const tech = toTrimmedText(item.technology) || "-";
+    const status = statusLabelForLang(item.status, uiLanguage);
+    return `${index + 1}. ${title} (Tech: ${tech}, Status: ${status})`;
+  });
+
+  if (lang === "es") {
+    return `Encontré ${useCases.length} caso(s) relevante(s):\n${lines.join(
+      "\n"
+    )}\n\nSi quieres, te ayudo a filtrar por tecnologia, estado o autor para llegar al caso exacto.`;
+  }
+  if (lang === "en") {
+    return `I found ${useCases.length} relevant case(s):\n${lines.join(
+      "\n"
+    )}\n\nIf you want, I can help narrow this list by technology, status, or author to reach the exact case.`;
+  }
+  return `Encontrei ${useCases.length} caso(s) relevante(s):\n${lines.join(
+    "\n"
+  )}\n\nSe quiser, eu te ajudo a refinar por tecnologia, status ou autor para chegar no caso exato.`;
+}
+
+function buildGeneralReply(message, uiLanguage) {
+  const q = String(message || "").toLowerCase();
+  const lang = normalizeUiLanguage(uiLanguage);
+  if (/favorit|estrela|star/.test(q)) {
+    if (lang === "es") {
+      return "Favoritos es por navegador/dispositivo. Cada persona ve su propia lista de favoritos.";
+    }
+    if (lang === "en") {
+      return "Favorites are browser/device specific. Each person sees their own favorites list.";
+    }
+    return "Favoritos sao por navegador/dispositivo. Cada pessoa ve sua propria lista de favoritos.";
+  }
+  if (/adicionar|agregar|add|create|criar|crear|form/.test(q)) {
+    if (lang === "es") {
+      return "Para crear un caso: haz clic en '+ Agregar caso' y completa obligatorios: Titulo, Autor, Tecnologia, Descripcion y Estado.";
+    }
+    if (lang === "en") {
+      return "To create a case: click '+ Add case' and fill required fields: Title, Author, Technology, Description, and Status.";
+    }
+    return "Para criar um caso: clique em '+ Adicionar caso' e preencha os obrigatorios: Titulo, Autor, Tecnologia, Descricao e Status.";
+  }
+  if (/sobre|about|acerca|mision|mission|vision|visao/.test(q)) {
+    if (lang === "es") {
+      return "En la seccion 'Acerca' tienes mision, vision, como trabajamos y principios del equipo LATAM GTM.";
+    }
+    if (lang === "en") {
+      return "In the 'About' section you can see mission, vision, how we work, and LATAM GTM team principles.";
+    }
+    return "Na secao 'Sobre' voce encontra missao, visao, como fazemos e principios do time LATAM GTM.";
+  }
+  if (/idioma|language|lengua|english|espanol|espa[nñ]ol|portugu[eê]s/.test(q)) {
+    if (lang === "es") {
+      return "Puedes cambiar idioma en el boton PT/ES/EN de la parte superior.";
+    }
+    if (lang === "en") {
+      return "You can change language using the PT/ES/EN button at the top.";
+    }
+    return "Voce pode trocar o idioma no botao PT/ES/EN no topo.";
+  }
+  if (lang === "es") {
+    return "Puedo ayudarte a encontrar casos de uso, explicar favoritos, mostrar como crear casos y orientar filtros del catalogo. Dime que necesitas.";
+  }
+  if (lang === "en") {
+    return "I can help you find use cases, explain favorites, show how to create cases, and guide catalog filters. Tell me what you need.";
+  }
+  return "Posso te ajudar a encontrar casos de uso, explicar favoritos, mostrar como criar casos e orientar filtros do catalogo. Me diga o que voce precisa.";
+}
+
+function buildLocalGuideReply({ message, uiLanguage, relevantCases, isFindIntent }) {
+  if (isFindIntent) return buildFindReply(relevantCases, uiLanguage);
+  return buildGeneralReply(message, uiLanguage);
+}
+
 function buildAiSystemPrompt(uiLanguage) {
   const lang = normalizeUiLanguage(uiLanguage);
   if (lang === "es") {
@@ -424,17 +523,6 @@ app.post("/api/ai-guide/chat", async (req, res) => {
   if (!message) {
     return res.status(400).json({ error: "Mensagem obrigatoria." });
   }
-  if (!OPENAI_API_KEY) {
-    return res.status(503).json({
-      error:
-        uiLanguage === "es"
-          ? "Configura OPENAI_API_KEY para activar respuestas inteligentes."
-          : uiLanguage === "en"
-            ? "Configure OPENAI_API_KEY to enable intelligent answers."
-            : "Configure OPENAI_API_KEY para ativar respostas inteligentes.",
-    });
-  }
-
   try {
     const useCases = await loadUseCasesForAiContext(40);
     const isFindIntent = /buscar|procura|procurar|encontrar|find|search|recommend|recomendar/i.test(
@@ -443,7 +531,7 @@ app.post("/api/ai-guide/chat", async (req, res) => {
     const relevantCases = isFindIntent
       ? findRelevantUseCases(useCases, message, uiLanguage, 8)
       : useCases.slice(0, 20);
-    const catalogContext = buildCatalogContextForAi(
+    const catalogContextForModel = buildCatalogContextForAi(
       relevantCases.length ? relevantCases : useCases.slice(0, 20),
       uiLanguage
     );
@@ -455,44 +543,54 @@ app.post("/api/ai-guide/chat", async (req, res) => {
       }))
       .filter((item) => item.content);
 
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${OPENAI_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: OPENAI_MODEL,
-        temperature: 0.3,
-        messages: [
-          { role: "system", content: buildAiSystemPrompt(uiLanguage) },
-          {
-            role: "system",
-            content: `Contexto do catalogo:\n${catalogContext || "Sem casos cadastrados."}`,
+    // If corporate gateway is configured, try it first.
+    if (LLM_GATEWAY_URL && LLM_GATEWAY_TOKEN) {
+      try {
+        const gatewayResponse = await fetch(LLM_GATEWAY_URL, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${LLM_GATEWAY_TOKEN}`,
+            "Content-Type": "application/json",
           },
-          {
-            role: "system",
-            content: isFindIntent
-              ? relevantCases.length
-                ? `A consulta do usuario parece busca de casos. Foram encontrados ${relevantCases.length} casos relevantes no catalogo. Priorize essa lista e cite titulos literalmente.`
-                : "A consulta do usuario parece busca de casos, mas nao houve correspondencia clara no catalogo. Informe isso explicitamente e sugira filtros."
-              : "Responda com base no catalogo e no funcionamento do app.",
-          },
-          ...safeHistory,
-          { role: "user", content: message },
-        ],
-      }),
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("AI chat error:", response.status, errorText);
-      return res.status(502).json({ error: "Falha ao consultar IA." });
+          body: JSON.stringify({
+            model: LLM_GATEWAY_MODEL,
+            messages: [
+              { role: "system", content: buildAiSystemPrompt(uiLanguage) },
+              {
+                role: "system",
+                content: `Contexto do catalogo:\n${
+                  catalogContextForModel || "Sem casos cadastrados."
+                }`,
+              },
+              ...safeHistory,
+              { role: "user", content: message },
+            ],
+          }),
+        });
+        if (gatewayResponse.ok) {
+          const gatewayData = await gatewayResponse.json();
+          const gatewayReply = toTrimmedText(
+            gatewayData?.reply ||
+              gatewayData?.choices?.[0]?.message?.content ||
+              gatewayData?.output_text
+          );
+          if (gatewayReply) return res.json({ reply: gatewayReply });
+        } else {
+          const gatewayError = await gatewayResponse.text();
+          console.error("Gateway chat error:", gatewayResponse.status, gatewayError);
+        }
+      } catch (gatewayError) {
+        console.error("Gateway chat request failed:", gatewayError);
+      }
     }
 
-    const data = await response.json();
-    const reply = toTrimmedText(data?.choices?.[0]?.message?.content);
-    if (!reply) return res.status(502).json({ error: "Resposta vazia da IA." });
+    // Always provide an intelligent local response as fallback.
+    const reply = buildLocalGuideReply({
+      message,
+      uiLanguage,
+      relevantCases,
+      isFindIntent,
+    });
     return res.json({ reply });
   } catch (error) {
     console.error(error);
