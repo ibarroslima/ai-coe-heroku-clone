@@ -180,6 +180,12 @@ function toCsvValue(value) {
   return text;
 }
 
+function extractUrlsFromText(value) {
+  const text = String(value || "");
+  const matches = text.match(/https?:\/\/[^\s)>\],"]+/gi) || [];
+  return Array.from(new Set(matches.map((url) => url.trim())));
+}
+
 function getJson(url) {
   return new Promise((resolve, reject) => {
     https
@@ -394,10 +400,122 @@ function scoreUseCaseAgainstQuery(item, queryTokens, uiLanguage) {
   return score;
 }
 
-function findRelevantUseCases(useCases, query, uiLanguage, limit = 8) {
+function parseStatusFilter(value) {
+  const normalized = String(value || "").toLowerCase();
+  if (/complet|conclu|done|closed/.test(normalized)) return "completed";
+  if (/progres|curso|andamento|open|pend/.test(normalized)) return "in_progress";
+  return "";
+}
+
+function parseSearchInput(text) {
+  let working = String(text || "");
+  const filters = {
+    author: "",
+    technology: "",
+    status: "",
+    area: "",
+    phase: "",
+    theme: "",
+  };
+  const captureFilter = (pattern, key, transform) => {
+    const match = working.match(pattern);
+    if (!match) return;
+    const raw = toTrimmedText(match[1] || "");
+    filters[key] = transform ? transform(raw) : raw;
+    working = working.replace(match[0], " ");
+  };
+
+  captureFilter(/(?:autor|author)\s*:\s*([^\n,;]+)/i, "author");
+  captureFilter(/(?:tecnologia|technology|tech)\s*:\s*([^\n,;]+)/i, "technology");
+  captureFilter(/(?:status|estado)\s*:\s*([^\n,;]+)/i, "status", parseStatusFilter);
+  captureFilter(/(?:area)\s*:\s*([^\n,;]+)/i, "area");
+  captureFilter(/(?:fase|phase)\s*:\s*([^\n,;]+)/i, "phase");
+  captureFilter(/(?:tema|theme)\s*:\s*([^\n,;]+)/i, "theme");
+
+  const freeText = toTrimmedText(
+    working
+      .replace(/[:;,]+/g, " ")
+      .replace(/\s+/g, " ")
+  );
+  const hasFilterTag = Object.values(filters).some(Boolean);
+  return { filters, freeText, hasFilterTag };
+}
+
+function hasAnyFilter(filters) {
+  return Boolean(
+    filters.author ||
+      filters.technology ||
+      filters.status ||
+      filters.area ||
+      filters.phase ||
+      filters.theme
+  );
+}
+
+function resolveSearchContext(message, history) {
+  const currentParsed = parseSearchInput(message);
+  const recentUserMessages = history
+    .filter((item) => item.role === "user")
+    .map((item) => toTrimmedText(item.content))
+    .filter(Boolean)
+    .slice(-6);
+  const parsedHistory = recentUserMessages.map((msg) => ({
+    text: msg,
+    parsed: parseSearchInput(msg),
+    hasFindIntent: detectFindIntent(msg),
+  }));
+
+  const mergedFilters = { ...currentParsed.filters };
+  parsedHistory.forEach((entry) => {
+    Object.entries(entry.parsed.filters).forEach(([key, value]) => {
+      if (!mergedFilters[key] && value) mergedFilters[key] = value;
+    });
+  });
+
+  const lastFreeText =
+    currentParsed.freeText ||
+    [...parsedHistory].reverse().map((entry) => entry.parsed.freeText).find(Boolean) ||
+    "";
+
+  const hadFindIntentBefore = parsedHistory.some((entry) => entry.hasFindIntent);
+  const isFindIntent =
+    detectFindIntent(message) || (currentParsed.hasFilterTag && hadFindIntentBefore);
+
+  return {
+    filters: mergedFilters,
+    queryText: lastFreeText,
+    isFindIntent,
+  };
+}
+
+function matchesFilters(item, filters) {
+  if (filters.status && normalizeStatus(item.status) !== filters.status) return false;
+  if (filters.author && !toTrimmedText(item.author_name).toLowerCase().includes(filters.author.toLowerCase())) {
+    return false;
+  }
+  if (
+    filters.technology &&
+    !toTrimmedText(item.technology).toLowerCase().includes(filters.technology.toLowerCase())
+  ) {
+    return false;
+  }
+  if (filters.area && !toTrimmedText(item.area).toLowerCase().includes(filters.area.toLowerCase())) {
+    return false;
+  }
+  if (filters.phase && !toTrimmedText(item.phase).toLowerCase().includes(filters.phase.toLowerCase())) {
+    return false;
+  }
+  if (filters.theme && !toTrimmedText(item.theme).toLowerCase().includes(filters.theme.toLowerCase())) {
+    return false;
+  }
+  return true;
+}
+
+function findRelevantUseCases(useCases, query, uiLanguage, filters = {}, limit = 8) {
   const tokens = tokenizeSearchText(query);
-  if (!tokens.length) return [];
-  return useCases
+  const filtered = useCases.filter((item) => matchesFilters(item, filters));
+  if (!tokens.length) return filtered.slice(0, limit);
+  return filtered
     .map((item) => ({
       item,
       score: scoreUseCaseAgainstQuery(item, tokens, uiLanguage),
@@ -416,16 +534,27 @@ function statusLabelForLang(status, uiLanguage) {
   return normalized === "completed" ? "concluido" : "em andamento";
 }
 
-function buildFindReply(useCases, uiLanguage) {
+function buildFindReply(useCases, uiLanguage, filters = {}) {
   const lang = normalizeUiLanguage(uiLanguage);
+  const activeFilters = [];
+  if (filters.author) activeFilters.push(`author=${filters.author}`);
+  if (filters.technology) activeFilters.push(`tech=${filters.technology}`);
+  if (filters.status) activeFilters.push(`status=${filters.status}`);
+  if (filters.area) activeFilters.push(`area=${filters.area}`);
+  if (filters.phase) activeFilters.push(`phase=${filters.phase}`);
+  if (filters.theme) activeFilters.push(`theme=${filters.theme}`);
+  const filtersLine = activeFilters.length
+    ? `\n${lang === "es" ? "Filtros aplicados" : lang === "en" ? "Applied filters" : "Filtros aplicados"}: ${activeFilters.join(", ")}`
+    : "";
+
   if (!useCases.length) {
     if (lang === "es") {
-      return "No encontré casos con esos términos en el catálogo ahora mismo. Prueba buscar por tecnologia, tema, autor o estado (por ejemplo: Agentforce, Discovery, completado).";
+      return `No encontré casos con esos términos en el catálogo ahora mismo.${filtersLine}\nPrueba buscar por tecnologia, tema, autor o estado (por ejemplo: Agentforce, Discovery, completado).`;
     }
     if (lang === "en") {
-      return "I could not find matching use cases with those terms right now. Try searching by technology, theme, author, or status (for example: Agentforce, Discovery, completed).";
+      return `I could not find matching use cases with those terms right now.${filtersLine}\nTry searching by technology, theme, author, or status (for example: Agentforce, Discovery, completed).`;
     }
-    return "Nao encontrei casos com esses termos no catalogo agora. Tente buscar por tecnologia, tema, autor ou status (ex.: Agentforce, Discovery, concluido).";
+    return `Nao encontrei casos com esses termos no catalogo agora.${filtersLine}\nTente buscar por tecnologia, tema, autor ou status (ex.: Agentforce, Discovery, concluido).`;
   }
 
   const top = useCases.slice(0, 5);
@@ -439,16 +568,16 @@ function buildFindReply(useCases, uiLanguage) {
   if (lang === "es") {
     return `Encontré ${useCases.length} caso(s) relevante(s):\n${lines.join(
       "\n"
-    )}\n\nSi quieres, te ayudo a filtrar por tecnologia, estado o autor para llegar al caso exacto.`;
+    )}${filtersLine}\n\nSi quieres, te ayudo a filtrar por tecnologia, estado o autor para llegar al caso exacto.`;
   }
   if (lang === "en") {
     return `I found ${useCases.length} relevant case(s):\n${lines.join(
       "\n"
-    )}\n\nIf you want, I can help narrow this list by technology, status, or author to reach the exact case.`;
+    )}${filtersLine}\n\nIf you want, I can help narrow this list by technology, status, or author to reach the exact case.`;
   }
   return `Encontrei ${useCases.length} caso(s) relevante(s):\n${lines.join(
     "\n"
-  )}\n\nSe quiser, eu te ajudo a refinar por tecnologia, status ou autor para chegar no caso exato.`;
+  )}${filtersLine}\n\nSe quiser, eu te ajudo a refinar por tecnologia, status ou autor para chegar no caso exato.`;
 }
 
 function buildGeneralReply(message, uiLanguage) {
@@ -499,8 +628,8 @@ function buildGeneralReply(message, uiLanguage) {
   return "Posso te ajudar a encontrar casos de uso, explicar favoritos, mostrar como criar casos e orientar filtros do catalogo. Me diga o que voce precisa.";
 }
 
-function buildLocalGuideReply({ message, uiLanguage, relevantCases, isFindIntent }) {
-  if (isFindIntent) return buildFindReply(relevantCases, uiLanguage);
+function buildLocalGuideReply({ message, uiLanguage, relevantCases, isFindIntent, filters }) {
+  if (isFindIntent) return buildFindReply(relevantCases, uiLanguage, filters);
   return buildGeneralReply(message, uiLanguage);
 }
 
@@ -539,9 +668,10 @@ app.post("/api/ai-guide/chat", async (req, res) => {
   }
   try {
     const useCases = await loadUseCasesForAiContext(40);
-    const isFindIntent = detectFindIntent(message);
+    const searchContext = resolveSearchContext(message, history);
+    const isFindIntent = searchContext.isFindIntent;
     const relevantCases = isFindIntent
-      ? findRelevantUseCases(useCases, message, uiLanguage, 8)
+      ? findRelevantUseCases(useCases, searchContext.queryText, uiLanguage, searchContext.filters, 8)
       : useCases.slice(0, 20);
     const catalogContextForModel = buildCatalogContextForAi(
       relevantCases.length ? relevantCases : useCases.slice(0, 20),
@@ -602,6 +732,7 @@ app.post("/api/ai-guide/chat", async (req, res) => {
       uiLanguage,
       relevantCases,
       isFindIntent,
+      filters: searchContext.filters,
     });
     return res.json({ reply });
   } catch (error) {
@@ -1053,7 +1184,11 @@ app.get("/api/use-cases/export.csv", requireAuth, async (_req, res) => {
     const headers = [
       "id",
       "status",
+      "source_language",
       "title",
+      "title_pt",
+      "title_es",
+      "title_en",
       "category",
       "area",
       "technology",
@@ -1062,6 +1197,10 @@ app.get("/api/use-cases/export.csv", requireAuth, async (_req, res) => {
       "author_name",
       "skill_name",
       "description",
+      "description_pt",
+      "description_es",
+      "description_en",
+      "links_detected",
       "video_url",
       "tags",
       "is_favorite",
@@ -1070,10 +1209,23 @@ app.get("/api/use-cases/export.csv", requireAuth, async (_req, res) => {
 
     const csvBody = rows
       .map((row) =>
-        [
+        (() => {
+          const linksDetected = [
+            ...extractUrlsFromText(row.description),
+            ...extractUrlsFromText(row.description_pt),
+            ...extractUrlsFromText(row.description_es),
+            ...extractUrlsFromText(row.description_en),
+            ...extractUrlsFromText(row.video_url),
+          ];
+          const uniqueLinks = Array.from(new Set(linksDetected));
+          return [
           row.id,
           row.status || "in_progress",
+          row.source_language || "pt",
           row.title,
+          row.title_pt || "",
+          row.title_es || "",
+          row.title_en || "",
           row.category,
           row.area,
           row.technology,
@@ -1082,14 +1234,18 @@ app.get("/api/use-cases/export.csv", requireAuth, async (_req, res) => {
           row.author_name,
           row.skill_name,
           row.description,
+          row.description_pt || "",
+          row.description_es || "",
+          row.description_en || "",
+          uniqueLinks.join(" | "),
           row.video_url || "",
           Array.isArray(row.tags) ? row.tags.join(" | ") : "",
           row.is_favorite,
           row.created_at,
-        ]
+          ];
+        })()
           .map(toCsvValue)
-          .join(",")
-      )
+          .join(","))
       .join("\n");
 
     res.setHeader("Content-Type", "text/csv; charset=utf-8");
