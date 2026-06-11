@@ -734,10 +734,10 @@
       <h1 id="homeTitle">AI CoE ProServ</h1>
       <p class="sub" id="homeDesc">Centralize e compartilhe conhecimento aplicado em IA para toda a organização.</p>
       <section class="home-grid">
-        <article class="metric"><div id="metricCases" class="value">0</div><div id="metricCasesLabel" class="label">Casos documentados</div></article>
-        <article class="metric"><div id="metricTech" class="value">0</div><div id="metricTechLabel" class="label">Tecnologias cobertas</div></article>
-        <article class="metric"><div id="metricContrib" class="value">0</div><div id="metricContribLabel" class="label">Contribuidores</div></article>
-        <article class="metric"><div id="metricBiz" class="value">0</div><div id="metricBizLabel" class="label">Áreas de negócio</div></article>
+        <article class="metric"><div id="metricCases" class="value">--</div><div id="metricCasesLabel" class="label">Casos documentados</div></article>
+        <article class="metric"><div id="metricTech" class="value">--</div><div id="metricTechLabel" class="label">Tecnologias cobertas</div></article>
+        <article class="metric"><div id="metricContrib" class="value">--</div><div id="metricContribLabel" class="label">Contribuidores</div></article>
+        <article class="metric"><div id="metricBiz" class="value">--</div><div id="metricBizLabel" class="label">Áreas de negócio</div></article>
       </section>
       <section class="explainers">
         <article class="explainer"><div class="explainer-icon">📘</div><h3 id="exp1Title">Catálogo de Casos de Uso</h3><p id="exp1Text">Explore todos os projetos de IA documentados pela equipe, com tecnologias, repositórios e contatos.</p></article>
@@ -1101,6 +1101,7 @@
     const AUTHORS_STORAGE_KEY = "ai_coe_authors_v1";
     const AUTHOR_PHOTOS_STORAGE_KEY = "ai_coe_author_photos_v1";
     const CLIENT_ID_STORAGE_KEY = "ai_coe_client_id_v1";
+    const USE_CASES_CACHE_KEY = "ai_coe_cases_cache_v1";
     const DEFAULT_AUTHORS = [
       "Alejandra Acuña",
       "Amanda Basilio",
@@ -1342,6 +1343,7 @@
     };
     let aiGuideLastLang = "pt";
     let aiGuideHistory = [];
+    let isCasesLoading = false;
 
     function resetAiGuideConversation() {
       aiGuideMessagesEl.innerHTML = "";
@@ -1587,6 +1589,45 @@
       document.getElementById("metricTech").textContent = String(tech);
       document.getElementById("metricContrib").textContent = String(contributors);
       document.getElementById("metricBiz").textContent = String(businessAreas);
+    }
+
+    function setCasesLoading(loading) {
+      isCasesLoading = loading;
+      if (!loading) return;
+      if (!allCases.length) {
+        document.getElementById("metricCases").textContent = "--";
+        document.getElementById("metricTech").textContent = "--";
+        document.getElementById("metricContrib").textContent = "--";
+        document.getElementById("metricBiz").textContent = "--";
+        counterEl.textContent = currentLang === "es"
+          ? "Cargando casos..."
+          : currentLang === "en"
+            ? "Loading cases..."
+            : "Carregando casos...";
+      }
+    }
+
+    function saveCasesCache() {
+      try {
+        localStorage.setItem(USE_CASES_CACHE_KEY, JSON.stringify(allCases));
+      } catch (_error) {}
+    }
+
+    function hydrateCasesFromCache() {
+      try {
+        const raw = localStorage.getItem(USE_CASES_CACHE_KEY);
+        if (!raw) return false;
+        const parsed = JSON.parse(raw);
+        if (!Array.isArray(parsed) || !parsed.length) return false;
+        allCases = parsed;
+        updateMetrics();
+        renderRecentCards();
+        updateFilters();
+        applySearch();
+        return true;
+      } catch (_error) {
+        return false;
+      }
     }
 
     function renderRecentCards() {
@@ -1911,7 +1952,13 @@
     }
 
     async function loadCases() {
-      allCases = await request("/api/use-cases");
+      setCasesLoading(true);
+      try {
+        allCases = await request("/api/use-cases");
+        saveCasesCache();
+      } finally {
+        setCasesLoading(false);
+      }
       updateMetrics();
       renderRecentCards();
       updateFilters();
@@ -2141,10 +2188,11 @@
       renderManageUsersList();
       setSelectedAuthor("");
       statusEl.value = "in_progress";
-      await checkAuth();
-      await loadCases();
+      hydrateCasesFromCache();
       updateStaticTranslations();
       switchTab("home");
+      await checkAuth();
+      await loadCases();
     })();
   </script>
 </body>
