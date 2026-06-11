@@ -15,6 +15,16 @@ const OPENAI_MODEL = process.env.OPENAI_MODEL || "gpt-4o-mini";
 const LLM_GATEWAY_URL = process.env.LLM_GATEWAY_URL || "";
 const LLM_GATEWAY_TOKEN = process.env.LLM_GATEWAY_TOKEN || "";
 const LLM_GATEWAY_MODEL = process.env.LLM_GATEWAY_MODEL || "claude-sonnet-4";
+const ENFORCE_SF_NETWORK_ONLY = String(
+  process.env.ENFORCE_SF_NETWORK_ONLY || (isProduction ? "true" : "false")
+).toLowerCase() === "true";
+const SALESFORCE_ALLOWED_CIDRS = (
+  process.env.SALESFORCE_ALLOWED_CIDRS ||
+  "13.108.0.0/14,136.146.0.0/15,204.14.236.0/24"
+)
+  .split(",")
+  .map((value) => value.trim())
+  .filter(Boolean);
 
 if (isProduction && (!ADMIN_PASSWORD || !SESSION_SECRET)) {
   throw new Error(
@@ -39,6 +49,63 @@ let memoryCases = [];
 let memoryId = 1;
 const memoryFavoritesByClient = new Map();
 
+function ipv4ToInt(ip) {
+  const parts = String(ip || "").trim().split(".");
+  if (parts.length !== 4) return null;
+  const nums = parts.map((part) => Number(part));
+  if (nums.some((num) => !Number.isInteger(num) || num < 0 || num > 255)) return null;
+  return (
+    nums[0] * 256 ** 3 +
+    nums[1] * 256 ** 2 +
+    nums[2] * 256 +
+    nums[3]
+  );
+}
+
+function parseCidr(cidr) {
+  const [network, maskBitsRaw] = String(cidr || "").trim().split("/");
+  const maskBits = Number(maskBitsRaw);
+  const networkInt = ipv4ToInt(network);
+  if (
+    networkInt === null ||
+    !Number.isInteger(maskBits) ||
+    maskBits < 0 ||
+    maskBits > 32
+  ) {
+    return null;
+  }
+  const mask =
+    maskBits === 0 ? 0 : (0xffffffff << (32 - maskBits)) >>> 0;
+  return { networkInt: networkInt & mask, mask };
+}
+
+function isIpAllowed(ip, cidrList) {
+  const ipInt = ipv4ToInt(ip);
+  if (ipInt === null) return false;
+  return cidrList.some((cidr) => {
+    const parsed = parseCidr(cidr);
+    if (!parsed) return false;
+    return (ipInt & parsed.mask) === parsed.networkInt;
+  });
+}
+
+function getClientIp(req) {
+  const forwarded = String(req.headers["x-forwarded-for"] || "").trim();
+  if (forwarded) {
+    const first = forwarded.split(",")[0].trim();
+    if (first.includes(":")) {
+      // Handle IPv4 mapped IPv6 format: ::ffff:204.14.236.10
+      const mapped = first.match(/::ffff:(\d+\.\d+\.\d+\.\d+)/i);
+      if (mapped) return mapped[1];
+    }
+    return first;
+  }
+  const remote = String(req.socket?.remoteAddress || "");
+  const mapped = remote.match(/::ffff:(\d+\.\d+\.\d+\.\d+)/i);
+  if (mapped) return mapped[1];
+  return remote;
+}
+
 app.set("trust proxy", 1);
 app.disable("etag");
 app.use(express.json());
@@ -59,6 +126,30 @@ app.use(
     },
   })
 );
+
+app.use((req, res, next) => {
+  if (!ENFORCE_SF_NETWORK_ONLY) return next();
+  if (req.path === "/api/network-access-check") return next();
+
+  const clientIp = getClientIp(req);
+  const localBypass =
+    clientIp === "127.0.0.1" || clientIp === "::1" || clientIp === "";
+  if (localBypass || isIpAllowed(clientIp, SALESFORCE_ALLOWED_CIDRS)) {
+    return next();
+  }
+
+  if (req.path.startsWith("/api/")) {
+    return res.status(403).json({
+      error: "Access denied: Salesforce network or VPN required.",
+    });
+  }
+  return res
+    .status(403)
+    .send(
+      "Access denied: this app is restricted to Salesforce corporate network/VPN."
+    );
+});
+
 app.use(express.static(path.join(__dirname, "public")));
 
 function requireAuth(req, res, next) {
@@ -743,6 +834,20 @@ app.post("/api/ai-guide/chat", async (req, res) => {
 
 app.get("/api/auth/status", (req, res) => {
   res.json({ authenticated: Boolean(req.session && req.session.isAuthenticated) });
+});
+
+app.get("/api/network-access-check", (req, res) => {
+  const clientIp = getClientIp(req);
+  const allowed =
+    !ENFORCE_SF_NETWORK_ONLY ||
+    clientIp === "127.0.0.1" ||
+    clientIp === "::1" ||
+    isIpAllowed(clientIp, SALESFORCE_ALLOWED_CIDRS);
+  return res.json({
+    network_restriction_enabled: ENFORCE_SF_NETWORK_ONLY,
+    allowed,
+    client_ip: clientIp,
+  });
 });
 
 app.post("/api/auth/login", (req, res) => {
