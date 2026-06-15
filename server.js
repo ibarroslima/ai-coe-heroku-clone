@@ -277,6 +277,12 @@ function extractUrlsFromText(value) {
   return Array.from(new Set(matches.map((url) => url.trim())));
 }
 
+function formatDateOnly(value) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  return date.toISOString().slice(0, 10);
+}
+
 function getJson(url) {
   return new Promise((resolve, reject) => {
     https
@@ -1289,64 +1295,43 @@ app.get("/api/use-cases/export.csv", requireAuth, async (_req, res) => {
     const headers = [
       "id",
       "status",
-      "source_language",
       "title",
-      "title_pt",
-      "title_es",
-      "title_en",
       "category",
       "area",
       "technology",
       "phase",
       "theme",
-      "author_name",
-      "skill_name",
+      "author",
+      "project",
       "description",
-      "description_pt",
-      "description_es",
-      "description_en",
-      "links_detected",
       "video_url",
       "tags",
-      "is_favorite",
-      "created_at",
+      "created_on",
+      "created_by",
     ];
 
     const csvBody = rows
-      .map((row) =>
+      .map((row, index) =>
         (() => {
-          const linksDetected = [
-            ...extractUrlsFromText(row.description),
-            ...extractUrlsFromText(row.description_pt),
-            ...extractUrlsFromText(row.description_es),
-            ...extractUrlsFromText(row.description_en),
-            ...extractUrlsFromText(row.video_url),
-          ];
-          const uniqueLinks = Array.from(new Set(linksDetected));
+          const titleEn = toTrimmedText(row.title_en) || toTrimmedText(row.title);
+          const descriptionEn =
+            toTrimmedText(row.description_en) || toTrimmedText(row.description);
           return [
-          row.id,
-          row.status || "in_progress",
-          row.source_language || "pt",
-          row.title,
-          row.title_pt || "",
-          row.title_es || "",
-          row.title_en || "",
-          row.category,
-          row.area,
-          row.technology,
-          row.phase,
-          row.theme,
-          row.author_name,
-          row.skill_name,
-          row.description,
-          row.description_pt || "",
-          row.description_es || "",
-          row.description_en || "",
-          uniqueLinks.join(" | "),
-          row.video_url || "",
-          Array.isArray(row.tags) ? row.tags.join(" | ") : "",
-          row.is_favorite,
-          row.created_at,
+            index + 1,
+            row.status || "in_progress",
+            titleEn,
+            row.category,
+            row.area,
+            row.technology,
+            row.phase,
+            row.theme,
+            row.author_name,
+            row.skill_name,
+            descriptionEn,
+            row.video_url || "",
+            Array.isArray(row.tags) ? row.tags.join(" | ") : "",
+            formatDateOnly(row.created_at),
+            row.author_name || "",
           ];
         })()
           .map(toCsvValue)
