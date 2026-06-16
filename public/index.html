@@ -867,9 +867,8 @@
           <div class="field"><label for="status">Status</label><select id="status" class="select"><option value="in_progress">Em andamento</option><option value="completed">Concluido</option></select></div>
           <div class="field full"><label id="labelTags" for="tags">Tags (separadas por virgula)</label><input id="tags" /></div>
           <div class="field full"><label id="labelDescription" for="description">Descricao *</label><textarea id="description" required></textarea></div>
-          <div class="field"><label id="labelCaseImage" for="caseImage">Imagem do caso (opcional)</label><input id="caseImage" type="file" accept="image/*" /></div>
-          <div class="field"><label id="labelVideoUrl" for="videoUrl">Link do video (opcional)</label><input id="videoUrl" type="url" placeholder="https://..." /></div>
-          <input type="hidden" id="existingImageData" />
+          <div class="field"><label id="labelAttachments" for="attachments">📎 Anexos (opcional)</label><input id="attachments" type="file" multiple accept=".pdf,.doc,.docx,.txt,.zip,.png,.jpg,.jpeg,.webp,.gif" /></div>
+          <input type="hidden" id="existingAttachmentsData" />
         </div>
         <div class="actions"><button type="button" class="pill-btn" id="closeModal">Cancelar</button><button type="submit" class="pill-btn primary" id="saveCaseBtn">Salvar caso</button></div>
       </form>
@@ -926,7 +925,7 @@
           <div class="detail-meta-item"><strong id="detailAreaLabel">Area:</strong> <span id="detailArea"></span></div>
           <div class="detail-meta-item"><strong id="detailTechLabel">Tecnologia:</strong> <span id="detailTech"></span></div>
           <div class="detail-meta-item"><strong id="detailSpmLabel">Pre-sales:</strong> <span id="detailSpm"></span></div>
-          <div id="detailVideoRow" class="detail-meta-item" style="display:none;"><strong id="detailVideoLabel">Video:</strong> <a id="detailVideoLink" href="#" target="_blank" rel="noopener noreferrer">Abrir video</a></div>
+          <div id="detailAttachmentsRow" class="detail-meta-item" style="display:none;"><strong id="detailAttachmentsLabel">Anexos:</strong> <span id="detailAttachmentsList"></span></div>
         </aside>
       </div>
     </div>
@@ -1090,11 +1089,10 @@
     const detailAreaEl = document.getElementById("detailArea");
     const detailTechEl = document.getElementById("detailTech");
     const detailSpmEl = document.getElementById("detailSpm");
-    const detailVideoRowEl = document.getElementById("detailVideoRow");
-    const detailVideoLinkEl = document.getElementById("detailVideoLink");
-    const caseImageEl = document.getElementById("caseImage");
-    const videoUrlEl = document.getElementById("videoUrl");
-    const existingImageDataEl = document.getElementById("existingImageData");
+    const detailAttachmentsRowEl = document.getElementById("detailAttachmentsRow");
+    const detailAttachmentsListEl = document.getElementById("detailAttachmentsList");
+    const attachmentsEl = document.getElementById("attachments");
+    const existingAttachmentsDataEl = document.getElementById("existingAttachmentsData");
     const aiGuideFab = document.getElementById("aiGuideFab");
     const aiGuideWrap = document.getElementById("aiGuideWrap");
     const aiGuideMessagesEl = document.getElementById("aiGuideMessages");
@@ -1205,11 +1203,9 @@
         detailArea: "Area:",
         detailTech: "Tecnologia:",
         detailSpm: "Pre-sales:",
-        detailVideo: "Video:",
-        detailOpenVideo: "Abrir video",
-        caseImageLabel: "Imagem do caso (opcional)",
-        videoUrlLabel: "Link do video (opcional)",
-        videoUrlPlaceholder: "https://...",
+        detailAttachments: "Anexos:",
+        detailOpenAttachment: "Abrir anexo",
+        attachmentsLabel: "📎 Anexos (opcional)",
         manageUsersBtn: "Gerenciar usuarios",
         translateAllBtn: "Traduzir tudo",
         manageUsersTitle: "Gerenciar usuarios (autores)",
@@ -1264,11 +1260,9 @@
         detailArea: "Area:",
         detailTech: "Tecnologia:",
         detailSpm: "Pre-sales:",
-        detailVideo: "Video:",
-        detailOpenVideo: "Abrir video",
-        caseImageLabel: "Imagen del caso (opcional)",
-        videoUrlLabel: "Enlace del video (opcional)",
-        videoUrlPlaceholder: "https://...",
+        detailAttachments: "Adjuntos:",
+        detailOpenAttachment: "Abrir adjunto",
+        attachmentsLabel: "📎 Adjuntos (opcional)",
         manageUsersBtn: "Gestionar usuarios",
         translateAllBtn: "Traducir todo",
         manageUsersTitle: "Gestionar usuarios (autores)",
@@ -1323,11 +1317,9 @@
         detailArea: "Area:",
         detailTech: "Technology:",
         detailSpm: "Pre-sales:",
-        detailVideo: "Video:",
-        detailOpenVideo: "Open video",
-        caseImageLabel: "Case image (optional)",
-        videoUrlLabel: "Video link (optional)",
-        videoUrlPlaceholder: "https://...",
+        detailAttachments: "Attachments:",
+        detailOpenAttachment: "Open attachment",
+        attachmentsLabel: "📎 Attachments (optional)",
         manageUsersBtn: "Manage users",
         translateAllBtn: "Translate all",
         manageUsersTitle: "Manage users (authors)",
@@ -1465,14 +1457,31 @@
       detailAreaEl.textContent = item.area || t().fallback.noArea;
       detailTechEl.textContent = item.technology || t().fallback.noTechnology;
       detailSpmEl.textContent = `${item.phase || t().fallback.noPhase} • ${item.theme || t().fallback.noTheme}`;
-      const videoUrl = String(item.video_url || "").trim();
-      if (videoUrl) {
-        detailVideoLinkEl.href = videoUrl;
-        detailVideoLinkEl.textContent = tx().detailOpenVideo;
-        detailVideoRowEl.style.display = "block";
+      detailAttachmentsListEl.innerHTML = "";
+      let attachments = [];
+      try {
+        const parsed = JSON.parse(String(item.attachments_data || "[]"));
+        if (Array.isArray(parsed)) attachments = parsed;
+      } catch (_error) {}
+      const legacyVideoUrl = String(item.video_url || "").trim();
+      if (legacyVideoUrl) {
+        attachments.push({ name: "video-link", data: legacyVideoUrl });
+      }
+      if (attachments.length) {
+        attachments.forEach((attachment, index) => {
+          const link = document.createElement("a");
+          const fileName = String(attachment.name || `attachment-${index + 1}`);
+          link.textContent = fileName;
+          link.target = "_blank";
+          link.rel = "noopener noreferrer";
+          link.href = String(attachment.data || "#");
+          link.download = fileName;
+          if (index > 0) detailAttachmentsListEl.appendChild(document.createTextNode(" | "));
+          detailAttachmentsListEl.appendChild(link);
+        });
+        detailAttachmentsRowEl.style.display = "block";
       } else {
-        detailVideoLinkEl.removeAttribute("href");
-        detailVideoRowEl.style.display = "none";
+        detailAttachmentsRowEl.style.display = "none";
       }
       detailWrap.style.display = "flex";
     }
@@ -1711,8 +1720,7 @@
       document.getElementById("detailAreaLabel").textContent = x.detailArea;
       document.getElementById("detailTechLabel").textContent = x.detailTech;
       document.getElementById("detailSpmLabel").textContent = x.detailSpm;
-      document.getElementById("detailVideoLabel").textContent = x.detailVideo;
-      document.getElementById("detailVideoLink").textContent = x.detailOpenVideo;
+      document.getElementById("detailAttachmentsLabel").textContent = x.detailAttachments;
       document.getElementById("manageUsersBtn").textContent = x.manageUsersBtn;
       document.getElementById("manageUsersTitle").textContent = x.manageUsersTitle;
       document.getElementById("newAuthorName").placeholder = x.manageUsersNamePlaceholder;
@@ -1741,9 +1749,7 @@
       document.getElementById("labelProject").textContent = i.labels.project;
       document.getElementById("labelTags").textContent = i.labels.tags;
       document.getElementById("labelDescription").textContent = `${i.labels.description} *`;
-      document.getElementById("labelCaseImage").textContent = x.caseImageLabel;
-      document.getElementById("labelVideoUrl").textContent = x.videoUrlLabel;
-      document.getElementById("videoUrl").placeholder = x.videoUrlPlaceholder;
+      document.getElementById("labelAttachments").textContent = x.attachmentsLabel;
       document.getElementById("labelTechnology").textContent = `${i.labels.technology} *`;
       document.getElementById("labelPassword").textContent = i.labels.password;
       document.getElementById("metricCasesLabel").textContent = i.metrics[0];
@@ -1785,10 +1791,23 @@
     }
 
     async function getPayloadFromForm() {
-      const selectedImage = caseImageEl.files && caseImageEl.files[0];
-      let imageData = String(existingImageDataEl.value || "");
-      if (selectedImage) {
-        imageData = await fileToDataUrl(selectedImage);
+      const selectedAttachments = Array.from(attachmentsEl.files || []);
+      let attachments = [];
+      try {
+        const parsed = JSON.parse(String(existingAttachmentsDataEl.value || "[]"));
+        if (Array.isArray(parsed)) attachments = parsed;
+      } catch (_error) {
+        attachments = [];
+      }
+      if (selectedAttachments.length) {
+        attachments = await Promise.all(
+          selectedAttachments.map(async (file) => ({
+            name: file.name,
+            type: file.type || "application/octet-stream",
+            size: file.size || 0,
+            data: await fileToDataUrl(file),
+          }))
+        );
       }
       return {
         title: document.getElementById("title").value,
@@ -1803,8 +1822,7 @@
         tags: document.getElementById("tags").value.split(",").map((tag) => tag.trim()).filter(Boolean),
         status: statusEl.value || "in_progress",
         sourceLanguage: currentLang === "es" ? "es" : "pt",
-        imageData,
-        videoUrl: videoUrlEl.value,
+        attachments,
       };
     }
 
@@ -1937,9 +1955,8 @@
         document.getElementById("skillName").value = item.skill_name || "";
         document.getElementById("description").value = getLocalizedField(item, "description") || item.description || "";
         document.getElementById("tags").value = (item.tags || []).join(", ");
-        existingImageDataEl.value = item.image_data || "";
-        caseImageEl.value = "";
-        videoUrlEl.value = item.video_url || "";
+        existingAttachmentsDataEl.value = String(item.attachments_data || "[]");
+        attachmentsEl.value = "";
         statusEl.value = item.status || "in_progress";
         modalWrap.style.display = "flex";
       }));
@@ -2026,9 +2043,8 @@
       modalWrap.style.display = "none";
       form.reset();
       editingIdEl.value = "";
-      existingImageDataEl.value = "";
-      caseImageEl.value = "";
-      videoUrlEl.value = "";
+      existingAttachmentsDataEl.value = "[]";
+      attachmentsEl.value = "";
       setSelectedAuthor("");
       statusEl.value = "in_progress";
       updateCaseModalTitle();

@@ -2,7 +2,6 @@ const path = require("path");
 const https = require("https");
 const express = require("express");
 const session = require("express-session");
-const multer = require("multer");
 const { Pool } = require("pg");
 
 const app = express();
@@ -39,11 +38,6 @@ const pool = hasDatabase
       ssl: { rejectUnauthorized: false },
     })
   : null;
-
-const upload = multer({
-  storage: multer.memoryStorage(),
-  limits: { fileSize: 2 * 1024 * 1024 },
-});
 
 let memoryCases = [];
 let memoryId = 1;
@@ -174,6 +168,7 @@ async function ensureSchema() {
       tags TEXT[] DEFAULT ARRAY[]::TEXT[],
       image_data TEXT DEFAULT '',
       video_url TEXT DEFAULT '',
+      attachments_data TEXT DEFAULT '[]',
       is_favorite BOOLEAN DEFAULT FALSE,
       created_at TIMESTAMPTZ DEFAULT NOW()
     )
@@ -185,6 +180,10 @@ async function ensureSchema() {
   await pool.query(`
     ALTER TABLE use_cases
     ADD COLUMN IF NOT EXISTS video_url TEXT DEFAULT ''
+  `);
+  await pool.query(`
+    ALTER TABLE use_cases
+    ADD COLUMN IF NOT EXISTS attachments_data TEXT DEFAULT '[]'
   `);
   await pool.query(`
     ALTER TABLE use_cases
@@ -248,6 +247,21 @@ function toTrimmedText(value) {
   return String(value || "").trim();
 }
 
+function normalizeAttachmentsInput(value) {
+  const list = Array.isArray(value) ? value : [];
+  return list
+    .slice(0, 10)
+    .map((item) => {
+      const name = toTrimmedText(item?.name || "attachment");
+      const type = toTrimmedText(item?.type || "application/octet-stream");
+      const data = String(item?.data || "");
+      const size = Number(item?.size || 0);
+      if (!data.startsWith("data:")) return null;
+      return { name: name || "attachment", type, data, size: Number.isFinite(size) ? size : 0 };
+    })
+    .filter(Boolean);
+}
+
 function normalizeStatus(value) {
   return String(value || "").trim() === "completed" ? "completed" : "in_progress";
 }
@@ -281,6 +295,19 @@ function formatDateOnly(value) {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return "";
   return date.toISOString().slice(0, 10);
+}
+
+function extractAttachmentNamesFromRow(row) {
+  try {
+    const parsed = JSON.parse(String(row.attachments_data || "[]"));
+    if (!Array.isArray(parsed)) return "";
+    return parsed
+      .map((item) => toTrimmedText(item?.name))
+      .filter(Boolean)
+      .join(" | ");
+  } catch (_error) {
+    return "";
+  }
 }
 
 function getJson(url) {
@@ -927,8 +954,7 @@ app.post("/api/use-cases", async (req, res) => {
     tags = [],
     status = "in_progress",
     sourceLanguage = "pt",
-    imageData = "",
-    videoUrl = "",
+    attachments = [],
   } = req.body || {};
 
   if (!toTrimmedText(title)) {
@@ -959,10 +985,9 @@ app.post("/api/use-cases", async (req, res) => {
       : [],
     status: normalizeStatus(status),
     source_language: normalizeSourceLanguage(sourceLanguage),
-    image_data: String(imageData || "").startsWith("data:image/")
-      ? String(imageData)
-      : "",
-    video_url: toTrimmedText(videoUrl),
+    image_data: "",
+    video_url: "",
+    attachments_data: JSON.stringify(normalizeAttachmentsInput(attachments)),
   };
   const localized = await translateUseCaseText({
     sourceLanguage: payload.source_language,
@@ -985,8 +1010,8 @@ app.post("/api/use-cases", async (req, res) => {
 
   try {
     const { rows } = await pool.query(
-      `INSERT INTO use_cases (title, category, area, technology, phase, theme, author_name, skill_name, description, tags, status, source_language, image_data, video_url, title_pt, title_es, title_en, description_pt, description_es, description_en)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20)
+      `INSERT INTO use_cases (title, category, area, technology, phase, theme, author_name, skill_name, description, tags, status, source_language, image_data, video_url, attachments_data, title_pt, title_es, title_en, description_pt, description_es, description_en)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21)
        RETURNING *`,
       [
         payload.title,
@@ -1003,6 +1028,7 @@ app.post("/api/use-cases", async (req, res) => {
         payload.source_language,
         payload.image_data,
         payload.video_url,
+        payload.attachments_data,
         localized.title_pt,
         localized.title_es,
         localized.title_en,
@@ -1032,8 +1058,7 @@ app.put("/api/use-cases/:id", async (req, res) => {
     tags = [],
     status = "in_progress",
     sourceLanguage = "pt",
-    imageData = "",
-    videoUrl = "",
+    attachments = [],
   } = req.body || {};
   if (!toTrimmedText(title)) {
     return res.status(400).json({ error: "Titulo e obrigatorio." });
@@ -1079,10 +1104,8 @@ app.put("/api/use-cases/:id", async (req, res) => {
     found.description_pt = localized.description_pt;
     found.description_es = localized.description_es;
     found.description_en = localized.description_en;
-    found.image_data = String(imageData || "").startsWith("data:image/")
-      ? String(imageData)
-      : found.image_data || "";
-    found.video_url = toTrimmedText(videoUrl);
+    found.video_url = "";
+    found.attachments_data = JSON.stringify(normalizeAttachmentsInput(attachments));
     return res.json(found);
   }
 
@@ -1093,7 +1116,7 @@ app.put("/api/use-cases/:id", async (req, res) => {
            author_name = $7, skill_name = $8, description = $9, tags = $10, status = $11,
            source_language = $12, title_pt = $13, title_es = $14, title_en = $15,
            description_pt = $16, description_es = $17, description_en = $18,
-           image_data = $19, video_url = $20
+           video_url = $19, attachments_data = $20
        WHERE id = $21
        RETURNING *`,
       [
@@ -1115,8 +1138,8 @@ app.put("/api/use-cases/:id", async (req, res) => {
         localized.description_pt,
         localized.description_es,
         localized.description_en,
-        String(imageData || "").startsWith("data:image/") ? String(imageData) : "",
-        toTrimmedText(videoUrl),
+        "",
+        JSON.stringify(normalizeAttachmentsInput(attachments)),
         req.params.id,
       ]
     );
@@ -1143,31 +1166,6 @@ app.delete("/api/use-cases/:id", requireAuth, async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Erro ao excluir caso." });
-  }
-});
-
-app.post("/api/use-cases/:id/image", requireAuth, upload.single("image"), async (req, res) => {
-  if (!req.file) return res.status(400).json({ error: "Arquivo obrigatorio." });
-
-  const dataUrl = `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`;
-  if (!hasDatabase) {
-    const id = Number(req.params.id);
-    const found = memoryCases.find((item) => item.id === id);
-    if (!found) return res.status(404).json({ error: "Caso nao encontrado." });
-    found.image_data = dataUrl;
-    return res.json(found);
-  }
-
-  try {
-    const { rows } = await pool.query(
-      `UPDATE use_cases SET image_data = $1 WHERE id = $2 RETURNING *`,
-      [dataUrl, req.params.id]
-    );
-    if (!rows.length) return res.status(404).json({ error: "Caso nao encontrado." });
-    return res.json(rows[0]);
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: "Erro ao enviar imagem." });
   }
 });
 
@@ -1304,7 +1302,7 @@ app.get("/api/use-cases/export.csv", requireAuth, async (_req, res) => {
       "author",
       "project",
       "description",
-      "video_url",
+      "attachments",
       "tags",
       "created_on",
       "created_by",
@@ -1328,7 +1326,7 @@ app.get("/api/use-cases/export.csv", requireAuth, async (_req, res) => {
             row.author_name,
             row.skill_name,
             descriptionEn,
-            row.video_url || "",
+            extractAttachmentNamesFromRow(row),
             Array.isArray(row.tags) ? row.tags.join(" | ") : "",
             formatDateOnly(row.created_at),
             row.author_name || "",
