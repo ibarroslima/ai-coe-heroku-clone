@@ -337,6 +337,10 @@
     .grid { display: grid; gap: 8px; grid-template-columns: 1fr 1fr; }
     .field { display: grid; gap: 5px; margin-bottom: 6px; }
     .field.full { grid-column: 1 / -1; }
+    .attachments-editor { display: grid; gap: 6px; }
+    .attachment-edit-row { display: grid; grid-template-columns: 1fr auto; gap: 6px; align-items: center; }
+    .attachment-edit-row input { min-width: 0; }
+    .attachment-remove-btn { padding: 8px 10px; font-size: 12px; }
     label { font-size: 13px; font-weight: 700; color: var(--text); }
     input, textarea { border: 1px solid #dde5ff; border-radius: 12px; padding: 10px 12px; font: inherit; }
     .author-picker { position: relative; }
@@ -868,6 +872,10 @@
           <div class="field full"><label id="labelTags" for="tags">Tags (separadas por virgula)</label><input id="tags" /></div>
           <div class="field full"><label id="labelDescription" for="description">Descricao *</label><textarea id="description" required></textarea></div>
           <div class="field"><label id="labelAttachments" for="attachments">📎 Anexos (opcional)</label><input id="attachments" type="file" multiple accept=".pdf,.doc,.docx,.txt,.zip,.png,.jpg,.jpeg,.webp,.gif" /></div>
+          <div id="existingAttachmentsField" class="field full" style="display:none;">
+            <label id="labelExistingAttachments">Anexos atuais</label>
+            <div id="existingAttachmentsEditor" class="attachments-editor"></div>
+          </div>
           <input type="hidden" id="existingAttachmentsData" />
         </div>
         <div class="actions"><button type="button" class="pill-btn" id="closeModal">Cancelar</button><button type="submit" class="pill-btn primary" id="saveCaseBtn">Salvar caso</button></div>
@@ -1093,6 +1101,8 @@
     const detailAttachmentsListEl = document.getElementById("detailAttachmentsList");
     const attachmentsEl = document.getElementById("attachments");
     const existingAttachmentsDataEl = document.getElementById("existingAttachmentsData");
+    const existingAttachmentsFieldEl = document.getElementById("existingAttachmentsField");
+    const existingAttachmentsEditorEl = document.getElementById("existingAttachmentsEditor");
     const aiGuideFab = document.getElementById("aiGuideFab");
     const aiGuideWrap = document.getElementById("aiGuideWrap");
     const aiGuideMessagesEl = document.getElementById("aiGuideMessages");
@@ -1104,6 +1114,7 @@
     let isAuthenticated = false;
     let currentTab = "home";
     let currentLang = "pt";
+    let currentEditingAttachments = [];
 
     const AUTHORS_STORAGE_KEY = "ai_coe_authors_v1";
     const AUTHOR_PHOTOS_STORAGE_KEY = "ai_coe_author_photos_v1";
@@ -1206,6 +1217,8 @@
         detailAttachments: "Anexos:",
         detailOpenAttachment: "Abrir anexo",
         attachmentsLabel: "📎 Anexos (opcional)",
+        existingAttachmentsLabel: "Anexos atuais",
+        removeAttachmentBtn: "Remover",
         manageUsersBtn: "Gerenciar usuarios",
         translateAllBtn: "Traduzir tudo",
         manageUsersTitle: "Gerenciar usuarios (autores)",
@@ -1263,6 +1276,8 @@
         detailAttachments: "Adjuntos:",
         detailOpenAttachment: "Abrir adjunto",
         attachmentsLabel: "📎 Adjuntos (opcional)",
+        existingAttachmentsLabel: "Adjuntos actuales",
+        removeAttachmentBtn: "Eliminar",
         manageUsersBtn: "Gestionar usuarios",
         translateAllBtn: "Traducir todo",
         manageUsersTitle: "Gestionar usuarios (autores)",
@@ -1320,6 +1335,8 @@
         detailAttachments: "Attachments:",
         detailOpenAttachment: "Open attachment",
         attachmentsLabel: "📎 Attachments (optional)",
+        existingAttachmentsLabel: "Current attachments",
+        removeAttachmentBtn: "Remove",
         manageUsersBtn: "Manage users",
         translateAllBtn: "Translate all",
         manageUsersTitle: "Manage users (authors)",
@@ -1750,6 +1767,7 @@
       document.getElementById("labelTags").textContent = i.labels.tags;
       document.getElementById("labelDescription").textContent = `${i.labels.description} *`;
       document.getElementById("labelAttachments").textContent = x.attachmentsLabel;
+      document.getElementById("labelExistingAttachments").textContent = x.existingAttachmentsLabel;
       document.getElementById("labelTechnology").textContent = `${i.labels.technology} *`;
       document.getElementById("labelPassword").textContent = i.labels.password;
       document.getElementById("metricCasesLabel").textContent = i.metrics[0];
@@ -1769,6 +1787,7 @@
       langItems.forEach((item) => item.classList.toggle("active", item.dataset.lang === currentLang));
       updateAuthLabel();
       updateCaseModalTitle();
+      renderExistingAttachmentsEditor();
       updateFilters();
       renderRecentCards();
       applySearch();
@@ -1786,21 +1805,59 @@
       caseModalTitleEl.textContent = editingIdEl.value ? t().modalEdit : t().modalNew;
     }
 
+    function parseAttachmentsData(value) {
+      try {
+        const parsed = JSON.parse(String(value || "[]"));
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (_error) {
+        return [];
+      }
+    }
+
+    function renderExistingAttachmentsEditor() {
+      existingAttachmentsEditorEl.innerHTML = "";
+      if (!currentEditingAttachments.length) {
+        existingAttachmentsFieldEl.style.display = "none";
+        return;
+      }
+      existingAttachmentsFieldEl.style.display = "grid";
+      currentEditingAttachments.forEach((attachment, index) => {
+        const row = document.createElement("div");
+        row.className = "attachment-edit-row";
+
+        const nameInput = document.createElement("input");
+        nameInput.type = "text";
+        nameInput.value = String(attachment.name || `attachment-${index + 1}`);
+        nameInput.addEventListener("input", () => {
+          currentEditingAttachments[index].name = nameInput.value;
+          existingAttachmentsDataEl.value = JSON.stringify(currentEditingAttachments);
+        });
+
+        const removeBtn = document.createElement("button");
+        removeBtn.type = "button";
+        removeBtn.className = "pill-btn attachment-remove-btn";
+        removeBtn.textContent = tx().removeAttachmentBtn;
+        removeBtn.addEventListener("click", () => {
+          currentEditingAttachments.splice(index, 1);
+          existingAttachmentsDataEl.value = JSON.stringify(currentEditingAttachments);
+          renderExistingAttachmentsEditor();
+        });
+
+        row.appendChild(nameInput);
+        row.appendChild(removeBtn);
+        existingAttachmentsEditorEl.appendChild(row);
+      });
+    }
+
     function formatCaseCount(count) {
       return `${count} ${count === 1 ? t().caseCountOne : t().caseCountMany}`;
     }
 
     async function getPayloadFromForm() {
       const selectedAttachments = Array.from(attachmentsEl.files || []);
-      let attachments = [];
-      try {
-        const parsed = JSON.parse(String(existingAttachmentsDataEl.value || "[]"));
-        if (Array.isArray(parsed)) attachments = parsed;
-      } catch (_error) {
-        attachments = [];
-      }
+      let attachments = parseAttachmentsData(existingAttachmentsDataEl.value);
       if (selectedAttachments.length) {
-        attachments = await Promise.all(
+        const newAttachments = await Promise.all(
           selectedAttachments.map(async (file) => ({
             name: file.name,
             type: file.type || "application/octet-stream",
@@ -1808,6 +1865,7 @@
             data: await fileToDataUrl(file),
           }))
         );
+        attachments = attachments.concat(newAttachments);
       }
       return {
         title: document.getElementById("title").value,
@@ -1955,7 +2013,14 @@
         document.getElementById("skillName").value = item.skill_name || "";
         document.getElementById("description").value = getLocalizedField(item, "description") || item.description || "";
         document.getElementById("tags").value = (item.tags || []).join(", ");
-        existingAttachmentsDataEl.value = String(item.attachments_data || "[]");
+        currentEditingAttachments = parseAttachmentsData(item.attachments_data).map((attachment) => ({
+          name: String(attachment.name || ""),
+          type: String(attachment.type || ""),
+          size: Number(attachment.size || 0),
+          data: String(attachment.data || ""),
+        }));
+        existingAttachmentsDataEl.value = JSON.stringify(currentEditingAttachments);
+        renderExistingAttachmentsEditor();
         attachmentsEl.value = "";
         statusEl.value = item.status || "in_progress";
         modalWrap.style.display = "flex";
@@ -2043,16 +2108,28 @@
       modalWrap.style.display = "none";
       form.reset();
       editingIdEl.value = "";
+      currentEditingAttachments = [];
       existingAttachmentsDataEl.value = "[]";
+      renderExistingAttachmentsEditor();
       attachmentsEl.value = "";
       setSelectedAuthor("");
       statusEl.value = "in_progress";
       updateCaseModalTitle();
     }
 
-    openModalBtn.addEventListener("click", () => { modalWrap.style.display = "flex"; });
+    openModalBtn.addEventListener("click", () => {
+      currentEditingAttachments = [];
+      existingAttachmentsDataEl.value = "[]";
+      renderExistingAttachmentsEditor();
+      modalWrap.style.display = "flex";
+    });
     heroViewCatalogBtn.addEventListener("click", () => switchTab("catalog"));
-    heroAddCaseBtn.addEventListener("click", () => { modalWrap.style.display = "flex"; });
+    heroAddCaseBtn.addEventListener("click", () => {
+      currentEditingAttachments = [];
+      existingAttachmentsDataEl.value = "[]";
+      renderExistingAttachmentsEditor();
+      modalWrap.style.display = "flex";
+    });
     closeModalBtn.addEventListener("click", closeModal);
     // Keep modal stable during text selection/copy interactions.
     // Close is handled by explicit buttons to avoid accidental dismiss.
