@@ -1576,6 +1576,9 @@
       if (value) {
         authorBtnAvatar.innerHTML = getAuthorAvatarMarkup(value);
         authorBtnText.textContent = value;
+        // Keep "Created by" aligned with selected author by default.
+        // Users can still edit this field manually afterwards.
+        createdByEl.value = value;
       } else {
         authorBtnAvatar.innerHTML = "--";
         authorBtnText.textContent = tx().selectAuthor;
