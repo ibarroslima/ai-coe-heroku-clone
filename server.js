@@ -970,6 +970,9 @@ app.post("/api/use-cases", async (req, res) => {
   if (!toTrimmedText(authorName)) {
     return res.status(400).json({ error: "Autor e obrigatorio." });
   }
+  if (!toTrimmedText(createdBy)) {
+    return res.status(400).json({ error: "Criado por e obrigatorio." });
+  }
   if (!toTrimmedText(technology)) {
     return res.status(400).json({ error: "Tecnologia e obrigatoria." });
   }
@@ -985,7 +988,7 @@ app.post("/api/use-cases", async (req, res) => {
     phase: toTrimmedText(phase),
     theme: toTrimmedText(theme),
     author_name: toTrimmedText(authorName),
-    created_by_name: toTrimmedText(createdBy) || toTrimmedText(authorName),
+    created_by_name: toTrimmedText(createdBy),
     skill_name: toTrimmedText(skillName),
     description: toTrimmedText(description),
     tags: Array.isArray(tags)
@@ -1076,6 +1079,9 @@ app.put("/api/use-cases/:id", async (req, res) => {
   if (!toTrimmedText(authorName)) {
     return res.status(400).json({ error: "Autor e obrigatorio." });
   }
+  if (!toTrimmedText(createdBy)) {
+    return res.status(400).json({ error: "Criado por e obrigatorio." });
+  }
   if (!toTrimmedText(technology)) {
     return res.status(400).json({ error: "Tecnologia e obrigatoria." });
   }
@@ -1101,8 +1107,7 @@ app.put("/api/use-cases/:id", async (req, res) => {
     found.phase = toTrimmedText(phase);
     found.theme = toTrimmedText(theme);
     found.author_name = toTrimmedText(authorName);
-    found.created_by_name =
-      toTrimmedText(createdBy) || found.created_by_name || found.author_name;
+    found.created_by_name = toTrimmedText(createdBy);
     found.skill_name = toTrimmedText(skillName);
     found.description = toTrimmedText(description);
     found.tags = Array.isArray(tags)
@@ -1125,7 +1130,7 @@ app.put("/api/use-cases/:id", async (req, res) => {
     const { rows } = await pool.query(
       `UPDATE use_cases
        SET title = $1, category = $2, area = $3, technology = $4, phase = $5, theme = $6,
-           author_name = $7, created_by_name = COALESCE(NULLIF($8, ''), created_by_name, author_name),
+           author_name = $7, created_by_name = $8,
            skill_name = $9, description = $10, tags = $11, status = $12,
            source_language = $13, title_pt = $14, title_es = $15, title_en = $16,
            description_pt = $17, description_es = $18, description_en = $19,

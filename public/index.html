@@ -867,7 +867,7 @@
               <div id="authorList" class="author-list"></div>
             </div>
           </div>
-          <div class="field"><label id="labelCreatedBy" for="createdBy">Criado por</label><input id="createdBy" placeholder="Ex.: Igor Lima" /></div>
+          <div class="field"><label id="labelCreatedBy" for="createdBy">Criado por *</label><input id="createdBy" required placeholder="Ex.: Igor Lima" /></div>
           <div class="field"><label id="labelProject" for="skillName">Skill/Projeto</label><input id="skillName" /></div>
           <div class="field"><label for="status">Status</label><select id="status" class="select"><option value="in_progress">Em andamento</option><option value="completed">Concluido</option></select></div>
           <div class="field full"><label id="labelTags" for="tags">Tags (separadas por virgula)</label><input id="tags" /></div>
@@ -1775,7 +1775,7 @@
       document.getElementById("labelPhase").textContent = i.labels.phase;
       document.getElementById("labelTheme").textContent = i.labels.theme;
       document.getElementById("labelAuthor").textContent = `${i.labels.author} *`;
-      document.getElementById("labelCreatedBy").textContent = x.createdByLabel;
+      document.getElementById("labelCreatedBy").textContent = `${x.createdByLabel} *`;
       createdByEl.placeholder = x.createdByPlaceholder;
       document.getElementById("labelProject").textContent = i.labels.project;
       document.getElementById("labelTags").textContent = i.labels.tags;
@@ -2280,6 +2280,10 @@
         const payload = await getPayloadFromForm();
         if (!payload.authorName) {
           alert("Autor e obrigatorio.");
+          return;
+        }
+        if (!String(payload.createdBy || "").trim()) {
+          alert("Criado por e obrigatorio.");
           return;
         }
         if (!payload.technology) {
