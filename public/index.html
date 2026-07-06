@@ -867,6 +867,7 @@
               <div id="authorList" class="author-list"></div>
             </div>
           </div>
+          <div class="field"><label id="labelCreatedBy" for="createdBy">Criado por</label><input id="createdBy" placeholder="Ex.: Igor Lima" /></div>
           <div class="field"><label id="labelProject" for="skillName">Skill/Projeto</label><input id="skillName" /></div>
           <div class="field"><label for="status">Status</label><select id="status" class="select"><option value="in_progress">Em andamento</option><option value="completed">Concluido</option></select></div>
           <div class="field full"><label id="labelTags" for="tags">Tags (separadas por virgula)</label><input id="tags" /></div>
@@ -1084,6 +1085,7 @@
     const authorBtnText = document.getElementById("authorBtnText");
     const authorListEl = document.getElementById("authorList");
     const statusEl = document.getElementById("status");
+    const createdByEl = document.getElementById("createdBy");
     const detailWrap = document.getElementById("detailWrap");
     const closeDetailBtn = document.getElementById("closeDetailBtn");
     const detailCategoryEl = document.getElementById("detailCategory");
@@ -1120,6 +1122,7 @@
     const AUTHOR_PHOTOS_STORAGE_KEY = "ai_coe_author_photos_v1";
     const CLIENT_ID_STORAGE_KEY = "ai_coe_client_id_v1";
     const USE_CASES_CACHE_KEY = "ai_coe_cases_cache_v1";
+    const CREATOR_NAME_STORAGE_KEY = "ai_coe_creator_name_v1";
     const DEFAULT_AUTHORS = [
       "Alejandra Acuña",
       "Amanda Basilio",
@@ -1217,6 +1220,8 @@
         detailAttachments: "Anexos:",
         detailOpenAttachment: "Abrir anexo",
         attachmentsLabel: "📎 Anexos (opcional)",
+        createdByLabel: "Criado por",
+        createdByPlaceholder: "Ex.: Igor Lima",
         existingAttachmentsLabel: "Anexos atuais",
         removeAttachmentBtn: "Remover",
         manageUsersBtn: "Gerenciar usuarios",
@@ -1276,6 +1281,8 @@
         detailAttachments: "Adjuntos:",
         detailOpenAttachment: "Abrir adjunto",
         attachmentsLabel: "📎 Adjuntos (opcional)",
+        createdByLabel: "Creado por",
+        createdByPlaceholder: "Ej.: Igor Lima",
         existingAttachmentsLabel: "Adjuntos actuales",
         removeAttachmentBtn: "Eliminar",
         manageUsersBtn: "Gestionar usuarios",
@@ -1335,6 +1342,8 @@
         detailAttachments: "Attachments:",
         detailOpenAttachment: "Open attachment",
         attachmentsLabel: "📎 Attachments (optional)",
+        createdByLabel: "Created by",
+        createdByPlaceholder: "Ex.: Igor Lima",
         existingAttachmentsLabel: "Current attachments",
         removeAttachmentBtn: "Remove",
         manageUsersBtn: "Manage users",
@@ -1763,6 +1772,8 @@
       document.getElementById("labelPhase").textContent = i.labels.phase;
       document.getElementById("labelTheme").textContent = i.labels.theme;
       document.getElementById("labelAuthor").textContent = `${i.labels.author} *`;
+      document.getElementById("labelCreatedBy").textContent = x.createdByLabel;
+      createdByEl.placeholder = x.createdByPlaceholder;
       document.getElementById("labelProject").textContent = i.labels.project;
       document.getElementById("labelTags").textContent = i.labels.tags;
       document.getElementById("labelDescription").textContent = `${i.labels.description} *`;
@@ -1875,6 +1886,7 @@
         phase: document.getElementById("phase").value,
         theme: document.getElementById("theme").value,
         authorName: authorNameEl.value,
+        createdBy: createdByEl.value,
         skillName: document.getElementById("skillName").value,
         description: document.getElementById("description").value,
         tags: document.getElementById("tags").value.split(",").map((tag) => tag.trim()).filter(Boolean),
@@ -2010,6 +2022,7 @@
         document.getElementById("phase").value = item.phase || "";
         document.getElementById("theme").value = item.theme || "";
         setSelectedAuthor(item.author_name || "");
+        createdByEl.value = item.created_by_name || localStorage.getItem(CREATOR_NAME_STORAGE_KEY) || "";
         document.getElementById("skillName").value = item.skill_name || "";
         document.getElementById("description").value = getLocalizedField(item, "description") || item.description || "";
         document.getElementById("tags").value = (item.tags || []).join(", ");
@@ -2113,6 +2126,7 @@
       renderExistingAttachmentsEditor();
       attachmentsEl.value = "";
       setSelectedAuthor("");
+      createdByEl.value = localStorage.getItem(CREATOR_NAME_STORAGE_KEY) || "";
       statusEl.value = "in_progress";
       updateCaseModalTitle();
     }
@@ -2121,6 +2135,7 @@
       currentEditingAttachments = [];
       existingAttachmentsDataEl.value = "[]";
       renderExistingAttachmentsEditor();
+      createdByEl.value = localStorage.getItem(CREATOR_NAME_STORAGE_KEY) || "";
       modalWrap.style.display = "flex";
     });
     heroViewCatalogBtn.addEventListener("click", () => switchTab("catalog"));
@@ -2128,6 +2143,7 @@
       currentEditingAttachments = [];
       existingAttachmentsDataEl.value = "[]";
       renderExistingAttachmentsEditor();
+      createdByEl.value = localStorage.getItem(CREATOR_NAME_STORAGE_KEY) || "";
       modalWrap.style.display = "flex";
     });
     closeModalBtn.addEventListener("click", closeModal);
@@ -2271,6 +2287,7 @@
           alert("Descricao e obrigatoria.");
           return;
         }
+        localStorage.setItem(CREATOR_NAME_STORAGE_KEY, String(payload.createdBy || "").trim());
         if (editingId) {
           await request(`/api/use-cases/${editingId}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
         } else {
@@ -2289,6 +2306,7 @@
       buildAuthorOptions();
       renderManageUsersList();
       setSelectedAuthor("");
+      createdByEl.value = localStorage.getItem(CREATOR_NAME_STORAGE_KEY) || "";
       statusEl.value = "in_progress";
       hydrateCasesFromCache();
       updateStaticTranslations();

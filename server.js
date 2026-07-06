@@ -164,6 +164,7 @@ async function ensureSchema() {
       phase TEXT DEFAULT '',
       theme TEXT DEFAULT '',
       author_name TEXT DEFAULT '',
+      created_by_name TEXT DEFAULT '',
       skill_name TEXT DEFAULT '',
       description TEXT DEFAULT '',
       tags TEXT[] DEFAULT ARRAY[]::TEXT[],
@@ -185,6 +186,10 @@ async function ensureSchema() {
   await pool.query(`
     ALTER TABLE use_cases
     ADD COLUMN IF NOT EXISTS attachments_data TEXT DEFAULT '[]'
+  `);
+  await pool.query(`
+    ALTER TABLE use_cases
+    ADD COLUMN IF NOT EXISTS created_by_name TEXT DEFAULT ''
   `);
   await pool.query(`
     ALTER TABLE use_cases
@@ -950,6 +955,7 @@ app.post("/api/use-cases", async (req, res) => {
     phase = "",
     theme = "",
     authorName = "",
+    createdBy = "",
     skillName = "",
     description = "",
     tags = [],
@@ -979,6 +985,7 @@ app.post("/api/use-cases", async (req, res) => {
     phase: toTrimmedText(phase),
     theme: toTrimmedText(theme),
     author_name: toTrimmedText(authorName),
+    created_by_name: toTrimmedText(createdBy) || toTrimmedText(authorName),
     skill_name: toTrimmedText(skillName),
     description: toTrimmedText(description),
     tags: Array.isArray(tags)
@@ -1011,8 +1018,8 @@ app.post("/api/use-cases", async (req, res) => {
 
   try {
     const { rows } = await pool.query(
-      `INSERT INTO use_cases (title, category, area, technology, phase, theme, author_name, skill_name, description, tags, status, source_language, image_data, video_url, attachments_data, title_pt, title_es, title_en, description_pt, description_es, description_en)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21)
+      `INSERT INTO use_cases (title, category, area, technology, phase, theme, author_name, created_by_name, skill_name, description, tags, status, source_language, image_data, video_url, attachments_data, title_pt, title_es, title_en, description_pt, description_es, description_en)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22)
        RETURNING *`,
       [
         payload.title,
@@ -1022,6 +1029,7 @@ app.post("/api/use-cases", async (req, res) => {
         payload.phase,
         payload.theme,
         payload.author_name,
+        payload.created_by_name,
         payload.skill_name,
         payload.description,
         payload.tags,
@@ -1054,6 +1062,7 @@ app.put("/api/use-cases/:id", async (req, res) => {
     phase = "",
     theme = "",
     authorName = "",
+    createdBy = "",
     skillName = "",
     description = "",
     tags = [],
@@ -1092,6 +1101,8 @@ app.put("/api/use-cases/:id", async (req, res) => {
     found.phase = toTrimmedText(phase);
     found.theme = toTrimmedText(theme);
     found.author_name = toTrimmedText(authorName);
+    found.created_by_name =
+      toTrimmedText(createdBy) || found.created_by_name || found.author_name;
     found.skill_name = toTrimmedText(skillName);
     found.description = toTrimmedText(description);
     found.tags = Array.isArray(tags)
@@ -1114,11 +1125,12 @@ app.put("/api/use-cases/:id", async (req, res) => {
     const { rows } = await pool.query(
       `UPDATE use_cases
        SET title = $1, category = $2, area = $3, technology = $4, phase = $5, theme = $6,
-           author_name = $7, skill_name = $8, description = $9, tags = $10, status = $11,
-           source_language = $12, title_pt = $13, title_es = $14, title_en = $15,
-           description_pt = $16, description_es = $17, description_en = $18,
-           video_url = $19, attachments_data = $20
-       WHERE id = $21
+           author_name = $7, created_by_name = COALESCE(NULLIF($8, ''), created_by_name, author_name),
+           skill_name = $9, description = $10, tags = $11, status = $12,
+           source_language = $13, title_pt = $14, title_es = $15, title_en = $16,
+           description_pt = $17, description_es = $18, description_en = $19,
+           video_url = $20, attachments_data = $21
+       WHERE id = $22
        RETURNING *`,
       [
         toTrimmedText(title),
@@ -1128,6 +1140,7 @@ app.put("/api/use-cases/:id", async (req, res) => {
         toTrimmedText(phase),
         toTrimmedText(theme),
         toTrimmedText(authorName),
+        toTrimmedText(createdBy),
         toTrimmedText(skillName),
         toTrimmedText(description),
         Array.isArray(tags) ? tags.map((tag) => toTrimmedText(tag)).filter(Boolean) : [],
@@ -1330,7 +1343,7 @@ app.get("/api/use-cases/export.csv", requireAuth, async (_req, res) => {
             extractAttachmentNamesFromRow(row),
             Array.isArray(row.tags) ? row.tags.join(" | ") : "",
             formatDateOnly(row.created_at),
-            row.author_name || "",
+            row.created_by_name || row.author_name || "",
           ];
         })()
           .map(toCsvValue)
