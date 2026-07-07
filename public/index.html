@@ -1117,6 +1117,7 @@
     let currentTab = "home";
     let currentLang = "pt";
     let currentEditingAttachments = [];
+    let lastAutoCreatedByFromAuthor = "";
 
     const AUTHORS_STORAGE_KEY = "ai_coe_authors_v1";
     const AUTHOR_PHOTOS_STORAGE_KEY = "ai_coe_author_photos_v1";
@@ -1576,9 +1577,13 @@
       if (value) {
         authorBtnAvatar.innerHTML = getAuthorAvatarMarkup(value);
         authorBtnText.textContent = value;
-        // Keep "Created by" aligned with selected author by default.
-        // Users can still edit this field manually afterwards.
-        createdByEl.value = value;
+        // Auto-fill "Created by" from author only when empty
+        // or when it still matches the last auto-filled author.
+        const currentCreatedBy = String(createdByEl.value || "").trim();
+        if (!currentCreatedBy || currentCreatedBy === lastAutoCreatedByFromAuthor) {
+          createdByEl.value = value;
+          lastAutoCreatedByFromAuthor = value;
+        }
       } else {
         authorBtnAvatar.innerHTML = "--";
         authorBtnText.textContent = tx().selectAuthor;
@@ -2025,7 +2030,12 @@
         document.getElementById("phase").value = item.phase || "";
         document.getElementById("theme").value = item.theme || "";
         setSelectedAuthor(item.author_name || "");
-        createdByEl.value = item.created_by_name || localStorage.getItem(CREATOR_NAME_STORAGE_KEY) || "";
+        createdByEl.value =
+          item.created_by_name ||
+          item.author_name ||
+          localStorage.getItem(CREATOR_NAME_STORAGE_KEY) ||
+          "";
+        lastAutoCreatedByFromAuthor = item.author_name || "";
         document.getElementById("skillName").value = item.skill_name || "";
         document.getElementById("description").value = getLocalizedField(item, "description") || item.description || "";
         document.getElementById("tags").value = (item.tags || []).join(", ");
@@ -2130,6 +2140,7 @@
       attachmentsEl.value = "";
       setSelectedAuthor("");
       createdByEl.value = localStorage.getItem(CREATOR_NAME_STORAGE_KEY) || "";
+      lastAutoCreatedByFromAuthor = authorNameEl.value || "";
       statusEl.value = "in_progress";
       updateCaseModalTitle();
     }
@@ -2139,6 +2150,7 @@
       existingAttachmentsDataEl.value = "[]";
       renderExistingAttachmentsEditor();
       createdByEl.value = localStorage.getItem(CREATOR_NAME_STORAGE_KEY) || "";
+      lastAutoCreatedByFromAuthor = authorNameEl.value || "";
       modalWrap.style.display = "flex";
     });
     heroViewCatalogBtn.addEventListener("click", () => switchTab("catalog"));
@@ -2147,6 +2159,7 @@
       existingAttachmentsDataEl.value = "[]";
       renderExistingAttachmentsEditor();
       createdByEl.value = localStorage.getItem(CREATOR_NAME_STORAGE_KEY) || "";
+      lastAutoCreatedByFromAuthor = authorNameEl.value || "";
       modalWrap.style.display = "flex";
     });
     closeModalBtn.addEventListener("click", closeModal);
