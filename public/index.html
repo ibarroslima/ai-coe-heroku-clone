@@ -1597,10 +1597,11 @@
       if (value) {
         authorBtnAvatar.innerHTML = getAuthorAvatarMarkup(value);
         authorBtnText.textContent = value;
-        // Auto-fill "Created by" from author only when empty
-        // or when it still matches the last auto-filled author.
+        const isEditing = Boolean(editingIdEl.value);
+        // For new cases, always prefill creator from selected author.
+        // For edits, preserve manual creator changes.
         const currentCreatedBy = String(createdByEl.value || "").trim();
-        if (!currentCreatedBy || currentCreatedBy === lastAutoCreatedByFromAuthor) {
+        if (!isEditing || !currentCreatedBy || currentCreatedBy === lastAutoCreatedByFromAuthor) {
           createdByEl.value = value;
           lastAutoCreatedByFromAuthor = value;
         }
@@ -1911,16 +1912,25 @@
         "um","uma","uns","umas","que","se","ao","aos","ou","the","and","for","with","from","this","that",
         "una","uno","unos","unas","con","sin","del","los","las","el","la","en","por","para","y","de",
       ]);
+      const genericWords = new Set([
+        "exemplo","example","ejemplo","auto","tags","tag","caso","use","uso","v1","v2","v3",
+        "teste","test","demo","sample","informacao","information","dados","data",
+      ]);
+      const preferredKeywords = new Set([
+        "agentforce","claude","salesforce","heroku","cursor","slack","csv","api","llm","ai",
+        "discovery","rom","dd","sow","scoping","sizing","proposal","proposal generation",
+      ]);
       const candidates = [];
       const pushIfValid = (raw) => {
         const text = String(raw || "").trim();
         if (!text) return;
         const key = normalizeTagToken(text);
-        if (!key || stopWords.has(key)) return;
+        if (!key || stopWords.has(key) || genericWords.has(key)) return;
         candidates.push(text);
       };
 
-      [payload.category, payload.technology, payload.phase, payload.theme, payload.area].forEach(pushIfValid);
+      // Always prioritize structured fields from the form.
+      [payload.category, payload.technology, payload.phase, payload.theme].forEach(pushIfValid);
 
       const textBlob = [
         payload.title,
@@ -1931,7 +1941,12 @@
         .join(" ");
 
       const wordMatches = textBlob.match(/[A-Za-zÀ-ÿ0-9+#._-]{4,}/g) || [];
-      wordMatches.slice(0, 120).forEach(pushIfValid);
+      wordMatches.slice(0, 120).forEach((word) => {
+        const key = normalizeTagToken(word);
+        if (preferredKeywords.has(key)) {
+          pushIfValid(word);
+        }
+      });
 
       const unique = [];
       const seen = new Set();
@@ -1940,7 +1955,7 @@
         if (seen.has(key)) continue;
         seen.add(key);
         unique.push(tag);
-        if (unique.length >= 8) break;
+        if (unique.length >= 5) break;
       }
       return unique;
     }
