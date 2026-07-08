@@ -1490,7 +1490,7 @@
       return date.toLocaleDateString("pt-BR");
     }
 
-    function openCaseDetail(item) {
+    function renderCaseDetail(item) {
       detailCategoryEl.textContent = (item.category || t().fallback.noCategory).toUpperCase();
       detailTitleEl.textContent = getLocalizedField(item, "title") || "-";
       detailTagsEl.innerHTML = (item.tags || []).map((tag) => `<span class="chip">${tag}</span>`).join("");
@@ -1531,6 +1531,11 @@
         detailAttachmentsRowEl.style.display = "none";
       }
       detailWrap.style.display = "flex";
+    }
+
+    async function openCaseDetail(item) {
+      const fullItem = item?.id ? await fetchUseCaseById(item.id) : item;
+      renderCaseDetail(fullItem || item);
     }
 
     function saveAuthors() {
@@ -1717,7 +1722,13 @@
           <h4>${getLocalizedField(item, "title") || item.title}</h4>
           <div class="recent-meta">${item.author_name || i.fallback.noAuthor} • ${item.skill_name || i.fallback.noProject}</div>
         `;
-        el.addEventListener("click", () => openCaseDetail(item));
+        el.addEventListener("click", async () => {
+          try {
+            await openCaseDetail(item);
+          } catch (error) {
+            alert(error.message);
+          }
+        });
         recentCardsEl.appendChild(el);
       });
       if (!recentItems.length) {
@@ -2013,6 +2024,10 @@
       return response.json();
     }
 
+    async function fetchUseCaseById(useCaseId) {
+      return request(`/api/use-cases/${useCaseId}`);
+    }
+
     async function checkAuth() {
       const data = await request("/api/auth/status");
       isAuthenticated = data.authenticated;
@@ -2101,7 +2116,13 @@
               ${adminDelete}
             </div>
           `;
-          card.addEventListener("click", () => openCaseDetail(item));
+          card.addEventListener("click", async () => {
+            try {
+              await openCaseDetail(item);
+            } catch (error) {
+              alert(error.message);
+            }
+          });
           grid.appendChild(card);
         });
         section.appendChild(grid);
@@ -2116,39 +2137,45 @@
         await request(`/api/use-cases/${btn.dataset.id}/favorite`, { method: "POST" });
         await loadCases();
       }));
-      document.querySelectorAll(".edit").forEach((btn) => btn.addEventListener("click", (event) => {
+      document.querySelectorAll(".edit").forEach((btn) => btn.addEventListener("click", async (event) => {
         event.stopPropagation();
-        const item = allCases.find((caseItem) => String(caseItem.id) === String(btn.dataset.id));
-        if (!item) return;
-        editingIdEl.value = item.id;
-        updateCaseModalTitle();
-        document.getElementById("title").value = getLocalizedField(item, "title") || item.title || "";
-        document.getElementById("category").value = item.category || "";
-        document.getElementById("area").value = "GTM ProServ";
-        document.getElementById("technology").value = item.technology || "";
-        document.getElementById("phase").value = item.phase || "";
-        document.getElementById("theme").value = item.theme || "";
-        setSelectedAuthor(item.author_name || "");
-        createdByEl.value =
-          item.created_by_name ||
-          item.author_name ||
-          localStorage.getItem(CREATOR_NAME_STORAGE_KEY) ||
-          "";
-        lastAutoCreatedByFromAuthor = item.author_name || "";
-        document.getElementById("skillName").value = item.skill_name || "";
-        document.getElementById("description").value = getLocalizedField(item, "description") || item.description || "";
-        document.getElementById("tags").value = (item.tags || []).join(", ");
-        currentEditingAttachments = parseAttachmentsData(item.attachments_data).map((attachment) => ({
-          name: String(attachment.name || ""),
-          type: String(attachment.type || ""),
-          size: Number(attachment.size || 0),
-          data: String(attachment.data || ""),
-        }));
-        existingAttachmentsDataEl.value = JSON.stringify(currentEditingAttachments);
-        renderExistingAttachmentsEditor();
-        attachmentsEl.value = "";
-        statusEl.value = item.status || "in_progress";
-        modalWrap.style.display = "flex";
+        try {
+          const baseItem = allCases.find((caseItem) => String(caseItem.id) === String(btn.dataset.id));
+          if (!baseItem) return;
+          const item = await fetchUseCaseById(baseItem.id);
+          if (!item) return;
+          editingIdEl.value = item.id;
+          updateCaseModalTitle();
+          document.getElementById("title").value = getLocalizedField(item, "title") || item.title || "";
+          document.getElementById("category").value = item.category || "";
+          document.getElementById("area").value = "GTM ProServ";
+          document.getElementById("technology").value = item.technology || "";
+          document.getElementById("phase").value = item.phase || "";
+          document.getElementById("theme").value = item.theme || "";
+          setSelectedAuthor(item.author_name || "");
+          createdByEl.value =
+            item.created_by_name ||
+            item.author_name ||
+            localStorage.getItem(CREATOR_NAME_STORAGE_KEY) ||
+            "";
+          lastAutoCreatedByFromAuthor = item.author_name || "";
+          document.getElementById("skillName").value = item.skill_name || "";
+          document.getElementById("description").value = getLocalizedField(item, "description") || item.description || "";
+          document.getElementById("tags").value = (item.tags || []).join(", ");
+          currentEditingAttachments = parseAttachmentsData(item.attachments_data).map((attachment) => ({
+            name: String(attachment.name || ""),
+            type: String(attachment.type || ""),
+            size: Number(attachment.size || 0),
+            data: String(attachment.data || ""),
+          }));
+          existingAttachmentsDataEl.value = JSON.stringify(currentEditingAttachments);
+          renderExistingAttachmentsEditor();
+          attachmentsEl.value = "";
+          statusEl.value = item.status || "in_progress";
+          modalWrap.style.display = "flex";
+        } catch (error) {
+          alert(error.message);
+        }
       }));
       document.querySelectorAll(".set-status").forEach((btn) => btn.addEventListener("click", async (event) => {
         event.stopPropagation();

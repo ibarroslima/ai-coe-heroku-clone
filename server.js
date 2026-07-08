@@ -276,6 +276,14 @@ function getClientId(req) {
   return String(req.headers["x-client-id"] || "").trim();
 }
 
+function toListCase(item, isFavorite = false) {
+  const row = { ...item, is_favorite: Boolean(isFavorite) };
+  // Large blobs are only needed on detail/edit requests.
+  delete row.attachments_data;
+  delete row.image_data;
+  return row;
+}
+
 function normalizeSourceLanguage(value) {
   const lang = String(value || "").trim().toLowerCase();
   if (lang === "es") return "es";
@@ -318,8 +326,7 @@ function extractAttachmentNamesFromRow(row) {
 
 function getJson(url) {
   return new Promise((resolve, reject) => {
-    https
-      .get(url, (response) => {
+    const request = https.get(url, (response) => {
         let body = "";
         response.setEncoding("utf8");
         response.on("data", (chunk) => {
@@ -336,8 +343,11 @@ function getJson(url) {
             reject(error);
           }
         });
-      })
-      .on("error", reject);
+      });
+    request.setTimeout(4000, () => {
+      request.destroy(new Error("timeout"));
+    });
+    request.on("error", reject);
   });
 }
 
@@ -373,10 +383,19 @@ async function translateUseCaseText({ sourceLanguage, title, description }) {
 
   if (!OPENAI_API_KEY) {
     const targets = ["pt", "es", "en"].filter((lang) => lang !== src);
-    for (const lang of targets) {
-      localized[`title_${lang}`] = await translateViaGoogle(cleanTitle, src, lang);
-      localized[`description_${lang}`] = await translateViaGoogle(cleanDescription, src, lang);
-    }
+    const translated = await Promise.all(
+      targets.map(async (lang) => {
+        const [titleValue, descriptionValue] = await Promise.all([
+          translateViaGoogle(cleanTitle, src, lang),
+          translateViaGoogle(cleanDescription, src, lang),
+        ]);
+        return { lang, titleValue, descriptionValue };
+      })
+    );
+    translated.forEach(({ lang, titleValue, descriptionValue }) => {
+      localized[`title_${lang}`] = titleValue;
+      localized[`description_${lang}`] = descriptionValue;
+    });
     if (!localized.title_pt) localized.title_pt = cleanTitle;
     if (!localized.title_es) localized.title_es = cleanTitle;
     if (!localized.title_en) localized.title_en = cleanTitle;
@@ -910,12 +929,12 @@ app.get("/api/use-cases", async (req, res) => {
   if (!hasDatabase) {
     const rows = [...memoryCases]
       .sort((a, b) => b.created_at - a.created_at)
-      .map((item) => ({
-        ...item,
-        is_favorite: clientId
-          ? (memoryFavoritesByClient.get(clientId) || new Set()).has(item.id)
-          : false,
-      }));
+      .map((item) =>
+        toListCase(
+          item,
+          clientId ? (memoryFavoritesByClient.get(clientId) || new Set()).has(item.id) : false
+        )
+      );
     return res.json(rows);
   }
   try {
@@ -935,14 +954,52 @@ app.get("/api/use-cases", async (req, res) => {
       [clientId]
     );
     return res.json(
-      rows.map((row) => ({
-        ...row,
-        is_favorite: Boolean(row.is_favorite_user),
-      }))
+      rows.map((row) => toListCase(row, Boolean(row.is_favorite_user)))
     );
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Erro ao listar casos." });
+  }
+});
+
+app.get("/api/use-cases/:id", async (req, res) => {
+  const clientId = getClientId(req);
+  if (!hasDatabase) {
+    const id = Number(req.params.id);
+    const found = memoryCases.find((item) => item.id === id);
+    if (!found) return res.status(404).json({ error: "Caso nao encontrado." });
+    return res.json({
+      ...found,
+      is_favorite: clientId
+        ? (memoryFavoritesByClient.get(clientId) || new Set()).has(found.id)
+        : false,
+    });
+  }
+  try {
+    const { rows } = await pool.query(
+      `SELECT uc.*,
+              CASE
+                WHEN $2 = '' THEN FALSE
+                ELSE EXISTS (
+                  SELECT 1
+                  FROM user_favorites uf
+                  WHERE uf.use_case_id = uc.id
+                    AND uf.client_id = $2
+                )
+              END AS is_favorite_user
+       FROM use_cases uc
+       WHERE uc.id = $1
+       LIMIT 1`,
+      [req.params.id, clientId]
+    );
+    if (!rows.length) return res.status(404).json({ error: "Caso nao encontrado." });
+    return res.json({
+      ...rows[0],
+      is_favorite: Boolean(rows[0].is_favorite_user),
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Erro ao buscar caso." });
   }
 });
 
