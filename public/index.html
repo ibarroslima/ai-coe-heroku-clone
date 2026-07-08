@@ -930,6 +930,7 @@
               <div id="detailProject" class="detail-meta-item"></div>
             </div>
           </div>
+          <div class="detail-meta-item"><strong id="detailCreatedByLabel">Criado por:</strong> <span id="detailCreatedBy"></span></div>
           <div class="detail-meta-item"><strong id="detailDateLabel">Data:</strong> <span id="detailDate"></span></div>
           <div class="detail-meta-item"><strong id="detailAreaLabel">Area:</strong> <span id="detailArea"></span></div>
           <div class="detail-meta-item"><strong id="detailTechLabel">Tecnologia:</strong> <span id="detailTech"></span></div>
@@ -1095,6 +1096,7 @@
     const detailAvatarEl = document.getElementById("detailAvatar");
     const detailAuthorNameEl = document.getElementById("detailAuthorName");
     const detailProjectEl = document.getElementById("detailProject");
+    const detailCreatedByEl = document.getElementById("detailCreatedBy");
     const detailDateEl = document.getElementById("detailDate");
     const detailAreaEl = document.getElementById("detailArea");
     const detailTechEl = document.getElementById("detailTech");
@@ -1480,6 +1482,8 @@
       detailAvatarEl.innerHTML = getAuthorAvatarMarkup(item.author_name || "");
       detailAuthorNameEl.textContent = item.author_name || t().fallback.noAuthor;
       detailProjectEl.textContent = item.skill_name || t().fallback.noProject;
+      detailCreatedByEl.textContent =
+        item.created_by_name || item.author_name || t().fallback.noAuthor;
       detailDateEl.textContent = formatDate(item.created_at);
       detailAreaEl.textContent = item.area || t().fallback.noArea;
       detailTechEl.textContent = item.technology || t().fallback.noTechnology;
@@ -1750,6 +1754,7 @@
       document.getElementById("aboutP5").textContent = x.aboutP5;
       document.getElementById("closeDetailBtn").textContent = x.detailBack;
       document.getElementById("detailAuthorLabel").textContent = x.detailAuthor;
+      document.getElementById("detailCreatedByLabel").textContent = `${x.createdByLabel}:`;
       document.getElementById("detailDateLabel").textContent = x.detailDate;
       document.getElementById("detailAreaLabel").textContent = x.detailArea;
       document.getElementById("detailTechLabel").textContent = x.detailTech;
