@@ -1318,13 +1318,13 @@ app.get("/api/use-cases/export.csv", requireAuth, async (_req, res) => {
       "technology",
       "phase",
       "theme",
-      "author",
       "project",
+      "author",
+      "created_on",
+      "created_by",
       "description",
       "attachments",
       "tags",
-      "created_on",
-      "created_by",
     ];
 
     const csvBody = rows
@@ -1342,13 +1342,13 @@ app.get("/api/use-cases/export.csv", requireAuth, async (_req, res) => {
             row.technology,
             row.phase,
             row.theme,
-            row.author_name,
             row.skill_name,
+            row.author_name,
+            formatDateOnly(row.created_at),
+            row.created_by_name || row.author_name || "",
             descriptionEn,
             extractAttachmentNamesFromRow(row),
             Array.isArray(row.tags) ? row.tags.join(" | ") : "",
-            formatDateOnly(row.created_at),
-            row.created_by_name || row.author_name || "",
           ];
         })()
           .map(toCsvValue)
