@@ -940,6 +940,16 @@
       </div>
     </div>
   </div>
+  <div id="deleteConfirmWrap" class="modal-wrap">
+    <div class="modal" style="max-width:420px;">
+      <h3 id="deleteConfirmTitle">Confirmar exclusao</h3>
+      <p id="deleteConfirmMessage" style="margin: 0 0 10px 0; color: var(--muted);">Tem certeza que deseja excluir este caso?</p>
+      <div class="actions">
+        <button id="deleteConfirmCancel" class="pill-btn" type="button">Cancelar</button>
+        <button id="deleteConfirmOk" class="pill-btn primary" type="button">Excluir</button>
+      </div>
+    </div>
+  </div>
   <section id="aiGuideWrap" class="ai-guide-panel hidden">
     <header class="ai-guide-head">
       <div class="ai-guide-head-left">
@@ -1088,6 +1098,11 @@
     const statusEl = document.getElementById("status");
     const createdByEl = document.getElementById("createdBy");
     const detailWrap = document.getElementById("detailWrap");
+    const deleteConfirmWrap = document.getElementById("deleteConfirmWrap");
+    const deleteConfirmTitleEl = document.getElementById("deleteConfirmTitle");
+    const deleteConfirmMessageEl = document.getElementById("deleteConfirmMessage");
+    const deleteConfirmCancelEl = document.getElementById("deleteConfirmCancel");
+    const deleteConfirmOkEl = document.getElementById("deleteConfirmOk");
     const closeDetailBtn = document.getElementById("closeDetailBtn");
     const detailCategoryEl = document.getElementById("detailCategory");
     const detailTitleEl = document.getElementById("detailTitle");
@@ -1120,6 +1135,7 @@
     let currentLang = "pt";
     let currentEditingAttachments = [];
     let lastAutoCreatedByFromAuthor = "";
+    let pendingDeleteId = "";
 
     const AUTHORS_STORAGE_KEY = "ai_coe_authors_v1";
     const AUTHOR_PHOTOS_STORAGE_KEY = "ai_coe_author_photos_v1";
@@ -1787,6 +1803,10 @@
       document.getElementById("labelAuthor").textContent = `${i.labels.author} *`;
       document.getElementById("labelCreatedBy").textContent = `${x.createdByLabel} *`;
       createdByEl.placeholder = x.createdByPlaceholder;
+      deleteConfirmTitleEl.textContent = t().actions.delete;
+      deleteConfirmMessageEl.textContent = t().confirmDelete;
+      deleteConfirmCancelEl.textContent = t().cancel;
+      deleteConfirmOkEl.textContent = t().actions.delete;
       document.getElementById("labelProject").textContent = i.labels.project;
       document.getElementById("labelTags").textContent = i.labels.tags;
       document.getElementById("labelDescription").textContent = `${i.labels.description} *`;
@@ -2067,9 +2087,7 @@
       }));
       document.querySelectorAll(".delete").forEach((btn) => btn.addEventListener("click", async (event) => {
         event.stopPropagation();
-        if (!confirm(t().confirmDelete)) return;
-        await request(`/api/use-cases/${btn.dataset.id}`, { method: "DELETE" });
-        await loadCases();
+        openDeleteConfirm(btn.dataset.id);
       }));
     }
 
@@ -2148,6 +2166,20 @@
       lastAutoCreatedByFromAuthor = authorNameEl.value || "";
       statusEl.value = "in_progress";
       updateCaseModalTitle();
+    }
+
+    function openDeleteConfirm(caseId) {
+      pendingDeleteId = String(caseId || "");
+      deleteConfirmTitleEl.textContent = t().actions.delete;
+      deleteConfirmMessageEl.textContent = t().confirmDelete;
+      deleteConfirmCancelEl.textContent = t().cancel;
+      deleteConfirmOkEl.textContent = t().actions.delete;
+      deleteConfirmWrap.style.display = "flex";
+    }
+
+    function closeDeleteConfirm() {
+      pendingDeleteId = "";
+      deleteConfirmWrap.style.display = "none";
     }
 
     openModalBtn.addEventListener("click", () => {
@@ -2272,6 +2304,19 @@
       if (event.target === detailWrap) {
         detailWrap.style.display = "none";
       }
+    });
+    deleteConfirmCancelEl.addEventListener("click", closeDeleteConfirm);
+    deleteConfirmWrap.addEventListener("click", (event) => {
+      if (event.target === deleteConfirmWrap) {
+        closeDeleteConfirm();
+      }
+    });
+    deleteConfirmOkEl.addEventListener("click", async () => {
+      if (!pendingDeleteId) return;
+      const targetId = pendingDeleteId;
+      closeDeleteConfirm();
+      await request(`/api/use-cases/${targetId}`, { method: "DELETE" });
+      await loadCases();
     });
     aiGuideFab.addEventListener("click", () => {
       aiGuideWrap.classList.remove("hidden");
