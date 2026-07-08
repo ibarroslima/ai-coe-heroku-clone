@@ -1897,6 +1897,54 @@
       return `${count} ${count === 1 ? t().caseCountOne : t().caseCountMany}`;
     }
 
+    function normalizeTagToken(value) {
+      return String(value || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .trim();
+    }
+
+    function suggestTagsFromPayload(payload) {
+      const stopWords = new Set([
+        "a","o","as","os","de","do","da","dos","das","e","em","para","por","com","sem","na","no","nas","nos",
+        "um","uma","uns","umas","que","se","ao","aos","ou","the","and","for","with","from","this","that",
+        "una","uno","unos","unas","con","sin","del","los","las","el","la","en","por","para","y","de",
+      ]);
+      const candidates = [];
+      const pushIfValid = (raw) => {
+        const text = String(raw || "").trim();
+        if (!text) return;
+        const key = normalizeTagToken(text);
+        if (!key || stopWords.has(key)) return;
+        candidates.push(text);
+      };
+
+      [payload.category, payload.technology, payload.phase, payload.theme, payload.area].forEach(pushIfValid);
+
+      const textBlob = [
+        payload.title,
+        payload.description,
+        payload.skillName,
+      ]
+        .map((value) => String(value || ""))
+        .join(" ");
+
+      const wordMatches = textBlob.match(/[A-Za-zÀ-ÿ0-9+#._-]{4,}/g) || [];
+      wordMatches.slice(0, 120).forEach(pushIfValid);
+
+      const unique = [];
+      const seen = new Set();
+      for (const tag of candidates) {
+        const key = normalizeTagToken(tag);
+        if (seen.has(key)) continue;
+        seen.add(key);
+        unique.push(tag);
+        if (unique.length >= 8) break;
+      }
+      return unique;
+    }
+
     async function getPayloadFromForm() {
       const selectedAttachments = Array.from(attachmentsEl.files || []);
       let attachments = parseAttachmentsData(existingAttachmentsDataEl.value);
@@ -1911,7 +1959,11 @@
         );
         attachments = attachments.concat(newAttachments);
       }
-      return {
+      const rawTags = document.getElementById("tags").value
+        .split(",")
+        .map((tag) => tag.trim())
+        .filter(Boolean);
+      const payload = {
         title: document.getElementById("title").value,
         category: document.getElementById("category").value,
         area: "GTM ProServ",
@@ -1922,11 +1974,18 @@
         createdBy: createdByEl.value,
         skillName: document.getElementById("skillName").value,
         description: document.getElementById("description").value,
-        tags: document.getElementById("tags").value.split(",").map((tag) => tag.trim()).filter(Boolean),
+        tags: rawTags,
         status: statusEl.value || "in_progress",
         sourceLanguage: currentLang === "es" ? "es" : "pt",
         attachments,
       };
+      if (!payload.tags.length) {
+        payload.tags = suggestTagsFromPayload(payload);
+        if (payload.tags.length) {
+          document.getElementById("tags").value = payload.tags.join(", ");
+        }
+      }
+      return payload;
     }
 
     async function request(url, options = {}) {
