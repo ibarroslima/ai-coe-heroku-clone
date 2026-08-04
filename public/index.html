@@ -1142,6 +1142,7 @@
     let lastAutoCreatedByFromAuthor = "";
     let pendingDeleteId = "";
     let currentDetailCaseId = "";
+    let detailRequestSeq = 0;
 
     const AUTHORS_STORAGE_KEY = "ai_coe_authors_v1";
     const AUTHOR_PHOTOS_STORAGE_KEY = "ai_coe_author_photos_v1";
@@ -1573,8 +1574,19 @@
     }
 
     async function openCaseDetail(item) {
-      const fullItem = item?.id ? await fetchUseCaseById(item.id) : item;
-      renderCaseDetail(fullItem || item);
+      const caseId = String(item?.id || "");
+      const requestSeq = ++detailRequestSeq;
+      // Open immediately with current list data for faster perceived response.
+      renderCaseDetail(item || {});
+      if (!caseId) return;
+      try {
+        const fullItem = await fetchUseCaseById(caseId);
+        if (requestSeq !== detailRequestSeq) return;
+        if (String(currentDetailCaseId || "") !== caseId) return;
+        renderCaseDetail(fullItem || item);
+      } catch (_error) {
+        // Keep lightweight detail already rendered if refresh fails.
+      }
     }
 
     function saveAuthors() {
