@@ -1247,6 +1247,7 @@
         detailSpm: "Pre-sales:",
         detailAttachments: "Anexos:",
         detailOpenAttachment: "Abrir anexo",
+        detailLoadingAttachments: "Carregando anexos...",
         attachmentsLabel: "📎 Anexos (opcional)",
         createdByLabel: "Criado por",
         createdByPlaceholder: "Ex.: Igor Lima",
@@ -1311,6 +1312,7 @@
         detailSpm: "Pre-sales:",
         detailAttachments: "Adjuntos:",
         detailOpenAttachment: "Abrir adjunto",
+        detailLoadingAttachments: "Cargando adjuntos...",
         attachmentsLabel: "📎 Adjuntos (opcional)",
         createdByLabel: "Creado por",
         createdByPlaceholder: "Ej.: Igor Lima",
@@ -1375,6 +1377,7 @@
         detailSpm: "Pre-sales:",
         detailAttachments: "Attachments:",
         detailOpenAttachment: "Open attachment",
+        detailLoadingAttachments: "Loading attachments...",
         attachmentsLabel: "📎 Attachments (optional)",
         createdByLabel: "Created by",
         createdByPlaceholder: "Ex.: Igor Lima",
@@ -1525,7 +1528,8 @@
       return date.toLocaleDateString("pt-BR");
     }
 
-    function renderCaseDetail(item) {
+    function renderCaseDetail(item, options = {}) {
+      const attachmentsLoading = Boolean(options.attachmentsLoading);
       currentDetailCaseId = String(item.id || "");
       detailCategoryEl.textContent = (item.category || t().fallback.noCategory).toUpperCase();
       detailTitleEl.textContent = getLocalizedField(item, "title") || "-";
@@ -1541,6 +1545,16 @@
       detailTechEl.textContent = item.technology || t().fallback.noTechnology;
       detailSpmEl.textContent = `${item.phase || t().fallback.noPhase} • ${item.theme || t().fallback.noTheme}`;
       detailAttachmentsListEl.innerHTML = "";
+      if (attachmentsLoading) {
+        detailAttachmentsListEl.textContent = tx().detailLoadingAttachments;
+        detailAttachmentsRowEl.style.display = "block";
+        detailWrap.style.display = "flex";
+        if (currentDetailCaseId) {
+          const sharedUrl = buildCaseShareUrl(currentDetailCaseId);
+          window.history.replaceState({}, "", sharedUrl);
+        }
+        return;
+      }
       let attachments = [];
       try {
         const parsed = JSON.parse(String(item.attachments_data || "[]"));
@@ -1588,7 +1602,7 @@
       );
       // Open immediately when we already have list data.
       if (hasDisplayData) {
-        renderCaseDetail(item || {});
+        renderCaseDetail(item || {}, { attachmentsLoading: Boolean(caseId) });
       }
       if (!caseId) return;
       try {
