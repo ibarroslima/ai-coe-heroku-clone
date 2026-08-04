@@ -1141,6 +1141,7 @@
     const AUTHOR_PHOTOS_STORAGE_KEY = "ai_coe_author_photos_v1";
     const CLIENT_ID_STORAGE_KEY = "ai_coe_client_id_v1";
     const USE_CASES_CACHE_KEY = "ai_coe_cases_cache_v1";
+    const USE_CASES_CACHE_MAX_AGE_MS = 2 * 60 * 1000;
     const CREATOR_NAME_STORAGE_KEY = "ai_coe_creator_name_v1";
     const DEFAULT_AUTHORS = [
       "Alejandra Acuña",
@@ -1687,7 +1688,13 @@
 
     function saveCasesCache() {
       try {
-        localStorage.setItem(USE_CASES_CACHE_KEY, JSON.stringify(allCases));
+        localStorage.setItem(
+          USE_CASES_CACHE_KEY,
+          JSON.stringify({
+            updatedAt: Date.now(),
+            items: allCases,
+          })
+        );
       } catch (_error) {}
     }
 
@@ -1696,8 +1703,16 @@
         const raw = localStorage.getItem(USE_CASES_CACHE_KEY);
         if (!raw) return false;
         const parsed = JSON.parse(raw);
-        if (!Array.isArray(parsed) || !parsed.length) return false;
-        allCases = parsed;
+        // Only hydrate from fresh cache to avoid showing stale counters.
+        if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return false;
+        const items = Array.isArray(parsed.items) ? parsed.items : [];
+        const updatedAt = Number(parsed.updatedAt || 0);
+        const cacheAge = Date.now() - updatedAt;
+        if (!items.length || !Number.isFinite(updatedAt) || cacheAge > USE_CASES_CACHE_MAX_AGE_MS) {
+          localStorage.removeItem(USE_CASES_CACHE_KEY);
+          return false;
+        }
+        allCases = items;
         updateMetrics();
         renderRecentCards();
         updateFilters();
