@@ -478,6 +478,7 @@
     body.dark .modal-wrap { background: rgba(2, 8, 26, 0.62); }
     .detail-wrap { max-width: 1100px !important; width: min(1100px, 100%); }
     .detail-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .detail-top-actions { display: flex; align-items: center; gap: 8px; }
     .detail-body { display: grid; grid-template-columns: 2fr 1fr; gap: 14px; }
     .detail-main, .detail-side {
       border: 1px solid var(--line);
@@ -913,6 +914,9 @@
     <div class="modal detail-wrap">
       <div class="detail-top">
         <button id="closeDetailBtn" class="pill-btn" type="button">← Voltar ao catalogo</button>
+        <div class="detail-top-actions">
+          <button id="shareCaseBtn" class="pill-btn" type="button">🔗 Compartilhar</button>
+        </div>
       </div>
       <div class="detail-body">
         <section class="detail-main">
@@ -1104,6 +1108,7 @@
     const deleteConfirmCancelEl = document.getElementById("deleteConfirmCancel");
     const deleteConfirmOkEl = document.getElementById("deleteConfirmOk");
     const closeDetailBtn = document.getElementById("closeDetailBtn");
+    const shareCaseBtn = document.getElementById("shareCaseBtn");
     const detailCategoryEl = document.getElementById("detailCategory");
     const detailTitleEl = document.getElementById("detailTitle");
     const detailTagsEl = document.getElementById("detailTags");
@@ -1136,6 +1141,7 @@
     let currentEditingAttachments = [];
     let lastAutoCreatedByFromAuthor = "";
     let pendingDeleteId = "";
+    let currentDetailCaseId = "";
 
     const AUTHORS_STORAGE_KEY = "ai_coe_authors_v1";
     const AUTHOR_PHOTOS_STORAGE_KEY = "ai_coe_author_photos_v1";
@@ -1232,6 +1238,8 @@
         actionComplete: "Marcar concluido",
         actionReopen: "Reabrir",
         detailBack: "← Voltar ao catalogo",
+        detailShare: "🔗 Compartilhar",
+        detailShareCopied: "Link copiado!",
         detailAuthor: "Autor",
         detailDate: "Data:",
         detailArea: "Area:",
@@ -1293,6 +1301,8 @@
         actionComplete: "Marcar completado",
         actionReopen: "Reabrir",
         detailBack: "← Volver al catalogo",
+        detailShare: "🔗 Compartir",
+        detailShareCopied: "Enlace copiado!",
         detailAuthor: "Autor",
         detailDate: "Fecha:",
         detailArea: "Area:",
@@ -1354,6 +1364,8 @@
         actionComplete: "Mark completed",
         actionReopen: "Reopen",
         detailBack: "← Back to catalog",
+        detailShare: "🔗 Share",
+        detailShareCopied: "Link copied!",
         detailAuthor: "Author",
         detailDate: "Date:",
         detailArea: "Area:",
@@ -1485,6 +1497,25 @@
         .replace(/\n/g, "<br>");
     }
 
+    function buildCaseShareUrl(caseId) {
+      const url = new URL(window.location.href);
+      url.searchParams.set("case", String(caseId));
+      return url.toString();
+    }
+
+    async function copyText(text) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(text);
+        return;
+      }
+      const input = document.createElement("textarea");
+      input.value = text;
+      document.body.appendChild(input);
+      input.select();
+      document.execCommand("copy");
+      document.body.removeChild(input);
+    }
+
     function formatDate(dateValue) {
       const date = new Date(dateValue);
       if (Number.isNaN(date.getTime())) return "-";
@@ -1492,6 +1523,7 @@
     }
 
     function renderCaseDetail(item) {
+      currentDetailCaseId = String(item.id || "");
       detailCategoryEl.textContent = (item.category || t().fallback.noCategory).toUpperCase();
       detailTitleEl.textContent = getLocalizedField(item, "title") || "-";
       detailTagsEl.innerHTML = (item.tags || []).map((tag) => `<span class="chip">${tag}</span>`).join("");
@@ -1532,6 +1564,10 @@
         detailAttachmentsRowEl.style.display = "none";
       }
       detailWrap.style.display = "flex";
+      if (currentDetailCaseId) {
+        const sharedUrl = buildCaseShareUrl(currentDetailCaseId);
+        window.history.replaceState({}, "", sharedUrl);
+      }
     }
 
     async function openCaseDetail(item) {
@@ -1796,6 +1832,7 @@
       document.getElementById("aboutP4").textContent = x.aboutP4;
       document.getElementById("aboutP5").textContent = x.aboutP5;
       document.getElementById("closeDetailBtn").textContent = x.detailBack;
+      shareCaseBtn.textContent = x.detailShare;
       document.getElementById("detailAuthorLabel").textContent = x.detailAuthor;
       document.getElementById("detailCreatedByLabel").textContent = `${x.createdByLabel}:`;
       document.getElementById("detailDateLabel").textContent = x.detailDate;
@@ -2415,11 +2452,32 @@
     });
     closeDetailBtn.addEventListener("click", () => {
       detailWrap.style.display = "none";
+      currentDetailCaseId = "";
+      const url = new URL(window.location.href);
+      url.searchParams.delete("case");
+      window.history.replaceState({}, "", url.toString());
     });
     detailWrap.addEventListener("click", (event) => {
       if (event.target === detailWrap) {
         detailWrap.style.display = "none";
+        currentDetailCaseId = "";
+        const url = new URL(window.location.href);
+        url.searchParams.delete("case");
+        window.history.replaceState({}, "", url.toString());
       }
+    });
+    shareCaseBtn.addEventListener("click", async () => {
+      if (!currentDetailCaseId) return;
+      const originalLabel = tx().detailShare;
+      try {
+        await copyText(buildCaseShareUrl(currentDetailCaseId));
+        shareCaseBtn.textContent = tx().detailShareCopied;
+      } catch (error) {
+        alert(error.message);
+      }
+      setTimeout(() => {
+        shareCaseBtn.textContent = originalLabel;
+      }, 1400);
     });
     deleteConfirmCancelEl.addEventListener("click", closeDeleteConfirm);
     deleteConfirmWrap.addEventListener("click", (event) => {
@@ -2499,6 +2557,12 @@
       switchTab("home");
       await checkAuth();
       await loadCases();
+      const queryCaseId = new URL(window.location.href).searchParams.get("case");
+      if (queryCaseId) {
+        try {
+          await openCaseDetail({ id: queryCaseId });
+        } catch (_error) {}
+      }
     })();
   </script>
 </body>
