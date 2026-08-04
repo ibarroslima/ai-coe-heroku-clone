@@ -1576,8 +1576,20 @@
     async function openCaseDetail(item) {
       const caseId = String(item?.id || "");
       const requestSeq = ++detailRequestSeq;
-      // Open immediately with current list data for faster perceived response.
-      renderCaseDetail(item || {});
+      const hasDisplayData = Boolean(
+        item &&
+          (
+            item.title ||
+            item.title_en ||
+            item.description ||
+            item.category ||
+            (Array.isArray(item.tags) && item.tags.length)
+          )
+      );
+      // Open immediately when we already have list data.
+      if (hasDisplayData) {
+        renderCaseDetail(item || {});
+      }
       if (!caseId) return;
       try {
         const fullItem = await fetchUseCaseById(caseId);
@@ -1585,7 +1597,7 @@
         if (String(currentDetailCaseId || "") !== caseId) return;
         renderCaseDetail(fullItem || item);
       } catch (_error) {
-        // Keep lightweight detail already rendered if refresh fails.
+        if (!hasDisplayData) throw _error;
       }
     }
 
@@ -2091,6 +2103,25 @@
       return request(`/api/use-cases/${useCaseId}`);
     }
 
+    async function openSharedCaseFromUrl(caseIdRaw) {
+      const caseId = String(caseIdRaw || "").trim();
+      if (!caseId) return false;
+      const maxAttempts = 2;
+      for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+        try {
+          const item = await fetchUseCaseById(caseId);
+          if (!item || String(item.id) !== caseId) {
+            throw new Error("shared case mismatch");
+          }
+          await openCaseDetail(item);
+          return true;
+        } catch (_error) {
+          if (attempt === maxAttempts) return false;
+        }
+      }
+      return false;
+    }
+
     async function checkAuth() {
       const data = await request("/api/auth/status");
       isAuthenticated = data.authenticated;
@@ -2570,9 +2601,10 @@
       await loadCases();
       const queryCaseId = new URL(window.location.href).searchParams.get("case");
       if (queryCaseId) {
-        try {
-          await openCaseDetail({ id: queryCaseId });
-        } catch (_error) {}
+        const opened = await openSharedCaseFromUrl(queryCaseId);
+        if (!opened) {
+          switchTab("catalog");
+        }
       }
     })();
   </script>
