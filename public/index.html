@@ -2099,8 +2099,14 @@
       return response.json();
     }
 
-    async function fetchUseCaseById(useCaseId) {
-      return request(`/api/use-cases/${useCaseId}`);
+    async function fetchUseCaseById(useCaseId, timeoutMs = 6000) {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+      try {
+        return await request(`/api/use-cases/${useCaseId}`, { signal: controller.signal });
+      } finally {
+        clearTimeout(timeoutId);
+      }
     }
 
     async function openSharedCaseFromUrl(caseIdRaw) {
@@ -2109,7 +2115,7 @@
       const maxAttempts = 2;
       for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
         try {
-          const item = await fetchUseCaseById(caseId);
+          const item = await fetchUseCaseById(caseId, 4500);
           if (!item || String(item.id) !== caseId) {
             throw new Error("shared case mismatch");
           }
@@ -2597,12 +2603,22 @@
       hydrateCasesFromCache();
       updateStaticTranslations();
       switchTab("home");
-      await checkAuth();
-      await loadCases();
       const queryCaseId = new URL(window.location.href).searchParams.get("case");
+      const authPromise = checkAuth();
+      let sharedOpenedEarly = false;
       if (queryCaseId) {
-        const opened = await openSharedCaseFromUrl(queryCaseId);
-        if (!opened) {
+        // Try shared case first so users don't wait for full catalog load.
+        sharedOpenedEarly = await openSharedCaseFromUrl(queryCaseId);
+      }
+      await authPromise;
+      await loadCases();
+      if (queryCaseId) {
+        if (!sharedOpenedEarly) {
+          const opened = await openSharedCaseFromUrl(queryCaseId);
+          if (!opened) {
+            switchTab("catalog");
+          }
+        } else if (currentTab !== "catalog") {
           switchTab("catalog");
         }
       }
