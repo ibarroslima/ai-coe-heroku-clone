@@ -24,6 +24,9 @@ const SALESFORCE_ALLOWED_CIDRS = (
   .split(",")
   .map((value) => value.trim())
   .filter(Boolean);
+const OPENAI_TRANSLATION_ENABLED =
+  /^sk-[A-Za-z0-9_-]{20,}/.test(OPENAI_API_KEY) &&
+  !OPENAI_API_KEY.includes("SUA_CHAVE_REAL");
 
 if (isProduction && (!ADMIN_PASSWORD || !SESSION_SECRET)) {
   throw new Error(
@@ -381,7 +384,7 @@ async function translateUseCaseText({ sourceLanguage, title, description }) {
     description_en: src === "en" ? cleanDescription : "",
   };
 
-  if (!OPENAI_API_KEY) {
+  if (!OPENAI_TRANSLATION_ENABLED) {
     const targets = ["pt", "es", "en"].filter((lang) => lang !== src);
     const translated = await Promise.all(
       targets.map(async (lang) => {
@@ -409,12 +412,15 @@ async function translateUseCaseText({ sourceLanguage, title, description }) {
   if (!targets.length) return localized;
 
   try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${OPENAI_API_KEY}`,
         "Content-Type": "application/json",
       },
+      signal: controller.signal,
       body: JSON.stringify({
         model: OPENAI_MODEL,
         temperature: 0.1,
@@ -446,6 +452,8 @@ async function translateUseCaseText({ sourceLanguage, title, description }) {
           },
         ],
       }),
+    }).finally(() => {
+      clearTimeout(timeoutId);
     });
     if (!response.ok) throw new Error("translator unavailable");
     const data = await response.json();
