@@ -319,7 +319,19 @@ function extractAttachmentNamesFromRow(row) {
     const parsed = JSON.parse(String(row.attachments_data || "[]"));
     if (!Array.isArray(parsed)) return "";
     return parsed
-      .map((item) => toTrimmedText(item?.name))
+      .map((item) => {
+        const name = toTrimmedText(item?.name);
+        const data = toTrimmedText(item?.data);
+        const type = toTrimmedText(item?.type).toLowerCase();
+        if (!name && !data) return "";
+        const isLink =
+          type === "link" ||
+          /^https?:\/\//i.test(data);
+        if (isLink && data) {
+          return name ? `${name} (${data})` : data;
+        }
+        return name || "";
+      })
       .filter(Boolean)
       .join(" | ");
   } catch (_error) {
