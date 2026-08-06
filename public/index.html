@@ -223,6 +223,15 @@
       filter: drop-shadow(0 1px 2px rgba(245, 185, 66, 0.35));
     }
     .meta, .desc { color: var(--muted); }
+    .card .desc {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 5;
+      line-clamp: 5;
+      overflow: hidden;
+      line-height: 1.4;
+      min-height: calc(1.4em * 5);
+    }
     .card .kicker,
     .card .title,
     .card .meta,
