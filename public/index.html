@@ -212,6 +212,8 @@
     .status-chip.completed { background: #dff8e7; color: #166534; }
     .cards { margin-top: 16px; display: grid; gap: 14px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .card { background: var(--surface); border: 1px solid var(--line); border-top: 3px solid #00b3ff; border-radius: 18px; padding: 16px; box-shadow: var(--shadow); }
+    .card.status-in-progress { background: #fffaf0; }
+    .card.status-completed { background: var(--surface); }
     .clickable-case { cursor: pointer; }
     .kicker { font-size: 11px; letter-spacing: 2px; font-weight: 800; color: #0b3bff; }
     .title { margin: 8px 0; font-size: 20px; line-height: 1.18; }
@@ -421,6 +423,8 @@
     body.dark .status-empty { color: #afbddf; }
     body.dark .status-chip.in-progress { background: #503f1f; color: #ffd894; }
     body.dark .status-chip.completed { background: #1e4a35; color: #9de3b7; }
+    body.dark .card.status-in-progress { background: #2d2618; }
+    body.dark .card.status-completed { background: #16213f; }
     body.dark .search,
     body.dark .select,
     body.dark input,
@@ -2214,9 +2218,9 @@
         grid.className = "cards";
         items.forEach((item) => {
           const card = document.createElement("article");
-          card.className = "card clickable-case";
           const adminDelete = isAuthenticated ? `<button class="mini delete" data-id="${item.id}">${i.actions.delete}</button>` : "";
           const status = item.status || "in_progress";
+          card.className = `card clickable-case ${status === "completed" ? "status-completed" : "status-in-progress"}`;
           const statusAction = status === "completed"
             ? `<button class="mini set-status reopen-action" data-id="${item.id}" data-status="in_progress">${x.actionReopen}</button>`
             : `<button class="mini set-status complete-action" data-id="${item.id}" data-status="completed">${x.actionComplete}</button>`;
