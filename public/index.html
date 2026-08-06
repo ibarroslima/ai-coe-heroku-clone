@@ -1281,7 +1281,6 @@
       "Alejandra Acuña",
       "Amanda Basilio",
       "Christian Salazar",
-      "Cleri Inhauser",
       "Diego Castro",
       "Diego da Fonseca",
       "Egberto Peretti",
@@ -1292,6 +1291,7 @@
       "Ixchel Saucedo",
       "Juan Schunck",
       "Julio Carmo",
+      "Israel Hernandez",
       "Luis M. Pacheco",
       "Luis Resende",
       "Nelson Stebulatis",
@@ -1304,7 +1304,6 @@
       "Alejandra Acuña": "/assets/authors/alejandra-acuna.png",
       "Amanda Basilio": "/assets/authors/amanda-basilio.png",
       "Christian Salazar": "/assets/authors/christian-salazar.png",
-      "Cleri Inhauser": "/assets/authors/cleri-inhauser.png",
       "Diego Castro": "/assets/authors/diego-castro.png",
       "Diego da Fonseca": "/assets/authors/diego-da-fonseca.png",
       "Egberto Peretti": "/assets/authors/egberto-peretti.png",
@@ -1313,6 +1312,7 @@
       "Igor Lima": "/assets/authors/igor-barros-lima.png",
       "Igor Barros Lima": "/assets/authors/igor-barros-lima.png",
       "Irineu Silva": "/assets/authors/irineu-silva.png",
+      "Israel Hernandez": "/assets/authors/israel-hernandez.png",
       "Ixchel Saucedo": "/assets/authors/ixchel-saucedo.png",
       "Juan Schunck": "/assets/authors/juan-schunck.png",
       "Julio Carmo": "/assets/authors/julio-carmo.png",
@@ -1766,8 +1766,12 @@
         }
         if (authors.includes("Igor Barros Lima") && !authors.includes("Igor Lima")) {
           authors = authors.map((name) => (name === "Igor Barros Lima" ? "Igor Lima" : name));
-          saveAuthors();
         }
+        authors = authors.filter((name) => name !== "Cleri Inhauser");
+        if (!authors.includes("Israel Hernandez")) {
+          authors.push("Israel Hernandez");
+        }
+        saveAuthors();
       } catch (_error) {
         authors = [...DEFAULT_AUTHORS];
       }
