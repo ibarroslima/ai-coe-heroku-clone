@@ -459,6 +459,24 @@
     body.dark .status-chip.completed { background: #1e4a35; color: #9de3b7; }
     body.dark .card.status-in-progress { background: #2d2618; }
     body.dark .card.status-completed { background: #16213f; }
+    body.dark .detail-wrap.status-in-progress .detail-main,
+    body.dark .detail-wrap.status-in-progress .detail-side {
+      background: #2d2618;
+      border-color: #7b5a28;
+    }
+    body.dark .detail-wrap.status-in-progress .detail-main { border-top-color: #d39d45; }
+    body.dark .detail-wrap.status-in-progress .kicker,
+    body.dark .detail-wrap.status-in-progress .detail-side h4 { color: #f0bc66; }
+    body.dark .detail-wrap.status-in-progress .detail-title,
+    body.dark .detail-wrap.status-in-progress .detail-author,
+    body.dark .detail-wrap.status-in-progress #detailAuthorName { color: #f7ddb1; }
+    body.dark .detail-wrap.status-in-progress .detail-desc,
+    body.dark .detail-wrap.status-in-progress .detail-meta-item { color: #e8c793; }
+    body.dark .detail-wrap.status-in-progress .chip {
+      background: #4a3613;
+      border-color: #8c6731;
+      color: #f0cf9d;
+    }
     body.dark .card.status-in-progress .mini:not(.set-status):hover {
       background: #624514;
       border-color: #d39d45;
@@ -543,6 +561,24 @@
       background: var(--surface);
       box-shadow: var(--shadow);
       padding: 14px;
+    }
+    .detail-wrap.status-in-progress .detail-main,
+    .detail-wrap.status-in-progress .detail-side {
+      background: #fffaf0;
+      border-color: #f0c98a;
+    }
+    .detail-wrap.status-in-progress .detail-main { border-top: 3px solid #e2ab52; }
+    .detail-wrap.status-in-progress .kicker { color: #b86800; }
+    .detail-wrap.status-in-progress .detail-title,
+    .detail-wrap.status-in-progress .detail-author,
+    .detail-wrap.status-in-progress #detailAuthorName { color: #7a4b12; }
+    .detail-wrap.status-in-progress .detail-desc,
+    .detail-wrap.status-in-progress .detail-meta-item { color: #8a5a1a; }
+    .detail-wrap.status-in-progress .detail-side h4 { color: #b86800; }
+    .detail-wrap.status-in-progress .chip {
+      background: #fff1d9;
+      border-color: #f3d2a0;
+      color: #9a5b00;
     }
     .detail-title { margin: 8px 0; font-size: 40px; }
     .detail-desc { color: var(--muted); line-height: 1.5; white-space: pre-wrap; }
@@ -968,7 +1004,7 @@
     </div>
   </div>
   <div id="detailWrap" class="modal-wrap">
-    <div class="modal detail-wrap">
+    <div id="detailModal" class="modal detail-wrap">
       <div class="detail-top">
         <button id="closeDetailBtn" class="pill-btn" type="button">← Voltar ao catalogo</button>
         <div class="detail-top-actions">
@@ -1159,6 +1195,7 @@
     const statusEl = document.getElementById("status");
     const createdByEl = document.getElementById("createdBy");
     const detailWrap = document.getElementById("detailWrap");
+    const detailModalEl = document.getElementById("detailModal");
     const deleteConfirmWrap = document.getElementById("deleteConfirmWrap");
     const deleteConfirmTitleEl = document.getElementById("deleteConfirmTitle");
     const deleteConfirmMessageEl = document.getElementById("deleteConfirmMessage");
@@ -1587,6 +1624,11 @@
 
     function renderCaseDetail(item, options = {}) {
       const attachmentsLoading = Boolean(options.attachmentsLoading);
+      const detailStatusClass = (item.status || "in_progress") === "completed"
+        ? "status-completed"
+        : "status-in-progress";
+      detailModalEl.classList.remove("status-in-progress", "status-completed");
+      detailModalEl.classList.add(detailStatusClass);
       currentDetailCaseId = String(item.id || "");
       detailCategoryEl.textContent = (item.category || t().fallback.noCategory).toUpperCase();
       detailTitleEl.textContent = getLocalizedField(item, "title") || "-";
