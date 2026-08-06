@@ -231,6 +231,11 @@
       border-color: #f1c887;
       color: #8a5400;
     }
+    .card.status-in-progress .mini:not(.set-status):hover {
+      background: #ffeecf;
+      border-color: #ebb464;
+      box-shadow: 0 4px 12px rgba(235, 180, 100, 0.35);
+    }
     .card.status-in-progress .mini.fav.is-on {
       background: #ffe9bf;
       border-color: #efb85e;
@@ -272,6 +277,11 @@
     .card-image { width: 100%; border-radius: 12px; border: 1px solid #e2e8ff; margin-bottom: 10px; }
     .card-actions { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 8px; }
     .mini { border: 1px solid #dce3ff; border-radius: 10px; background: #fff; cursor: pointer; padding: 6px 10px; font-size: 12px; font-weight: 700; color: #2e3f8f; }
+    .card .mini:not(.set-status):hover {
+      background: #eef3ff;
+      border-color: #b6c8ff;
+      box-shadow: 0 4px 12px rgba(130, 156, 233, 0.28);
+    }
     .mini.fav.is-on {
       background: #fff7d6;
       border-color: #f5b942;
@@ -449,6 +459,11 @@
     body.dark .status-chip.completed { background: #1e4a35; color: #9de3b7; }
     body.dark .card.status-in-progress { background: #2d2618; }
     body.dark .card.status-completed { background: #16213f; }
+    body.dark .card.status-in-progress .mini:not(.set-status):hover {
+      background: #624514;
+      border-color: #d39d45;
+      box-shadow: 0 4px 12px rgba(211, 157, 69, 0.35);
+    }
     body.dark .search,
     body.dark .select,
     body.dark input,
@@ -461,6 +476,11 @@
       background: #1a2a5e;
       color: #e7edff;
       border-color: #31467f;
+    }
+    body.dark .card .mini:not(.set-status):hover {
+      background: #263b7a;
+      border-color: #4f6ab5;
+      box-shadow: 0 4px 12px rgba(58, 92, 175, 0.35);
     }
     body.dark .mini.fav.is-on {
       background: #5b4512;
