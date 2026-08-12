@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI CoE ProServ LATAM GTM</title>
+  <title>CoE ProServ LATAM GTM</title>
   <style>
     :root {
       --bg: #cef9fe;
@@ -45,6 +45,26 @@
     .topbar { padding: 18px 0 10px; border-bottom: 1px solid var(--line); }
     .row { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
     .brand { display: flex; align-items: center; gap: 12px; }
+    .topbar-logo {
+      width: clamp(58px, 7.5vw, 86px);
+      height: auto;
+      display: block;
+    }
+    .brand-portal-btn {
+      padding: 8px 12px;
+      font-size: 12px;
+      white-space: nowrap;
+      border-color: #c9ddff;
+      background: rgba(255, 255, 255, 0.78);
+      color: #2b4f92;
+      box-shadow: none;
+    }
+    .brand-portal-btn:hover {
+      background: rgba(255, 255, 255, 0.96);
+      border-color: #9ec4ff;
+      color: #163c80;
+      box-shadow: 0 3px 10px rgba(63, 126, 222, 0.2);
+    }
     .brand-text { font-size: 24px; font-weight: 900; letter-spacing: -0.4px; color: var(--text); }
     .brand-text small { display: block; font-size: 12px; font-weight: 700; letter-spacing: 2px; color: #28a0ff; margin-top: -6px; }
     .cloud {
@@ -94,6 +114,119 @@
     main { padding: 24px 0 36px; }
     h1 { margin: 0; font-size: clamp(30px, 3.5vw, 44px); letter-spacing: -0.8px; line-height: 1.08; }
     .sub { margin: 6px 0 18px; color: var(--muted); font-size: 18px; }
+    .portal-hero { text-align: center; margin-bottom: 10px; }
+    .portal-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+    .portal-brand .cloud {
+      width: 66px;
+      height: 66px;
+      font-size: 30px;
+    }
+    .portal-brand .cloud-img {
+      width: 38px;
+      height: 38px;
+    }
+    .portal-brand .brand-text {
+      text-align: center;
+      font-size: clamp(34px, 4vw, 48px);
+      line-height: 0.95;
+    }
+    .portal-brand .brand-text small {
+      font-size: 18px;
+      letter-spacing: 2px;
+      margin-top: 6px;
+      line-height: 1.1;
+    }
+    .portal-brand .brand-text small strong {
+      font-size: 2em;
+      font-weight: 900;
+      line-height: 0;
+      vertical-align: middle;
+    }
+    .portal-grid {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-items: start;
+      justify-items: center;
+      max-width: 980px;
+      margin: 0 auto;
+    }
+    .portal-option {
+      position: relative;
+      display: grid;
+      justify-items: center;
+      gap: 10px;
+      width: min(360px, 36vw);
+      padding-bottom: 195px;
+    }
+    .portal-mascot {
+      position: absolute;
+      width: min(260px, 24vw);
+      height: auto;
+      object-fit: contain;
+      bottom: 28px;
+      z-index: 2;
+      mix-blend-mode: normal;
+      opacity: 1;
+      filter: drop-shadow(0 8px 16px rgba(24, 45, 116, 0.2));
+      user-select: none;
+      pointer-events: none;
+    }
+    .portal-mascot.catalog { left: -230px; bottom: 36px; transform: none; }
+    .portal-mascot.bookmark {
+      right: -284px;
+      width: min(325px, 30vw);
+      mix-blend-mode: normal;
+      transform: scaleX(-1);
+      bottom: 20px;
+    }
+    body.dark .portal-mascot { mix-blend-mode: normal; }
+    .portal-circle {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border: 2px solid #9ec6ff;
+      border-top: 5px solid #066afe;
+      border-radius: 50%;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      padding: 28px;
+      display: grid;
+      align-content: center;
+      justify-items: center;
+      text-align: center;
+      gap: 10px;
+    }
+    .portal-circle h2 { margin: 0; font-size: clamp(22px, 2.4vw, 34px); }
+    .portal-circle p { margin: 0; color: var(--muted); line-height: 1.35; max-width: 290px; }
+    .portal-circle .pill-btn { margin-top: 4px; }
+    .bookmark-preview-grid { margin-top: 14px; display: grid; gap: 10px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .bookmark-alert {
+      margin: 14px auto 8px;
+      max-width: 760px;
+      border: 2px dashed #f3b43f;
+      background: #fff5d9;
+      color: #8a4b00;
+      border-radius: 18px;
+      padding: 14px 18px;
+      text-align: center;
+      font-size: clamp(24px, 3.2vw, 42px);
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      box-shadow: 0 8px 20px rgba(243, 180, 63, 0.25);
+    }
+    .bookmark-alert-img {
+      width: min(220px, 42vw);
+      height: auto;
+      display: block;
+      margin: 6px auto 0;
+    }
     .hero-banner {
       padding: 24px 6px 30px;
       text-align: center;
@@ -551,6 +684,23 @@
       color: #7dc3ff;
     }
     body.dark .brand-text small { color: #7dc3ff; }
+    body.dark .bookmark-alert {
+      background: #4d3713;
+      border-color: #f3b43f;
+      color: #ffe2a2;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+    }
+    body.dark .brand-portal-btn {
+      background: rgba(26, 42, 94, 0.72);
+      border-color: #38508d;
+      color: #cfe0ff;
+    }
+    body.dark .brand-portal-btn:hover {
+      background: rgba(31, 53, 114, 0.92);
+      border-color: #5b7cc8;
+      color: #e8f0ff;
+      box-shadow: 0 3px 10px rgba(31, 84, 179, 0.35);
+    }
     body.dark .hero-badge { color: #8cc8ff; }
     body.dark .kicker { color: #85c3ff; }
     body.dark .recent-link { color: #8cc8ff; }
@@ -796,11 +946,34 @@
     }
     .hidden { display: none !important; }
     @media (max-width: 1100px) {
-      .cards, .home-grid, .explainers, .recent-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .cards, .home-grid, .explainers, .recent-cards, .bookmark-preview-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .portal-grid { grid-template-columns: 1fr; }
+      .portal-option { width: min(390px, 84vw); padding-bottom: 178px; }
+      .portal-mascot { width: min(230px, 50vw); }
+      .portal-mascot.catalog { left: -178px; bottom: 34px; }
+      .portal-mascot.bookmark {
+        right: -226px;
+        width: min(278px, 56vw);
+        mix-blend-mode: normal;
+        transform: scaleX(-1);
+        bottom: 20px;
+      }
+      .portal-circle { width: 100%; }
       .filter-row { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     }
     @media (max-width: 760px) {
-      .cards, .grid, .filter-row, .tabs, .home-grid, .explainers, .recent-cards { grid-template-columns: 1fr; }
+      .cards, .grid, .filter-row, .tabs, .home-grid, .explainers, .recent-cards, .bookmark-preview-grid { grid-template-columns: 1fr; }
+      .portal-option { width: min(360px, 94vw); padding-bottom: 158px; }
+      .portal-mascot { width: min(200px, 55vw); }
+      .portal-mascot.catalog { left: -138px; bottom: 32px; }
+      .portal-mascot.bookmark {
+        right: -184px;
+        width: min(240px, 60vw);
+        mix-blend-mode: normal;
+        transform: scaleX(-1);
+        bottom: 20px;
+      }
+      .portal-circle { padding: 28px; }
       .brand-text { font-size: 26px; }
       .sub { font-size: 16px; }
       .hero-layout { flex-direction: column; align-items: center; }
@@ -824,8 +997,9 @@
   <header class="topbar">
     <div class="container row">
       <div class="brand">
-        <div class="cloud" id="flagCloud">☁️</div>
-        <div class="brand-text">AI CoE ProServ<small id="logoCaption">LATAM GTM</small></div>
+        <img class="topbar-logo" src="/assets/salesforce-logo.svg" alt="Salesforce logo" />
+        <div class="cloud" id="portalFlagCloud">☁️</div>
+        <button id="goPortalBtn" class="pill-btn brand-portal-btn hidden">Portal</button>
       </div>
       <div class="top-actions">
         <button id="openModal" class="pill-btn primary">+ Adicionar caso</button>
@@ -847,7 +1021,7 @@
         <button id="authBtn" class="pill-btn">Entrar/ADM</button>
       </div>
     </div>
-    <div class="container tabs">
+    <div id="topTabs" class="container tabs">
       <div id="tabHome" class="tab active" data-tab="home">🏠 Home</div>
       <div id="tabCatalog" class="tab" data-tab="catalog">📖 Catalogo</div>
       <div id="tabFavorites" class="tab" data-tab="favorites">⭐ Favoritos</div>
@@ -855,6 +1029,34 @@
     </div>
   </header>
   <main>
+    <div id="portalView" class="container">
+      <section class="portal-hero">
+        <div class="portal-brand">
+          <div class="brand-text">LARK<small>(<strong>L</strong>atam <strong>A</strong>rchitecture & <strong>R</strong>epository of <strong>K</strong>nowledge)</small></div>
+        </div>
+        <p id="portalDesc" class="sub">Selecione a seção que deseja acessar.</p>
+      </section>
+      <section class="portal-grid">
+        <article class="portal-option">
+          <div class="portal-circle">
+            <div class="kicker" id="portalCatalogKicker">SEÇÃO 1</div>
+            <h2 id="portalCatalogTitle">AI Catalogue</h2>
+            <p id="portalCatalogDesc">Catálogo de casos de uso de IA já implementados, com busca, filtros, favoritos e compartilhamento.</p>
+            <button id="portalGoCatalogBtn" class="pill-btn primary" type="button">Entrar em AI Catalogue</button>
+          </div>
+          <img class="portal-mascot catalog" src="/assets/astro-portal-catalog.png" alt="Astro mascot pointing to AI Catalogue" />
+        </article>
+        <article class="portal-option">
+          <div class="portal-circle">
+            <div class="kicker" id="portalBookmarkKicker">SEÇÃO 2</div>
+            <h2 id="portalBookmarkTitle">LATAM Bookmark Central</h2>
+            <p id="portalBookmarkDesc">Central única para organizar links, assets e referências relevantes para o time LATAM.</p>
+            <button id="portalGoBookmarkBtn" class="pill-btn primary" type="button">Entrar em Bookmark Central</button>
+          </div>
+          <img class="portal-mascot bookmark" src="/assets/agent-astro-portal-fixed.png" alt="Agent Astro mascot pointing to Bookmark Central" />
+        </article>
+      </section>
+    </div>
     <div id="homeView" class="container">
       <section class="hero-banner">
         <div class="hero-layout">
@@ -872,7 +1074,7 @@
           </div>
         </div>
       </section>
-      <h1 id="homeTitle">AI CoE ProServ</h1>
+      <h1 id="homeTitle">CoE ProServ</h1>
       <p class="sub" id="homeDesc">Centralize e compartilhe conhecimento aplicado em IA para toda a organização.</p>
       <section class="home-grid">
         <article class="metric"><div id="metricCases" class="value">--</div><div id="metricCasesLabel" class="label">Casos documentados</div></article>
@@ -948,6 +1150,41 @@
           <div class="principle-item"><span class="principle-dot">4</span><span id="aboutP4">A confidencialidade do cliente e nao-negociavel.</span></div>
           <div class="principle-item"><span class="principle-dot">5</span><span id="aboutP5">Melhor pequeno, real e compartilhado do que grande, perfeito e secreto.</span></div>
         </div>
+      </section>
+    </div>
+    <div id="bookmarkView" class="container hidden">
+      <section class="hero-banner">
+        <div class="hero-layout">
+          <div class="hero-content">
+            <span id="bookmarkBadge" class="hero-badge">• LATAM Bookmark Central • Preview</span>
+            <h2 id="bookmarkMainTitle" class="hero-main-title">Organize e compartilhe referências da região LATAM</h2>
+            <p id="bookmarkMainDesc" class="hero-main-desc">Esta nova seção está sendo estruturada com base no AI Catalogue para acelerar curadoria e reutilização de links importantes.</p>
+            <div class="hero-main-actions">
+              <button id="bookmarkBackPortalBtn" class="pill-btn hero-view-btn">Voltar ao portal</button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <h1 id="bookmarkTitle">LATAM Bookmark Central</h1>
+      <p id="bookmarkDesc" class="sub">Primeira versão da nova área. Em breve com criação, busca e filtros de bookmarks.</p>
+      <div id="bookmarkAlert" class="bookmark-alert">Em construção</div>
+      <img id="bookmarkAlertImg" class="bookmark-alert-img" src="/assets/under-construction.png" alt="Em construção" />
+      <section class="bookmark-preview-grid">
+        <article class="explainer">
+          <div class="explainer-icon">🔖</div>
+          <h3 id="bookmarkExp1Title">Biblioteca de links</h3>
+          <p id="bookmarkExp1Text">Consolide documentos, dashboards, playbooks e referências em um só lugar.</p>
+        </article>
+        <article class="explainer">
+          <div class="explainer-icon">🧭</div>
+          <h3 id="bookmarkExp2Title">Navegação por tema</h3>
+          <p id="bookmarkExp2Text">Estruture bookmarks por país, tecnologia, squad e tipo de material.</p>
+        </article>
+        <article class="explainer">
+          <div class="explainer-icon">🤝</div>
+          <h3 id="bookmarkExp3Title">Colaboração regional</h3>
+          <p id="bookmarkExp3Text">Permita que o time LATAM compartilhe e mantenha referências atualizadas.</p>
+        </article>
       </section>
     </div>
   </main>
@@ -1088,7 +1325,7 @@
           <img id="aiGuideAvatarImg" class="ai-guide-avatar-img" src="/assets/ai-guide-avatar.png" alt="AI Guide avatar" />
         </div>
         <div>
-          <h3 id="aiGuideTitle" class="ai-guide-head-title">AI CoE Guide</h3>
+          <h3 id="aiGuideTitle" class="ai-guide-head-title">CoE Guide</h3>
           <p id="aiGuideSubtitle" class="ai-guide-head-subtitle">Asistente do site</p>
         </div>
       </div>
@@ -1104,14 +1341,14 @@
   </section>
   <script>
     const I18N = {
-      pt: { tabs: { home: "🏠 Home", catalog: "📖 Catalogo", favorites: "⭐ Favoritos", about: "❓ Sobre" }, authIn: "Entrar/ADM", authOut: "Sair/ADM", addCase: "+ Adicionar caso", homeTitle: "AI CoE ProServ", homeDesc: "Centralize e compartilhe conhecimento aplicado em IA para toda a organizacao.", catalogTitle: "Catalogo de Casos de Uso", favoritesTitle: "Favoritos", caseCountOne: "caso documentado", caseCountMany: "casos documentados", allAreas: "Todas as areas", allTechnologies: "Todas as tecnologias", allPhases: "Todas as fases SPM", allThemes: "Todos os temas SPM", recent: "Mais recentes", oldest: "Mais antigos", all: "Todos", onlyFavorites: "Apenas favoritos", emptyTitle: "Seu catalogo esta vazio", emptyDesc: "Clique em \"+ Adicionar caso\" para incluir o primeiro item.", aboutTitle: "Sobre", aboutText: "Plataforma de catalogo de casos de uso com filtros por area, tecnologia, fase e tema. Qualquer colaborador pode criar e editar casos. Remocao e permitida somente para administradores.", recentSectionTitle: "Mais recentes", recentViewAll: "Ver todos >", metrics: ["Casos documentados", "Tecnologias cobertas", "Contribuidores", "Areas de negocio"], explainers: [["Catalogo de Casos de Uso","Explore todos os projetos de IA documentados pela equipe, com tecnologias, repositorios e contatos."],["Busca e filtros","Encontre rapidamente casos por tecnologia, projeto, area de negocio ou data."],["Conhecimento Compartilhado","Evite duplicar esforcos. Aprenda com o que o time ja fez e construa em cima disso."]], hero: { badge: "• Centro de excelência em IA • LATAM", title: "O repositório de conhecimento do time de IA", desc: "Documente, descubra e reutilize casos de uso de inteligência artificial criados pela sua organização. Pensado regionalmente, construído para escalar globalmente.", viewCatalog: "Ver catálogo", addCase: "Adicionar caso de uso" }, modalNew: "Novo caso de uso", modalEdit: "Editar caso de uso", labels: { title: "Titulo *", category: "Categoria", area: "Area", technology: "Tecnologia", phase: "Fase SPM", theme: "Tema SPM", author: "Autor", project: "Skill/Projeto", tags: "Tags (separadas por virgula)", description: "Descricao", password: "Senha" }, cancel: "Cancelar", saveCase: "Salvar caso", loginTitle: "Login administrador", loginBtn: "Entrar", fallback: { noAuthor: "Sem autor", noProject: "Sem projeto", noArea: "Sem area", noTechnology: "Sem tecnologia", noPhase: "Sem fase", noTheme: "Sem tema", noCategory: "Sem categoria" }, actions: { favorite: "Favoritar", favoriteOn: "Favorito", edit: "Editar", delete: "Excluir", image: "Imagem" }, confirmDelete: "Excluir este caso de uso?" },
-      es: { tabs: { home: "🏠 Inicio", catalog: "📖 Catalogo", favorites: "⭐ Favoritos", about: "❓ Acerca" }, authIn: "Ingresar", authOut: "Salir", addCase: "+ Agregar caso", homeTitle: "AI CoE ProServ", homeDesc: "Centraliza y comparte conocimiento aplicado en IA para toda la organizacion.", catalogTitle: "Catalogo de Casos de Uso", caseCountOne: "caso documentado", caseCountMany: "casos documentados", allAreas: "Todas las areas", allTechnologies: "Todas las tecnologias", allPhases: "Todas las fases SPM", allThemes: "Todos los temas SPM", recent: "Mas recientes", oldest: "Mas antiguos", all: "Todos", onlyFavorites: "Solo favoritos", emptyTitle: "Tu catalogo esta vacio", emptyDesc: "Haz clic en \"+ Agregar caso\" para incluir el primer item.", aboutTitle: "Acerca", aboutText: "Plataforma de catalogo de casos de uso con filtros por area, tecnologia, fase y tema. Cualquier colaborador puede crear y editar casos. Eliminar solo para administradores.", metrics: ["Casos documentados", "Tecnologias cubiertas", "Colaboradores"], explainers: [["Busqueda y filtros","Encuentra casos por autor, tema, tecnologia, fase o palabra clave."],["Conocimiento compartido","Consolida aprendizajes de distintos paises y equipos en un solo lugar."],["Catalogo de casos de uso","Documenta problemas, enfoques y resultados para acelerar nuevas iniciativas."]], modalNew: "Nuevo caso de uso", modalEdit: "Editar caso de uso", labels: { title: "Titulo *", category: "Categoria", area: "Area", technology: "Tecnologia", phase: "Fase SPM", theme: "Tema SPM", author: "Autor", project: "Skill/Proyecto", tags: "Etiquetas (separadas por coma)", description: "Descripcion", password: "Contrasena" }, cancel: "Cancelar", saveCase: "Guardar caso", loginTitle: "Login administrador", loginBtn: "Ingresar", fallback: { noAuthor: "Sin autor", noProject: "Sin proyecto", noArea: "Sin area", noTechnology: "Sin tecnologia", noPhase: "Sin fase", noTheme: "Sin tema", noCategory: "Sin categoria" }, actions: { favorite: "Favorito", favoriteOn: "Favorito", edit: "Editar", delete: "Eliminar", image: "Imagen" }, confirmDelete: "Eliminar este caso de uso?" },
-      en: { tabs: { home: "🏠 Home", catalog: "📖 Catalog", favorites: "⭐ Favorites", about: "❓ About" }, authIn: "Sign in", authOut: "Sign out", addCase: "+ Add case", homeTitle: "AI CoE ProServ", homeDesc: "Centralize and share AI applied knowledge across the organization.", catalogTitle: "Use Case Catalog", caseCountOne: "documented case", caseCountMany: "documented cases", allAreas: "All areas", allTechnologies: "All technologies", allPhases: "All SPM phases", allThemes: "All SPM themes", recent: "Most recent", oldest: "Oldest", all: "All", onlyFavorites: "Only favorites", emptyTitle: "Your catalog is empty", emptyDesc: "Click \"+ Add case\" to include your first item.", aboutTitle: "About", aboutText: "Use case catalog platform with filters by area, technology, phase, and theme. Any collaborator can create and edit cases. Delete is admin-only.", metrics: ["Documented cases", "Technologies covered", "Contributors"], explainers: [["Search and filters","Find cases by author, theme, technology, phase, or keyword."],["Shared knowledge","Consolidate learnings from countries and teams in one place."],["Use case catalog","Document problems, approaches, and outcomes to accelerate initiatives."]], modalNew: "New use case", modalEdit: "Edit use case", labels: { title: "Title *", category: "Category", area: "Area", technology: "Technology", phase: "SPM Phase", theme: "SPM Theme", author: "Author", project: "Skill/Project", tags: "Tags (comma separated)", description: "Description", password: "Password" }, cancel: "Cancel", saveCase: "Save case", loginTitle: "Admin login", loginBtn: "Sign in", fallback: { noAuthor: "No author", noProject: "No project", noArea: "No area", noTechnology: "No technology", noPhase: "No phase", noTheme: "No theme", noCategory: "No category" }, actions: { favorite: "Favorite", favoriteOn: "Favorited", edit: "Edit", delete: "Delete", image: "Image" }, confirmDelete: "Delete this use case?" }
+      pt: { tabs: { home: "🏠 Home", catalog: "📖 Catalogo", favorites: "⭐ Favoritos", about: "❓ Sobre" }, authIn: "Entrar/ADM", authOut: "Sair/ADM", addCase: "+ Adicionar caso", homeTitle: "CoE ProServ", homeDesc: "Centralize e compartilhe conhecimento aplicado em IA para toda a organizacao.", catalogTitle: "Catalogo de Casos de Uso", favoritesTitle: "Favoritos", caseCountOne: "caso documentado", caseCountMany: "casos documentados", allAreas: "Todas as areas", allTechnologies: "Todas as tecnologias", allPhases: "Todas as fases SPM", allThemes: "Todos os temas SPM", recent: "Mais recentes", oldest: "Mais antigos", all: "Todos", onlyFavorites: "Apenas favoritos", emptyTitle: "Seu catalogo esta vazio", emptyDesc: "Clique em \"+ Adicionar caso\" para incluir o primeiro item.", aboutTitle: "Sobre", aboutText: "Plataforma de catalogo de casos de uso com filtros por area, tecnologia, fase e tema. Qualquer colaborador pode criar e editar casos. Remocao e permitida somente para administradores.", recentSectionTitle: "Mais recentes", recentViewAll: "Ver todos >", metrics: ["Casos documentados", "Tecnologias cobertas", "Contribuidores", "Areas de negocio"], explainers: [["Catalogo de Casos de Uso","Explore todos os projetos de IA documentados pela equipe, com tecnologias, repositorios e contatos."],["Busca e filtros","Encontre rapidamente casos por tecnologia, projeto, area de negocio ou data."],["Conhecimento Compartilhado","Evite duplicar esforcos. Aprenda com o que o time ja fez e construa em cima disso."]], hero: { badge: "• Centro de excelência em IA • LATAM", title: "O repositório de conhecimento do time de IA", desc: "Documente, descubra e reutilize casos de uso de inteligência artificial criados pela sua organização. Pensado regionalmente, construído para escalar globalmente.", viewCatalog: "Ver catálogo", addCase: "Adicionar caso de uso" }, modalNew: "Novo caso de uso", modalEdit: "Editar caso de uso", labels: { title: "Titulo *", category: "Categoria", area: "Area", technology: "Tecnologia", phase: "Fase SPM", theme: "Tema SPM", author: "Autor", project: "Skill/Projeto", tags: "Tags (separadas por virgula)", description: "Descricao", password: "Senha" }, cancel: "Cancelar", saveCase: "Salvar caso", loginTitle: "Login administrador", loginBtn: "Entrar", fallback: { noAuthor: "Sem autor", noProject: "Sem projeto", noArea: "Sem area", noTechnology: "Sem tecnologia", noPhase: "Sem fase", noTheme: "Sem tema", noCategory: "Sem categoria" }, actions: { favorite: "Favoritar", favoriteOn: "Favorito", edit: "Editar", delete: "Excluir", image: "Imagem" }, confirmDelete: "Excluir este caso de uso?" },
+      es: { tabs: { home: "🏠 Inicio", catalog: "📖 Catalogo", favorites: "⭐ Favoritos", about: "❓ Acerca" }, authIn: "Ingresar", authOut: "Salir", addCase: "+ Agregar caso", homeTitle: "CoE ProServ", homeDesc: "Centraliza y comparte conocimiento aplicado en IA para toda la organizacion.", catalogTitle: "Catalogo de Casos de Uso", caseCountOne: "caso documentado", caseCountMany: "casos documentados", allAreas: "Todas las areas", allTechnologies: "Todas las tecnologias", allPhases: "Todas las fases SPM", allThemes: "Todos los temas SPM", recent: "Mas recientes", oldest: "Mas antiguos", all: "Todos", onlyFavorites: "Solo favoritos", emptyTitle: "Tu catalogo esta vacio", emptyDesc: "Haz clic en \"+ Agregar caso\" para incluir el primer item.", aboutTitle: "Acerca", aboutText: "Plataforma de catalogo de casos de uso con filtros por area, tecnologia, fase y tema. Cualquier colaborador puede crear y editar casos. Eliminar solo para administradores.", metrics: ["Casos documentados", "Tecnologias cubiertas", "Colaboradores"], explainers: [["Busqueda y filtros","Encuentra casos por autor, tema, tecnologia, fase o palabra clave."],["Conocimiento compartido","Consolida aprendizajes de distintos paises y equipos en un solo lugar."],["Catalogo de casos de uso","Documenta problemas, enfoques y resultados para acelerar nuevas iniciativas."]], modalNew: "Nuevo caso de uso", modalEdit: "Editar caso de uso", labels: { title: "Titulo *", category: "Categoria", area: "Area", technology: "Tecnologia", phase: "Fase SPM", theme: "Tema SPM", author: "Autor", project: "Skill/Proyecto", tags: "Etiquetas (separadas por coma)", description: "Descripcion", password: "Contrasena" }, cancel: "Cancelar", saveCase: "Guardar caso", loginTitle: "Login administrador", loginBtn: "Ingresar", fallback: { noAuthor: "Sin autor", noProject: "Sin proyecto", noArea: "Sin area", noTechnology: "Sin tecnologia", noPhase: "Sin fase", noTheme: "Sin tema", noCategory: "Sin categoria" }, actions: { favorite: "Favorito", favoriteOn: "Favorito", edit: "Editar", delete: "Eliminar", image: "Imagen" }, confirmDelete: "Eliminar este caso de uso?" },
+      en: { tabs: { home: "🏠 Home", catalog: "📖 Catalog", favorites: "⭐ Favorites", about: "❓ About" }, authIn: "Sign in", authOut: "Sign out", addCase: "+ Add case", homeTitle: "CoE ProServ", homeDesc: "Centralize and share AI applied knowledge across the organization.", catalogTitle: "Use Case Catalog", caseCountOne: "documented case", caseCountMany: "documented cases", allAreas: "All areas", allTechnologies: "All technologies", allPhases: "All SPM phases", allThemes: "All SPM themes", recent: "Most recent", oldest: "Oldest", all: "All", onlyFavorites: "Only favorites", emptyTitle: "Your catalog is empty", emptyDesc: "Click \"+ Add case\" to include your first item.", aboutTitle: "About", aboutText: "Use case catalog platform with filters by area, technology, phase, and theme. Any collaborator can create and edit cases. Delete is admin-only.", metrics: ["Documented cases", "Technologies covered", "Contributors"], explainers: [["Search and filters","Find cases by author, theme, technology, phase, or keyword."],["Shared knowledge","Consolidate learnings from countries and teams in one place."],["Use case catalog","Document problems, approaches, and outcomes to accelerate initiatives."]], modalNew: "New use case", modalEdit: "Edit use case", labels: { title: "Title *", category: "Category", area: "Area", technology: "Technology", phase: "SPM Phase", theme: "SPM Theme", author: "Author", project: "Skill/Project", tags: "Tags (comma separated)", description: "Description", password: "Password" }, cancel: "Cancel", saveCase: "Save case", loginTitle: "Admin login", loginBtn: "Sign in", fallback: { noAuthor: "No author", noProject: "No project", noArea: "No area", noTechnology: "No technology", noPhase: "No phase", noTheme: "No theme", noCategory: "No category" }, actions: { favorite: "Favorite", favoriteOn: "Favorited", edit: "Edit", delete: "Delete", image: "Image" }, confirmDelete: "Delete this use case?" }
     };
 
     // Quick brand/form normalization requested by user.
     Object.entries(I18N).forEach(([lang, langCopy]) => {
-      langCopy.homeTitle = "AI CoE ProServ LATAM GTM";
+      langCopy.homeTitle = "CoE ProServ LATAM GTM";
       langCopy.allPhases = (langCopy.allPhases || "").replace("SPM", "Deal");
       langCopy.allThemes = (langCopy.allThemes || "").replace("SPM", "Deal");
       if (langCopy.labels) {
@@ -1152,6 +1389,7 @@
     });
 
     const flagCloud = document.getElementById("flagCloud");
+    const portalFlagCloud = document.getElementById("portalFlagCloud");
     const flagSequence = [
       { icon: "🇧🇷" },
       { icon: "☁", color: "#00A1E0" },
@@ -1167,14 +1405,20 @@
       { image: "/assets/gemini.png" }
     ];
     let flagIndex = 0;
+    function renderFlagCarouselItem(targetEl, item) {
+      if (!targetEl) return;
+      if (item.image) {
+        targetEl.innerHTML = `<img class="cloud-img" src="${item.image}" alt="" />`;
+      } else {
+        targetEl.textContent = item.icon;
+      }
+      targetEl.style.color = item.color || "#0089ff";
+    }
+
     setInterval(() => {
       const item = flagSequence[flagIndex % flagSequence.length];
-      if (item.image) {
-        flagCloud.innerHTML = `<img class="cloud-img" src="${item.image}" alt="" />`;
-      } else {
-        flagCloud.textContent = item.icon;
-      }
-      flagCloud.style.color = item.color || "#0089ff";
+      renderFlagCarouselItem(flagCloud, item);
+      renderFlagCarouselItem(portalFlagCloud, item);
       flagIndex += 1;
     }, 1500);
 
@@ -1200,6 +1444,7 @@
     const exportCsvBtn = document.getElementById("exportCsvBtn");
     const translateAllBtn = document.getElementById("translateAllBtn");
     const manageUsersBtn = document.getElementById("manageUsersBtn");
+    const goPortalBtn = document.getElementById("goPortalBtn");
     const authForm = document.getElementById("authForm");
     const closeAuthBtn = document.getElementById("closeAuth");
     const manageUsersWrap = document.getElementById("manageUsersWrap");
@@ -1209,11 +1454,17 @@
     const newAuthorPhotoEl = document.getElementById("newAuthorPhoto");
     const addAuthorBtn = document.getElementById("addAuthorBtn");
     const tabs = Array.from(document.querySelectorAll(".tab"));
+    const topTabsEl = document.getElementById("topTabs");
+    const portalViewEl = document.getElementById("portalView");
     const homeViewEl = document.getElementById("homeView");
     const catalogViewEl = document.getElementById("catalogView");
     const aboutViewEl = document.getElementById("aboutView");
+    const bookmarkViewEl = document.getElementById("bookmarkView");
     const heroViewCatalogBtn = document.getElementById("heroViewCatalogBtn");
     const heroAddCaseBtn = document.getElementById("heroAddCaseBtn");
+    const portalGoCatalogBtn = document.getElementById("portalGoCatalogBtn");
+    const portalGoBookmarkBtn = document.getElementById("portalGoBookmarkBtn");
+    const bookmarkBackPortalBtn = document.getElementById("bookmarkBackPortalBtn");
     const recentCardsEl = document.getElementById("recentCards");
     const recentViewAllEl = document.getElementById("recentViewAll");
     const langBtn = document.getElementById("langBtn");
@@ -1264,6 +1515,7 @@
 
     let allCases = [];
     let isAuthenticated = false;
+    let currentSection = "portal";
     let currentTab = "home";
     let currentLang = "pt";
     let currentEditingAttachments = [];
@@ -1363,6 +1615,30 @@
         sectionInProgress: "Em andamento",
         sectionCompleted: "Concluidos",
         sectionEmpty: "Nenhum caso nesta secao.",
+        portalTitle: "AI Knowledge Hub LATAM",
+        portalDesc: "Selecione a secao que deseja acessar.",
+        portalCatalogKicker: "SECAO 1",
+        portalCatalogTitle: "AI Catalogue",
+        portalCatalogDesc: "Catalogo de casos de uso de IA com busca, filtros, favoritos e compartilhamento.",
+        portalCatalogCta: "Entrar em AI Catalogue",
+        portalBookmarkKicker: "SECAO 2",
+        portalBookmarkTitle: "LATAM Bookmark Central",
+        portalBookmarkDesc: "Central unica para organizar links, assets e referencias relevantes para o time LATAM.",
+        portalBookmarkCta: "Entrar em Bookmark Central",
+        portalBackBtn: "Voltar ao portal",
+        bookmarkBadge: "• LATAM Bookmark Central • Preview",
+        bookmarkMainTitle: "Organize e compartilhe referencias da regiao LATAM",
+        bookmarkMainDesc: "Nova secao em construcao com base no AI Catalogue para acelerar curadoria e reutilizacao de links importantes.",
+        bookmarkBackPortal: "Voltar ao portal",
+        bookmarkTitle: "LATAM Bookmark Central",
+        bookmarkDesc: "Primeira versao da nova area. Em breve com criacao, busca e filtros de bookmarks.",
+        bookmarkAlert: "Em construção",
+        bookmarkExp1Title: "Biblioteca de links",
+        bookmarkExp1Text: "Consolide documentos, dashboards, playbooks e referencias em um so lugar.",
+        bookmarkExp2Title: "Navegacao por tema",
+        bookmarkExp2Text: "Estruture bookmarks por pais, tecnologia, squad e tipo de material.",
+        bookmarkExp3Title: "Colaboracao regional",
+        bookmarkExp3Text: "Permita que o time LATAM compartilhe e mantenha referencias atualizadas.",
         actionComplete: "Marcar concluido",
         actionReopen: "Reabrir",
         detailBack: "← Voltar ao catalogo",
@@ -1390,10 +1666,10 @@
         manageUsersClose: "Fechar",
         manageUsersDelete: "Excluir",
         aiGuideFabTitle: "Abrir assistente IA",
-        aiGuideTitle: "AI CoE Guide",
+        aiGuideTitle: "CoE Guide",
         aiGuideSubtitle: "Assistente do site",
         aiGuideInputPlaceholder: "Digite sua duvida...",
-        aiGuideWelcome: "Ola. Sou o assistente do site AI CoE LATAM GTM. Posso te orientar pelo catalogo, favoritos, secao Sobre e envio de caso. Como posso ajudar?",
+        aiGuideWelcome: "Ola. Sou o assistente do site CoE LATAM GTM. Posso te orientar pelo catalogo, favoritos, secao Sobre e envio de caso. Como posso ajudar?",
         aiGuideCatalog: "Para explorar o catalogo: use busca, filtros de tecnologia/fase/tema e clique no card para abrir o detalhe completo.",
         aiGuideFavorites: "Favoritos sao individuais por navegador/dispositivo. Se outro colega abrir no computador dele, a lista dele sera diferente.",
         aiGuideCreate: "Para adicionar um caso: clique em + Adicionar caso e preencha os campos obrigatorios Titulo, Autor, Tecnologia, Descricao e Status.",
@@ -1428,6 +1704,30 @@
         sectionInProgress: "En curso",
         sectionCompleted: "Completados",
         sectionEmpty: "No hay casos en esta seccion.",
+        portalTitle: "AI Knowledge Hub LATAM",
+        portalDesc: "Selecciona la seccion que deseas abrir.",
+        portalCatalogKicker: "SECCION 1",
+        portalCatalogTitle: "AI Catalogue",
+        portalCatalogDesc: "Catalogo de casos de uso de IA con busqueda, filtros, favoritos y comparticion.",
+        portalCatalogCta: "Entrar a AI Catalogue",
+        portalBookmarkKicker: "SECCION 2",
+        portalBookmarkTitle: "LATAM Bookmark Central",
+        portalBookmarkDesc: "Centro unico para organizar enlaces, assets y referencias relevantes para el equipo LATAM.",
+        portalBookmarkCta: "Entrar a Bookmark Central",
+        portalBackBtn: "Volver al portal",
+        bookmarkBadge: "• LATAM Bookmark Central • Preview",
+        bookmarkMainTitle: "Organiza y comparte referencias de la region LATAM",
+        bookmarkMainDesc: "Nueva seccion en construccion basada en AI Catalogue para acelerar curaduria y reutilizacion de enlaces importantes.",
+        bookmarkBackPortal: "Volver al portal",
+        bookmarkTitle: "LATAM Bookmark Central",
+        bookmarkDesc: "Primera version de la nueva area. Pronto con creacion, busqueda y filtros de bookmarks.",
+        bookmarkAlert: "En construcción",
+        bookmarkExp1Title: "Biblioteca de enlaces",
+        bookmarkExp1Text: "Consolida documentos, dashboards, playbooks y referencias en un solo lugar.",
+        bookmarkExp2Title: "Navegacion por tema",
+        bookmarkExp2Text: "Estructura bookmarks por pais, tecnologia, squad y tipo de material.",
+        bookmarkExp3Title: "Colaboracion regional",
+        bookmarkExp3Text: "Permite que el equipo LATAM comparta y mantenga referencias actualizadas.",
         actionComplete: "Marcar completado",
         actionReopen: "Reabrir",
         detailBack: "← Volver al catalogo",
@@ -1455,10 +1755,10 @@
         manageUsersClose: "Cerrar",
         manageUsersDelete: "Eliminar",
         aiGuideFabTitle: "Abrir asistente IA",
-        aiGuideTitle: "AI CoE Guide",
+        aiGuideTitle: "CoE Guide",
         aiGuideSubtitle: "Asistente del sitio",
         aiGuideInputPlaceholder: "Escribe tu duda...",
-        aiGuideWelcome: "Hola. Soy el asistente del sitio AI CoE LATAM GTM. Puedo orientarte sobre catalogo, favoritos, seccion Acerca y como enviar un caso. Como te ayudo?",
+        aiGuideWelcome: "Hola. Soy el asistente del sitio CoE LATAM GTM. Puedo orientarte sobre catalogo, favoritos, seccion Acerca y como enviar un caso. Como te ayudo?",
         aiGuideCatalog: "Para explorar el catalogo: usa busqueda, filtros de tecnologia/fase/tema y haz clic en la tarjeta para abrir el detalle completo.",
         aiGuideFavorites: "Favoritos es individual por navegador/dispositivo. Si otro colega entra desde su equipo, vera su propia lista.",
         aiGuideCreate: "Para agregar un caso: haz clic en + Agregar caso y completa los obligatorios Titulo, Autor, Tecnologia, Descripcion y Estado.",
@@ -1493,6 +1793,30 @@
         sectionInProgress: "In progress",
         sectionCompleted: "Completed",
         sectionEmpty: "No cases in this section.",
+        portalTitle: "AI Knowledge Hub LATAM",
+        portalDesc: "Select the section you want to access.",
+        portalCatalogKicker: "SECTION 1",
+        portalCatalogTitle: "AI Catalogue",
+        portalCatalogDesc: "AI use-case catalog with search, filters, favorites, and sharing.",
+        portalCatalogCta: "Open AI Catalogue",
+        portalBookmarkKicker: "SECTION 2",
+        portalBookmarkTitle: "LATAM Bookmark Central",
+        portalBookmarkDesc: "Single hub to organize links, assets, and key references for the LATAM team.",
+        portalBookmarkCta: "Open Bookmark Central",
+        portalBackBtn: "Back to portal",
+        bookmarkBadge: "• LATAM Bookmark Central • Preview",
+        bookmarkMainTitle: "Organize and share LATAM regional references",
+        bookmarkMainDesc: "New section in progress based on AI Catalogue to speed up curation and reuse of key links.",
+        bookmarkBackPortal: "Back to portal",
+        bookmarkTitle: "LATAM Bookmark Central",
+        bookmarkDesc: "First version of the new area. Bookmark creation, search, and filters are coming soon.",
+        bookmarkAlert: "Under construction",
+        bookmarkExp1Title: "Link library",
+        bookmarkExp1Text: "Consolidate documents, dashboards, playbooks, and references in one place.",
+        bookmarkExp2Title: "Topic navigation",
+        bookmarkExp2Text: "Organize bookmarks by country, technology, squad, and material type.",
+        bookmarkExp3Title: "Regional collaboration",
+        bookmarkExp3Text: "Enable the LATAM team to share and keep references updated.",
         actionComplete: "Mark completed",
         actionReopen: "Reopen",
         detailBack: "← Back to catalog",
@@ -1520,10 +1844,10 @@
         manageUsersClose: "Close",
         manageUsersDelete: "Delete",
         aiGuideFabTitle: "Open AI assistant",
-        aiGuideTitle: "AI CoE Guide",
+        aiGuideTitle: "CoE Guide",
         aiGuideSubtitle: "Site assistant",
         aiGuideInputPlaceholder: "Type your question...",
-        aiGuideWelcome: "Hi. I am the AI CoE LATAM GTM site assistant. I can guide you through catalog, favorites, About section, and how to submit a case. How can I help?",
+        aiGuideWelcome: "Hi. I am the CoE LATAM GTM site assistant. I can guide you through catalog, favorites, About section, and how to submit a case. How can I help?",
         aiGuideCatalog: "To explore the catalog, use search and technology/phase/theme filters, then click a card to open full detail.",
         aiGuideFavorites: "Favorites are browser/device specific. Each teammate has an independent favorites list.",
         aiGuideCreate: "To add a case, click + Add case and fill required fields: Title, Author, Technology, Description, and Status.",
@@ -1983,6 +2307,30 @@
       document.getElementById("heroMainDesc").textContent = hero.desc;
       heroViewCatalogBtn.textContent = hero.viewCatalog;
       heroAddCaseBtn.textContent = hero.addCase;
+      document.getElementById("portalDesc").textContent = x.portalDesc;
+      document.getElementById("portalCatalogKicker").textContent = x.portalCatalogKicker;
+      document.getElementById("portalCatalogTitle").textContent = x.portalCatalogTitle;
+      document.getElementById("portalCatalogDesc").textContent = x.portalCatalogDesc;
+      portalGoCatalogBtn.textContent = x.portalCatalogCta;
+      document.getElementById("portalBookmarkKicker").textContent = x.portalBookmarkKicker;
+      document.getElementById("portalBookmarkTitle").textContent = x.portalBookmarkTitle;
+      document.getElementById("portalBookmarkDesc").textContent = x.portalBookmarkDesc;
+      portalGoBookmarkBtn.textContent = x.portalBookmarkCta;
+      goPortalBtn.textContent = x.portalBackBtn;
+      document.getElementById("bookmarkBadge").textContent = x.bookmarkBadge;
+      document.getElementById("bookmarkMainTitle").textContent = x.bookmarkMainTitle;
+      document.getElementById("bookmarkMainDesc").textContent = x.bookmarkMainDesc;
+      bookmarkBackPortalBtn.textContent = x.bookmarkBackPortal;
+      document.getElementById("bookmarkTitle").textContent = x.bookmarkTitle;
+      document.getElementById("bookmarkDesc").textContent = x.bookmarkDesc;
+      document.getElementById("bookmarkAlert").textContent = x.bookmarkAlert;
+      document.getElementById("bookmarkAlertImg").alt = x.bookmarkAlert;
+      document.getElementById("bookmarkExp1Title").textContent = x.bookmarkExp1Title;
+      document.getElementById("bookmarkExp1Text").textContent = x.bookmarkExp1Text;
+      document.getElementById("bookmarkExp2Title").textContent = x.bookmarkExp2Title;
+      document.getElementById("bookmarkExp2Text").textContent = x.bookmarkExp2Text;
+      document.getElementById("bookmarkExp3Title").textContent = x.bookmarkExp3Title;
+      document.getElementById("bookmarkExp3Text").textContent = x.bookmarkExp3Text;
       document.getElementById("catalogTitle").textContent = i.catalogTitle;
       document.getElementById("emptyTitle").textContent = i.emptyTitle;
       document.getElementById("emptyDesc").textContent = i.emptyDesc;
@@ -2485,12 +2833,33 @@
       render(result);
     }
 
+    function switchSection(section) {
+      currentSection = section;
+      const isCatalogSection = section === "catalog";
+      topTabsEl.classList.toggle("hidden", !isCatalogSection);
+      portalViewEl.classList.toggle("hidden", section !== "portal");
+      bookmarkViewEl.classList.toggle("hidden", section !== "bookmark");
+      openModalBtn.classList.toggle("hidden", !isCatalogSection);
+      aiGuideFab.classList.toggle("hidden", !isCatalogSection);
+      goPortalBtn.classList.toggle("hidden", section === "portal");
+      if (isCatalogSection) {
+        switchTab(currentTab || "home");
+      } else {
+        tabs.forEach((item) => item.classList.remove("active"));
+        homeViewEl.classList.add("hidden");
+        catalogViewEl.classList.add("hidden");
+        aboutViewEl.classList.add("hidden");
+      }
+    }
+
     function switchTab(tab) {
       currentTab = tab;
       tabs.forEach((item) => item.classList.toggle("active", item.dataset.tab === tab));
-      homeViewEl.classList.toggle("hidden", tab !== "home");
-      catalogViewEl.classList.toggle("hidden", tab === "about" || tab === "home");
-      aboutViewEl.classList.toggle("hidden", tab !== "about");
+      const isCatalogSection = currentSection === "catalog";
+      homeViewEl.classList.toggle("hidden", !isCatalogSection || tab !== "home");
+      catalogViewEl.classList.toggle("hidden", !isCatalogSection || tab === "about" || tab === "home");
+      aboutViewEl.classList.toggle("hidden", !isCatalogSection || tab !== "about");
+      if (!isCatalogSection) return;
       if (tab === "favorites") { favoriteFilterEl.value = "only"; applySearch(); }
       else if (tab === "catalog") { favoriteFilterEl.value = "all"; applySearch(); }
       const catalogAstroEl = document.getElementById("catalogAstro");
@@ -2541,6 +2910,19 @@
       createdByEl.value = localStorage.getItem(CREATOR_NAME_STORAGE_KEY) || "";
       lastAutoCreatedByFromAuthor = authorNameEl.value || "";
       modalWrap.style.display = "flex";
+    });
+    portalGoCatalogBtn.addEventListener("click", () => {
+      switchSection("catalog");
+      switchTab("home");
+    });
+    portalGoBookmarkBtn.addEventListener("click", () => {
+      switchSection("bookmark");
+    });
+    bookmarkBackPortalBtn.addEventListener("click", () => {
+      switchSection("portal");
+    });
+    goPortalBtn.addEventListener("click", () => {
+      switchSection("portal");
     });
     heroViewCatalogBtn.addEventListener("click", () => switchTab("catalog"));
     heroAddCaseBtn.addEventListener("click", () => {
@@ -2630,7 +3012,16 @@
     });
 
     langBtn.addEventListener("click", () => { langMenu.style.display = langMenu.style.display === "block" ? "none" : "block"; });
-    langItems.forEach((item) => item.addEventListener("click", () => { currentLang = item.dataset.lang; langMenu.style.display = "none"; updateStaticTranslations(); switchTab(currentTab); }));
+    langItems.forEach((item) => item.addEventListener("click", () => {
+      currentLang = item.dataset.lang;
+      langMenu.style.display = "none";
+      updateStaticTranslations();
+      if (currentSection === "catalog") {
+        switchTab(currentTab);
+      } else {
+        switchSection(currentSection);
+      }
+    }));
     document.addEventListener("click", (event) => {
       if (!langMenu.contains(event.target) && !langBtn.contains(event.target)) { langMenu.style.display = "none"; }
       if (!authorListEl.contains(event.target) && !authorBtn.contains(event.target)) { authorListEl.classList.remove("show"); }
@@ -2741,7 +3132,12 @@
       } catch (error) { alert(error.message); }
     });
 
-    tabs.forEach((tabEl) => tabEl.addEventListener("click", () => switchTab(tabEl.dataset.tab)));
+    tabs.forEach((tabEl) =>
+      tabEl.addEventListener("click", () => {
+        switchSection("catalog");
+        switchTab(tabEl.dataset.tab);
+      })
+    );
     recentViewAllEl.addEventListener("click", () => switchTab("catalog"));
     (async function bootstrap() {
       loadAuthors();
@@ -2753,7 +3149,7 @@
       statusEl.value = "in_progress";
       hydrateCasesFromCache();
       updateStaticTranslations();
-      switchTab("home");
+      switchSection("portal");
       const queryCaseId = new URL(window.location.href).searchParams.get("case");
       const authPromise = checkAuth();
       let sharedOpenedEarly = false;
@@ -2767,9 +3163,11 @@
         if (!sharedOpenedEarly) {
           const opened = await openSharedCaseFromUrl(queryCaseId);
           if (!opened) {
+            switchSection("catalog");
             switchTab("catalog");
           }
-        } else if (currentTab !== "catalog") {
+        } else if (currentTab !== "catalog" || currentSection !== "catalog") {
+          switchSection("catalog");
           switchTab("catalog");
         }
       }
