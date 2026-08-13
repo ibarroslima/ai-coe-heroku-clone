@@ -206,26 +206,31 @@
     .portal-circle p { margin: 0; color: var(--muted); line-height: 1.35; max-width: 290px; }
     .portal-circle .pill-btn { margin-top: 4px; }
     .bookmark-preview-grid { margin-top: 14px; display: grid; gap: 10px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .bookmark-alert {
-      margin: 14px auto 8px;
-      max-width: 760px;
-      border: 2px dashed #f3b43f;
-      background: #fff5d9;
-      color: #8a4b00;
-      border-radius: 18px;
-      padding: 14px 18px;
-      text-align: center;
-      font-size: clamp(24px, 3.2vw, 42px);
-      font-weight: 900;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      box-shadow: 0 8px 20px rgba(243, 180, 63, 0.25);
+    .bookmark-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
     }
-    .bookmark-alert-img {
-      width: min(220px, 42vw);
-      height: auto;
-      display: block;
-      margin: 6px auto 0;
+    .bookmark-click-box {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 16px;
+      border-radius: 12px;
+      border: 2px solid #0d6efd;
+      background: linear-gradient(135deg, #0d6efd, #2ea7ff);
+      color: #fff;
+      font-weight: 800;
+      letter-spacing: 0.6px;
+      text-decoration: none;
+      box-shadow: 0 8px 16px rgba(13, 110, 253, 0.28);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .bookmark-click-box:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 20px rgba(13, 110, 253, 0.34);
     }
     .hero-banner {
       padding: 24px 6px 30px;
@@ -684,11 +689,10 @@
       color: #7dc3ff;
     }
     body.dark .brand-text small { color: #7dc3ff; }
-    body.dark .bookmark-alert {
-      background: #4d3713;
-      border-color: #f3b43f;
-      color: #ffe2a2;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+    body.dark .bookmark-click-box {
+      border-color: #63b7ff;
+      background: linear-gradient(135deg, #1f5ed6, #1a82d1);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.38);
     }
     body.dark .brand-portal-btn {
       background: rgba(26, 42, 94, 0.72);
@@ -1159,16 +1163,14 @@
             <span id="bookmarkBadge" class="hero-badge">• LATAM Bookmark Central • Preview</span>
             <h2 id="bookmarkMainTitle" class="hero-main-title">Organize e compartilhe referências da região LATAM</h2>
             <p id="bookmarkMainDesc" class="hero-main-desc">Esta nova seção está sendo estruturada com base no AI Catalogue para acelerar curadoria e reutilização de links importantes.</p>
-            <div class="hero-main-actions">
-              <button id="bookmarkBackPortalBtn" class="pill-btn hero-view-btn">Voltar ao portal</button>
-            </div>
           </div>
         </div>
       </section>
-      <h1 id="bookmarkTitle">LATAM Bookmark Central</h1>
+      <div class="bookmark-title-row">
+        <h1 id="bookmarkTitle">LATAM Bookmark Central</h1>
+        <a id="bookmarkClickBox" class="bookmark-click-box" href="https://salesforce.enterprise.slack.com/docs/T01G0063H29/F0BQ3AQG5HN" target="_blank" rel="noopener noreferrer">Clique aqui</a>
+      </div>
       <p id="bookmarkDesc" class="sub">Primeira versão da nova área. Em breve com criação, busca e filtros de bookmarks.</p>
-      <div id="bookmarkAlert" class="bookmark-alert">Em construção</div>
-      <img id="bookmarkAlertImg" class="bookmark-alert-img" src="/assets/under-construction.png" alt="Em construção" />
       <section class="bookmark-preview-grid">
         <article class="explainer">
           <div class="explainer-icon">🔖</div>
@@ -1464,7 +1466,7 @@
     const heroAddCaseBtn = document.getElementById("heroAddCaseBtn");
     const portalGoCatalogBtn = document.getElementById("portalGoCatalogBtn");
     const portalGoBookmarkBtn = document.getElementById("portalGoBookmarkBtn");
-    const bookmarkBackPortalBtn = document.getElementById("bookmarkBackPortalBtn");
+    const bookmarkClickBox = document.getElementById("bookmarkClickBox");
     const recentCardsEl = document.getElementById("recentCards");
     const recentViewAllEl = document.getElementById("recentViewAll");
     const langBtn = document.getElementById("langBtn");
@@ -1629,10 +1631,9 @@
         bookmarkBadge: "• LATAM Bookmark Central • Preview",
         bookmarkMainTitle: "Organize e compartilhe referencias da regiao LATAM",
         bookmarkMainDesc: "Nova secao em construcao com base no AI Catalogue para acelerar curadoria e reutilizacao de links importantes.",
-        bookmarkBackPortal: "Voltar ao portal",
         bookmarkTitle: "LATAM Bookmark Central",
         bookmarkDesc: "Primeira versao da nova area. Em breve com criacao, busca e filtros de bookmarks.",
-        bookmarkAlert: "Em construção",
+        bookmarkClickHere: "Clique aqui",
         bookmarkExp1Title: "Biblioteca de links",
         bookmarkExp1Text: "Consolide documentos, dashboards, playbooks e referencias em um so lugar.",
         bookmarkExp2Title: "Navegacao por tema",
@@ -1718,10 +1719,9 @@
         bookmarkBadge: "• LATAM Bookmark Central • Preview",
         bookmarkMainTitle: "Organiza y comparte referencias de la region LATAM",
         bookmarkMainDesc: "Nueva seccion en construccion basada en AI Catalogue para acelerar curaduria y reutilizacion de enlaces importantes.",
-        bookmarkBackPortal: "Volver al portal",
         bookmarkTitle: "LATAM Bookmark Central",
         bookmarkDesc: "Primera version de la nueva area. Pronto con creacion, busqueda y filtros de bookmarks.",
-        bookmarkAlert: "En construcción",
+        bookmarkClickHere: "Haz clic aquí",
         bookmarkExp1Title: "Biblioteca de enlaces",
         bookmarkExp1Text: "Consolida documentos, dashboards, playbooks y referencias en un solo lugar.",
         bookmarkExp2Title: "Navegacion por tema",
@@ -1807,10 +1807,9 @@
         bookmarkBadge: "• LATAM Bookmark Central • Preview",
         bookmarkMainTitle: "Organize and share LATAM regional references",
         bookmarkMainDesc: "New section in progress based on AI Catalogue to speed up curation and reuse of key links.",
-        bookmarkBackPortal: "Back to portal",
         bookmarkTitle: "LATAM Bookmark Central",
         bookmarkDesc: "First version of the new area. Bookmark creation, search, and filters are coming soon.",
-        bookmarkAlert: "Under construction",
+        bookmarkClickHere: "Click here",
         bookmarkExp1Title: "Link library",
         bookmarkExp1Text: "Consolidate documents, dashboards, playbooks, and references in one place.",
         bookmarkExp2Title: "Topic navigation",
@@ -2320,11 +2319,9 @@
       document.getElementById("bookmarkBadge").textContent = x.bookmarkBadge;
       document.getElementById("bookmarkMainTitle").textContent = x.bookmarkMainTitle;
       document.getElementById("bookmarkMainDesc").textContent = x.bookmarkMainDesc;
-      bookmarkBackPortalBtn.textContent = x.bookmarkBackPortal;
       document.getElementById("bookmarkTitle").textContent = x.bookmarkTitle;
       document.getElementById("bookmarkDesc").textContent = x.bookmarkDesc;
-      document.getElementById("bookmarkAlert").textContent = x.bookmarkAlert;
-      document.getElementById("bookmarkAlertImg").alt = x.bookmarkAlert;
+      bookmarkClickBox.textContent = x.bookmarkClickHere;
       document.getElementById("bookmarkExp1Title").textContent = x.bookmarkExp1Title;
       document.getElementById("bookmarkExp1Text").textContent = x.bookmarkExp1Text;
       document.getElementById("bookmarkExp2Title").textContent = x.bookmarkExp2Title;
@@ -2917,9 +2914,6 @@
     });
     portalGoBookmarkBtn.addEventListener("click", () => {
       switchSection("bookmark");
-    });
-    bookmarkBackPortalBtn.addEventListener("click", () => {
-      switchSection("portal");
     });
     goPortalBtn.addEventListener("click", () => {
       switchSection("portal");
