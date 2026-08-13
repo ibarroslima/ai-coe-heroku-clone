@@ -205,7 +205,7 @@
     .portal-circle h2 { margin: 0; font-size: clamp(22px, 2.4vw, 34px); }
     .portal-circle p { margin: 0; color: var(--muted); line-height: 1.35; max-width: 290px; }
     .portal-circle .pill-btn { margin-top: 4px; }
-    .bookmark-preview-grid { margin-top: 54px; display: grid; gap: 10px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .bookmark-preview-grid { margin: 0 0 26px; display: grid; gap: 10px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .bookmark-title-row {
       display: flex;
       align-items: center;
@@ -227,6 +227,14 @@
       letter-spacing: -0.4px;
       font-weight: 800;
       color: var(--text);
+    }
+    #bookmarkMainDesc {
+      font-family: inherit;
+      font-size: 18px;
+      line-height: 1.35;
+      font-weight: 400;
+      letter-spacing: 0;
+      color: var(--muted);
     }
     .bookmark-title-row h1 {
       margin: 2px 0 0;
@@ -1181,6 +1189,23 @@
       </section>
     </div>
     <div id="bookmarkView" class="container hidden">
+      <section class="bookmark-preview-grid">
+        <article class="explainer">
+          <div class="explainer-icon">🔖</div>
+          <h3 id="bookmarkExp1Title">Biblioteca de links</h3>
+          <p id="bookmarkExp1Text">Consolide documentos, dashboards, playbooks e referências em um só lugar.</p>
+        </article>
+        <article class="explainer">
+          <div class="explainer-icon">🧭</div>
+          <h3 id="bookmarkExp2Title">Navegação por tema</h3>
+          <p id="bookmarkExp2Text">Estruture bookmarks por país, tecnologia, squad e tipo de material.</p>
+        </article>
+        <article class="explainer">
+          <div class="explainer-icon">🤝</div>
+          <h3 id="bookmarkExp3Title">Colaboração regional</h3>
+          <p id="bookmarkExp3Text">Permita que o time LATAM compartilhe e mantenha referências atualizadas.</p>
+        </article>
+      </section>
       <section class="hero-banner">
         <div class="hero-layout">
           <div class="hero-content">
@@ -1201,23 +1226,11 @@
         <span class="bookmark-title-arrow" aria-hidden="true">→</span>
         <a id="bookmarkCortexClickBox" class="bookmark-click-box" href="https://damp-plateau-53219-042e4179fc0a.herokuapp.com/?case=595" target="_blank" rel="noopener noreferrer">Clique aqui</a>
       </div>
-      <section class="bookmark-preview-grid">
-        <article class="explainer">
-          <div class="explainer-icon">🔖</div>
-          <h3 id="bookmarkExp1Title">Biblioteca de links</h3>
-          <p id="bookmarkExp1Text">Consolide documentos, dashboards, playbooks e referências em um só lugar.</p>
-        </article>
-        <article class="explainer">
-          <div class="explainer-icon">🧭</div>
-          <h3 id="bookmarkExp2Title">Navegação por tema</h3>
-          <p id="bookmarkExp2Text">Estruture bookmarks por país, tecnologia, squad e tipo de material.</p>
-        </article>
-        <article class="explainer">
-          <div class="explainer-icon">🤝</div>
-          <h3 id="bookmarkExp3Title">Colaboração regional</h3>
-          <p id="bookmarkExp3Text">Permita que o time LATAM compartilhe e mantenha referências atualizadas.</p>
-        </article>
-      </section>
+      <div class="bookmark-title-row">
+        <h2 id="bookmarkMcaTitle" class="bookmark-subtitle">MCA Paks Digital - Reusable Assets Portal</h2>
+        <span class="bookmark-title-arrow" aria-hidden="true">→</span>
+        <a id="bookmarkMcaClickBox" class="bookmark-click-box" href="https://git.soma.salesforce.com/pages/kvilassa/digital-reusable-assets/" target="_blank" rel="noopener noreferrer">Clique aqui</a>
+      </div>
     </div>
   </main>
   <div id="modalWrap" class="modal-wrap">
@@ -1498,6 +1511,7 @@
     const portalGoBookmarkBtn = document.getElementById("portalGoBookmarkBtn");
     const bookmarkClickBox = document.getElementById("bookmarkClickBox");
     const bookmarkCortexClickBox = document.getElementById("bookmarkCortexClickBox");
+    const bookmarkMcaClickBox = document.getElementById("bookmarkMcaClickBox");
     const recentCardsEl = document.getElementById("recentCards");
     const recentViewAllEl = document.getElementById("recentViewAll");
     const langBtn = document.getElementById("langBtn");
@@ -1664,6 +1678,7 @@
         bookmarkMainDesc: "Nova secao em construcao com base no AI Catalogue para acelerar curadoria e reutilizacao de links importantes.",
         bookmarkTitle: "LATAM Bookmark Central",
         bookmarkCortexTitle: "Cortex 6.0",
+        bookmarkMcaTitle: "MCA Paks Digital - Reusable Assets Portal",
         bookmarkDesc: "Primeira versao da nova area. Em breve com criacao, busca e filtros de bookmarks.",
         bookmarkClickHere: "Clique aqui",
         bookmarkExp1Title: "Biblioteca de links",
@@ -1753,6 +1768,7 @@
         bookmarkMainDesc: "Nueva seccion en construccion basada en AI Catalogue para acelerar curaduria y reutilizacion de enlaces importantes.",
         bookmarkTitle: "LATAM Bookmark Central",
         bookmarkCortexTitle: "Cortex 6.0",
+        bookmarkMcaTitle: "MCA Paks Digital - Reusable Assets Portal",
         bookmarkDesc: "Primera version de la nueva area. Pronto con creacion, busqueda y filtros de bookmarks.",
         bookmarkClickHere: "Haz clic aquí",
         bookmarkExp1Title: "Biblioteca de enlaces",
@@ -1842,6 +1858,7 @@
         bookmarkMainDesc: "New section in progress based on AI Catalogue to speed up curation and reuse of key links.",
         bookmarkTitle: "LATAM Bookmark Central",
         bookmarkCortexTitle: "Cortex 6.0",
+        bookmarkMcaTitle: "MCA Paks Digital - Reusable Assets Portal",
         bookmarkDesc: "First version of the new area. Bookmark creation, search, and filters are coming soon.",
         bookmarkClickHere: "Click here",
         bookmarkExp1Title: "Link library",
@@ -2355,9 +2372,11 @@
       document.getElementById("bookmarkMainDesc").textContent = x.bookmarkMainDesc;
       document.getElementById("bookmarkTitle").textContent = x.bookmarkTitle;
       document.getElementById("bookmarkCortexTitle").textContent = x.bookmarkCortexTitle;
+      document.getElementById("bookmarkMcaTitle").textContent = x.bookmarkMcaTitle;
       document.getElementById("bookmarkDesc").textContent = x.bookmarkDesc;
       bookmarkClickBox.textContent = x.bookmarkClickHere;
       bookmarkCortexClickBox.textContent = x.bookmarkClickHere;
+      bookmarkMcaClickBox.textContent = x.bookmarkClickHere;
       document.getElementById("bookmarkExp1Title").textContent = x.bookmarkExp1Title;
       document.getElementById("bookmarkExp1Text").textContent = x.bookmarkExp1Text;
       document.getElementById("bookmarkExp2Title").textContent = x.bookmarkExp2Title;
