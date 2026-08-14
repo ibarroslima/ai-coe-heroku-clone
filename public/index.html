@@ -337,6 +337,11 @@
       gap: 10px;
       box-shadow: 0 3px 8px rgba(52, 84, 130, 0.12);
     }
+    .bookmark-side-actions {
+      display: grid;
+      gap: 6px;
+      justify-items: end;
+    }
     .bookmark-side-meta {
       display: flex;
       align-items: center;
@@ -1443,7 +1448,10 @@
                   <p id="bookmarkMcaDesc">Catalogo de activos digitales reutilizables.</p>
                 </div>
               </div>
-              <a id="bookmarkMcaClickBox" class="bookmark-action-btn" href="https://git.soma.salesforce.com/pages/kvilassa/digital-reusable-assets/" target="_blank" rel="noopener noreferrer">DESCARGAR ACTIVOS</a>
+              <div class="bookmark-side-actions">
+                <a id="bookmarkMcaGitClickBox" class="bookmark-action-btn" href="https://git.soma.salesforce.com/pages/kvilassa/digital-reusable-assets/" target="_blank" rel="noopener noreferrer">GIT</a>
+                <a id="bookmarkMcaAwsClickBox" class="bookmark-action-btn" href="https://cloudhosting.internal.salesforce.com/f/01KYASQVQ61C2J7T5T3GA72XF4" target="_blank" rel="noopener noreferrer">AWS</a>
+              </div>
             </article>
           </aside>
         </div>
@@ -1728,7 +1736,8 @@
     const portalGoBookmarkBtn = document.getElementById("portalGoBookmarkBtn");
     const bookmarkClickBox = document.getElementById("bookmarkClickBox");
     const bookmarkCortexClickBox = document.getElementById("bookmarkCortexClickBox");
-    const bookmarkMcaClickBox = document.getElementById("bookmarkMcaClickBox");
+    const bookmarkMcaGitClickBox = document.getElementById("bookmarkMcaGitClickBox");
+    const bookmarkMcaAwsClickBox = document.getElementById("bookmarkMcaAwsClickBox");
     const recentCardsEl = document.getElementById("recentCards");
     const recentViewAllEl = document.getElementById("recentViewAll");
     const langBtn = document.getElementById("langBtn");
@@ -1909,7 +1918,8 @@
         bookmarkCortexDesc: "Motor avancado de analise de dados e IA.",
         bookmarkCortexAction: "EXPLORAR",
         bookmarkMcaDesc: "Catalogo de ativos digitais reutilizaveis.",
-        bookmarkMcaAction: "EXPLORAR",
+        bookmarkMcaGitAction: "GIT",
+        bookmarkMcaAwsAction: "AWS",
         bookmarkExp1Title: "Biblioteca de links",
         bookmarkExp1Text: "Consolide documentos, dashboards, playbooks e referencias em um so lugar.",
         bookmarkExp2Title: "Navegacao por tema",
@@ -2011,7 +2021,8 @@
         bookmarkCortexDesc: "Motor de analisis de datos e IA avanzado.",
         bookmarkCortexAction: "EXPLORAR",
         bookmarkMcaDesc: "Catalogo de activos digitales reutilizables.",
-        bookmarkMcaAction: "EXPLORAR",
+        bookmarkMcaGitAction: "GIT",
+        bookmarkMcaAwsAction: "AWS",
         bookmarkExp1Title: "Biblioteca de enlaces",
         bookmarkExp1Text: "Consolida documentos, dashboards, playbooks y referencias en un solo lugar.",
         bookmarkExp2Title: "Navegacion por tema",
@@ -2113,7 +2124,8 @@
         bookmarkCortexDesc: "Advanced data and AI analysis engine.",
         bookmarkCortexAction: "EXPLORE",
         bookmarkMcaDesc: "Catalog of reusable digital assets.",
-        bookmarkMcaAction: "EXPLORE",
+        bookmarkMcaGitAction: "GIT",
+        bookmarkMcaAwsAction: "AWS",
         bookmarkExp1Title: "Link library",
         bookmarkExp1Text: "Consolidate documents, dashboards, playbooks, and references in one place.",
         bookmarkExp2Title: "Topic navigation",
@@ -2639,7 +2651,8 @@
       document.getElementById("bookmarkMcaDesc").textContent = x.bookmarkMcaDesc;
       bookmarkClickBox.textContent = x.bookmarkPortalAction;
       bookmarkCortexClickBox.textContent = x.bookmarkCortexAction;
-      bookmarkMcaClickBox.textContent = x.bookmarkMcaAction;
+      bookmarkMcaGitClickBox.textContent = x.bookmarkMcaGitAction;
+      bookmarkMcaAwsClickBox.textContent = x.bookmarkMcaAwsAction;
       document.getElementById("bookmarkExp1Title").textContent = x.bookmarkExp1Title;
       document.getElementById("bookmarkExp1Text").textContent = x.bookmarkExp1Text;
       document.getElementById("bookmarkExp2Title").textContent = x.bookmarkExp2Title;
