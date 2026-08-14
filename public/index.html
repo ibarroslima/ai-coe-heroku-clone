@@ -223,7 +223,7 @@
     }
     .bookmark-resources-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+      grid-template-columns: 1fr;
       gap: 12px;
       align-items: stretch;
     }
@@ -320,6 +320,11 @@
     .bookmark-action-btn:hover {
       transform: translateY(-1px);
       box-shadow: 0 10px 20px rgba(13, 110, 253, 0.34);
+    }
+    .bookmark-action-stack {
+      display: grid;
+      gap: 6px;
+      justify-items: start;
     }
     .bookmark-side-resources {
       display: grid;
@@ -1426,34 +1431,38 @@
                     <a id="bookmarkClickBox" class="bookmark-action-btn" href="https://salesforce.enterprise.slack.com/docs/T01G0063H29/F0BQ3AQG5HN" target="_blank" rel="noopener noreferrer">IR AL PORTAL</a>
                   </td>
                 </tr>
+                <tr>
+                  <td>
+                    <div class="bookmark-resource-cell-name">
+                      <span class="bookmark-resource-icon" aria-hidden="true">⚙️</span>
+                      <span id="bookmarkCortexTitle">Cortex 6.0</span>
+                    </div>
+                  </td>
+                  <td id="bookmarkCortexDesc">Motor de analisis de datos e IA avanzado.</td>
+                  <td><span id="bookmarkCortexStatus" class="bookmark-status-pill">VERIFICADO</span></td>
+                  <td>
+                    <a id="bookmarkCortexClickBox" class="bookmark-action-btn" href="https://damp-plateau-53219-042e4179fc0a.herokuapp.com/?case=595" target="_blank" rel="noopener noreferrer">EXPLORAR</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="bookmark-resource-cell-name">
+                      <span class="bookmark-resource-icon" aria-hidden="true">📦</span>
+                      <span id="bookmarkMcaTitle">MCA Paks Digital</span>
+                    </div>
+                  </td>
+                  <td id="bookmarkMcaDesc">Catalogo de activos digitales reutilizables.</td>
+                  <td><span id="bookmarkMcaStatus" class="bookmark-status-pill">VERIFICADO</span></td>
+                  <td>
+                    <div class="bookmark-action-stack">
+                      <a id="bookmarkMcaGitClickBox" class="bookmark-action-btn" href="https://git.soma.salesforce.com/pages/kvilassa/digital-reusable-assets/" target="_blank" rel="noopener noreferrer">GIT</a>
+                      <a id="bookmarkMcaAwsClickBox" class="bookmark-action-btn" href="https://cloudhosting.internal.salesforce.com/f/01KYASQVQ61C2J7T5T3GA72XF4" target="_blank" rel="noopener noreferrer">AWS</a>
+                    </div>
+                  </td>
+                </tr>
               </tbody>
             </table>
           </article>
-          <aside class="bookmark-side-resources">
-            <article class="bookmark-side-card">
-              <div class="bookmark-side-meta">
-                <span class="bookmark-side-icon" aria-hidden="true">⚙️</span>
-                <div class="bookmark-side-text">
-                  <h2 id="bookmarkCortexTitle">Cortex 6.0</h2>
-                  <p id="bookmarkCortexDesc">Motor de analisis de datos e IA avanzado.</p>
-                </div>
-              </div>
-              <a id="bookmarkCortexClickBox" class="bookmark-action-btn" href="https://damp-plateau-53219-042e4179fc0a.herokuapp.com/?case=595" target="_blank" rel="noopener noreferrer">EXPLORAR</a>
-            </article>
-            <article class="bookmark-side-card">
-              <div class="bookmark-side-meta">
-                <span class="bookmark-side-icon" aria-hidden="true">📦</span>
-                <div class="bookmark-side-text">
-                  <h2 id="bookmarkMcaTitle">MCA Paks Digital</h2>
-                  <p id="bookmarkMcaDesc">Catalogo de activos digitales reutilizables.</p>
-                </div>
-              </div>
-              <div class="bookmark-side-actions">
-                <a id="bookmarkMcaGitClickBox" class="bookmark-action-btn" href="https://git.soma.salesforce.com/pages/kvilassa/digital-reusable-assets/" target="_blank" rel="noopener noreferrer">GIT</a>
-                <a id="bookmarkMcaAwsClickBox" class="bookmark-action-btn" href="https://cloudhosting.internal.salesforce.com/f/01KYASQVQ61C2J7T5T3GA72XF4" target="_blank" rel="noopener noreferrer">AWS</a>
-              </div>
-            </article>
-          </aside>
         </div>
       </section>
     </div>
@@ -2647,6 +2656,8 @@
       document.getElementById("bookmarkPrimaryResourceName").textContent = x.bookmarkPrimaryResourceName;
       document.getElementById("bookmarkPrimaryResourceDesc").textContent = x.bookmarkPrimaryResourceDesc;
       document.getElementById("bookmarkPrimaryResourceStatus").textContent = x.bookmarkPrimaryResourceStatus;
+      document.getElementById("bookmarkCortexStatus").textContent = x.bookmarkPrimaryResourceStatus;
+      document.getElementById("bookmarkMcaStatus").textContent = x.bookmarkPrimaryResourceStatus;
       document.getElementById("bookmarkCortexDesc").textContent = x.bookmarkCortexDesc;
       document.getElementById("bookmarkMcaDesc").textContent = x.bookmarkMcaDesc;
       bookmarkClickBox.textContent = x.bookmarkPortalAction;
