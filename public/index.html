@@ -206,27 +206,167 @@
     .portal-circle p { margin: 0; color: var(--muted); line-height: 1.35; max-width: 290px; }
     .portal-circle .pill-btn { margin-top: 4px; }
     .bookmark-preview-grid { margin: 0 0 56px; display: grid; gap: 10px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .bookmark-title-row {
+    .bookmark-resources {
+      border: 1px solid #d5e4f8;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(237, 246, 255, 0.9) 0%, rgba(232, 244, 255, 0.8) 100%);
+      box-shadow: 0 14px 24px rgba(25, 56, 110, 0.16);
+      padding: 14px;
+    }
+    .bookmark-resources-label {
+      margin: 0 0 10px;
+      font-size: 18px;
+      letter-spacing: 0.35px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #1b2f55;
+    }
+    .bookmark-resources-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+      gap: 12px;
+      align-items: stretch;
+    }
+    .bookmark-main-resource {
+      border: 1px solid #b2cae8;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.86);
+      overflow: hidden;
+    }
+    .bookmark-main-resource h1 {
+      margin: 0;
+      padding: 10px 14px;
+      font-size: clamp(16px, 1.8vw, 24px);
+      line-height: 1.15;
+      font-weight: 800;
+      color: #0f1e38;
+      border-bottom: 1px solid #c8d9ef;
+      background: rgba(246, 250, 255, 0.94);
+    }
+    .bookmark-resource-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 14px;
+    }
+    .bookmark-resource-table col:nth-child(1) { width: 28%; }
+    .bookmark-resource-table col:nth-child(2) { width: 30%; }
+    .bookmark-resource-table col:nth-child(3) { width: 18%; }
+    .bookmark-resource-table col:nth-child(4) { width: 24%; }
+    .bookmark-resource-table th {
+      text-align: left;
+      padding: 7px 10px;
+      border-bottom: 1px solid #c6d7ee;
+      font-size: 13px;
+      font-weight: 800;
+      color: #2a4067;
+      background: rgba(235, 243, 252, 0.84);
+    }
+    .bookmark-resource-table td {
+      padding: 8px 10px;
+      border-bottom: 1px solid #d3e2f3;
+      color: #1f2f49;
+      vertical-align: middle;
+      background: rgba(250, 253, 255, 0.9);
+    }
+    .bookmark-resource-cell-name {
       display: flex;
       align-items: center;
-      justify-content: flex-start;
-      gap: 10px;
-      flex-wrap: wrap;
+      gap: 8px;
+      font-weight: 700;
+      line-height: 1.25;
     }
-    .bookmark-title-arrow {
-      font-size: 34px;
-      line-height: 1;
-      font-weight: 900;
-      color: #0d6efd;
-      margin: 0 2px;
+    .bookmark-resource-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      background: linear-gradient(135deg, #d9e7f7, #bfd4ea);
+      border: 1px solid #a8bdd7;
+      display: grid;
+      place-items: center;
+      font-size: 16px;
+      flex: 0 0 auto;
     }
-    .bookmark-subtitle {
-      margin: 2px 0 0;
-      font-size: clamp(24px, 2.8vw, 34px);
-      line-height: 1.1;
-      letter-spacing: -0.4px;
+    .bookmark-status-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 12px;
       font-weight: 800;
-      color: var(--text);
+      color: #1f5f2b;
+      background: #bfecc9;
+      border: 1px solid #9ad8aa;
+      white-space: nowrap;
+    }
+    .bookmark-action-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      border: 1px solid #0d6efd;
+      background: linear-gradient(135deg, #0d6efd, #2ea7ff);
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.35px;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 6px 12px;
+      white-space: nowrap;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .bookmark-action-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 20px rgba(13, 110, 253, 0.34);
+    }
+    .bookmark-side-resources {
+      display: grid;
+      gap: 10px;
+      align-content: start;
+    }
+    .bookmark-side-card {
+      border: 1px solid #c7d8eb;
+      border-radius: 12px;
+      background: rgba(248, 252, 255, 0.92);
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      box-shadow: 0 3px 8px rgba(52, 84, 130, 0.12);
+    }
+    .bookmark-side-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+    .bookmark-side-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      border: 1px solid #c0cde0;
+      background: linear-gradient(180deg, #f2f5fa, #e3eaf3);
+      display: grid;
+      place-items: center;
+      color: #4a5f80;
+      font-size: 20px;
+      flex: 0 0 auto;
+    }
+    .bookmark-side-text h2 {
+      margin: 0;
+      font-size: 26px;
+      line-height: 1.15;
+      font-weight: 800;
+      color: #0f213f;
+    }
+    .bookmark-side-text p {
+      margin: 2px 0 0;
+      color: #2d4161;
+      line-height: 1.3;
+      font-size: 18px;
     }
     #bookmarkMainDesc {
       font-family: inherit;
@@ -240,33 +380,6 @@
       font-size: 14px;
       line-height: 1.35;
       margin-bottom: 4px;
-    }
-    .bookmark-title-row h1 {
-      margin: 2px 0 0;
-      font-size: clamp(24px, 2.8vw, 34px);
-      line-height: 1.1;
-      letter-spacing: -0.4px;
-      font-weight: 800;
-      color: var(--text);
-    }
-    .bookmark-click-box {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 10px 16px;
-      border-radius: 12px;
-      border: 2px solid #0d6efd;
-      background: linear-gradient(135deg, #0d6efd, #2ea7ff);
-      color: #fff;
-      font-weight: 800;
-      letter-spacing: 0.6px;
-      text-decoration: none;
-      box-shadow: 0 8px 16px rgba(13, 110, 253, 0.28);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .bookmark-click-box:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 10px 20px rgba(13, 110, 253, 0.34);
     }
     .hero-banner {
       padding: 24px 6px 30px;
@@ -725,12 +838,58 @@
       color: #7dc3ff;
     }
     body.dark .brand-text small { color: #7dc3ff; }
-    body.dark .bookmark-click-box {
-      border-color: #63b7ff;
-      background: linear-gradient(135deg, #1f5ed6, #1a82d1);
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.38);
+    body.dark .bookmark-resources {
+      border-color: #355684;
+      background: linear-gradient(180deg, rgba(17, 34, 63, 0.95) 0%, rgba(16, 31, 56, 0.92) 100%);
+      box-shadow: 0 14px 24px rgba(0, 0, 0, 0.45);
     }
-    body.dark .bookmark-title-arrow { color: #8ec8ff; }
+    body.dark .bookmark-resources-label { color: #cde5ff; }
+    body.dark .bookmark-main-resource {
+      border-color: #36557f;
+      background: rgba(21, 37, 67, 0.9);
+    }
+    body.dark .bookmark-main-resource h1 {
+      color: #eff5ff;
+      border-bottom-color: #35537d;
+      background: rgba(24, 42, 74, 0.9);
+    }
+    body.dark .bookmark-resource-table th {
+      color: #d8e9ff;
+      border-bottom-color: #36547f;
+      background: rgba(31, 51, 86, 0.86);
+    }
+    body.dark .bookmark-resource-table td {
+      color: #dbe9ff;
+      border-bottom-color: #35537c;
+      background: rgba(18, 34, 62, 0.84);
+    }
+    body.dark .bookmark-resource-icon {
+      background: linear-gradient(135deg, #21385f, #284976);
+      border-color: #486791;
+      color: #e0ecff;
+    }
+    body.dark .bookmark-status-pill {
+      color: #cdf9d6;
+      border-color: #4f8f5d;
+      background: rgba(57, 126, 72, 0.45);
+    }
+    body.dark .bookmark-action-btn {
+      border-color: #4d6b94;
+      background: linear-gradient(180deg, #2a446e, #22375b);
+      color: #ebf4ff;
+    }
+    body.dark .bookmark-action-btn:hover { box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4); }
+    body.dark .bookmark-side-card {
+      border-color: #3b5a84;
+      background: rgba(19, 36, 64, 0.9);
+    }
+    body.dark .bookmark-side-icon {
+      border-color: #46678f;
+      background: linear-gradient(180deg, #2a446b, #223759);
+      color: #dceaff;
+    }
+    body.dark .bookmark-side-text h2 { color: #f1f6ff; }
+    body.dark .bookmark-side-text p { color: #c9ddfb; }
     body.dark .brand-portal-btn {
       background: rgba(26, 42, 94, 0.72);
       border-color: #38508d;
@@ -1001,6 +1160,7 @@
       }
       .portal-circle { width: 100%; }
       .filter-row { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .bookmark-resources-grid { grid-template-columns: 1fr; }
     }
     @media (max-width: 760px) {
       .cards, .grid, .filter-row, .tabs, .home-grid, .explainers, .recent-cards, .bookmark-preview-grid { grid-template-columns: 1fr; }
@@ -1017,6 +1177,12 @@
       .portal-circle { padding: 28px; }
       .brand-text { font-size: 26px; }
       .sub { font-size: 16px; }
+      .bookmark-resources-label { font-size: 20px; }
+      .bookmark-resource-table { font-size: 13px; }
+      .bookmark-resource-table th,
+      .bookmark-resource-table td { padding: 7px; }
+      .bookmark-side-card { padding: 9px 10px; }
+      .bookmark-action-btn { font-size: 11px; padding: 6px 10px; }
       .hero-layout { flex-direction: column; align-items: center; }
       .hero-banner { text-align: center; }
       .hero-main-actions { justify-content: center; }
@@ -1221,21 +1387,67 @@
           <p id="bookmarkExp3Text">Permita que o time LATAM compartilhe e mantenha referências atualizadas.</p>
         </article>
       </section>
-      <div class="bookmark-title-row">
-        <h1 id="bookmarkTitle">LATAM Bookmark Central</h1>
-        <span class="bookmark-title-arrow" aria-hidden="true">→</span>
-        <a id="bookmarkClickBox" class="bookmark-click-box" href="https://salesforce.enterprise.slack.com/docs/T01G0063H29/F0BQ3AQG5HN" target="_blank" rel="noopener noreferrer">Clique aqui</a>
-      </div>
-      <div class="bookmark-title-row">
-        <h2 id="bookmarkCortexTitle" class="bookmark-subtitle">Cortex 6.0</h2>
-        <span class="bookmark-title-arrow" aria-hidden="true">→</span>
-        <a id="bookmarkCortexClickBox" class="bookmark-click-box" href="https://damp-plateau-53219-042e4179fc0a.herokuapp.com/?case=595" target="_blank" rel="noopener noreferrer">Clique aqui</a>
-      </div>
-      <div class="bookmark-title-row">
-        <h2 id="bookmarkMcaTitle" class="bookmark-subtitle">MCA Paks Digital - Reusable Assets Portal</h2>
-        <span class="bookmark-title-arrow" aria-hidden="true">→</span>
-        <a id="bookmarkMcaClickBox" class="bookmark-click-box" href="https://git.soma.salesforce.com/pages/kvilassa/digital-reusable-assets/" target="_blank" rel="noopener noreferrer">Clique aqui</a>
-      </div>
+      <section class="bookmark-resources">
+        <p id="bookmarkResourcesLabel" class="bookmark-resources-label">ACCESO DIRECTO A RECURSOS CLAVE (3 EN TOTAL)</p>
+        <div class="bookmark-resources-grid">
+          <article class="bookmark-main-resource">
+            <h1 id="bookmarkTitle">LATAM Bookmark Central</h1>
+            <table class="bookmark-resource-table" aria-label="Bookmark resources table">
+              <colgroup>
+                <col />
+                <col />
+                <col />
+                <col />
+              </colgroup>
+              <thead>
+                <tr>
+                  <th id="bookmarkColResource">Recurso</th>
+                  <th id="bookmarkColDesc">Descripcion Breve</th>
+                  <th id="bookmarkColStatus">Estado</th>
+                  <th id="bookmarkColAction">Accion</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="bookmark-resource-cell-name">
+                      <span class="bookmark-resource-icon" aria-hidden="true">📖</span>
+                      <span id="bookmarkPrimaryResourceName">LATAM Bookmark Central</span>
+                    </div>
+                  </td>
+                  <td id="bookmarkPrimaryResourceDesc">Plataforma principal para referencias regionales unificadas.</td>
+                  <td><span id="bookmarkPrimaryResourceStatus" class="bookmark-status-pill">VERIFICADO</span></td>
+                  <td>
+                    <a id="bookmarkClickBox" class="bookmark-action-btn" href="https://salesforce.enterprise.slack.com/docs/T01G0063H29/F0BQ3AQG5HN" target="_blank" rel="noopener noreferrer">IR AL PORTAL</a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </article>
+          <aside class="bookmark-side-resources">
+            <article class="bookmark-side-card">
+              <div class="bookmark-side-meta">
+                <span class="bookmark-side-icon" aria-hidden="true">⚙️</span>
+                <div class="bookmark-side-text">
+                  <h2 id="bookmarkCortexTitle">Cortex 6.0</h2>
+                  <p id="bookmarkCortexDesc">Motor de analisis de datos e IA avanzado.</p>
+                </div>
+              </div>
+              <a id="bookmarkCortexClickBox" class="bookmark-action-btn" href="https://damp-plateau-53219-042e4179fc0a.herokuapp.com/?case=595" target="_blank" rel="noopener noreferrer">EXPLORAR</a>
+            </article>
+            <article class="bookmark-side-card">
+              <div class="bookmark-side-meta">
+                <span class="bookmark-side-icon" aria-hidden="true">📦</span>
+                <div class="bookmark-side-text">
+                  <h2 id="bookmarkMcaTitle">MCA Paks Digital</h2>
+                  <p id="bookmarkMcaDesc">Catalogo de activos digitales reutilizables.</p>
+                </div>
+              </div>
+              <a id="bookmarkMcaClickBox" class="bookmark-action-btn" href="https://git.soma.salesforce.com/pages/kvilassa/digital-reusable-assets/" target="_blank" rel="noopener noreferrer">DESCARGAR ACTIVOS</a>
+            </article>
+          </aside>
+        </div>
+      </section>
     </div>
   </main>
   <div id="modalWrap" class="modal-wrap">
@@ -1683,9 +1895,21 @@
         bookmarkMainDesc: "Nova secao em construcao com base no AI Catalogue para acelerar curadoria e reutilizacao de links importantes.",
         bookmarkTitle: "LATAM Bookmark Central",
         bookmarkCortexTitle: "Cortex 6.0",
-        bookmarkMcaTitle: "MCA Paks Digital - Reusable Assets Portal",
+        bookmarkMcaTitle: "MCA Paks Digital",
         bookmarkDesc: "Primeira versao da nova area. Em breve com criacao, busca e filtros de bookmarks.",
-        bookmarkClickHere: "Clique aqui",
+        bookmarkResourcesLabel: "ACESSO DIRETO A RECURSOS-CHAVE (3 NO TOTAL)",
+        bookmarkColResource: "Recurso",
+        bookmarkColDesc: "Descricao breve",
+        bookmarkColStatus: "Status",
+        bookmarkColAction: "Acao",
+        bookmarkPrimaryResourceName: "LATAM Bookmark Central",
+        bookmarkPrimaryResourceDesc: "Plataforma principal para referencias regionais unificadas.",
+        bookmarkPrimaryResourceStatus: "VERIFICADO",
+        bookmarkPortalAction: "IR AO PORTAL",
+        bookmarkCortexDesc: "Motor avancado de analise de dados e IA.",
+        bookmarkCortexAction: "EXPLORAR",
+        bookmarkMcaDesc: "Catalogo de ativos digitais reutilizaveis.",
+        bookmarkMcaAction: "EXPLORAR",
         bookmarkExp1Title: "Biblioteca de links",
         bookmarkExp1Text: "Consolide documentos, dashboards, playbooks e referencias em um so lugar.",
         bookmarkExp2Title: "Navegacao por tema",
@@ -1773,9 +1997,21 @@
         bookmarkMainDesc: "Nueva seccion en construccion basada en AI Catalogue para acelerar curaduria y reutilizacion de enlaces importantes.",
         bookmarkTitle: "LATAM Bookmark Central",
         bookmarkCortexTitle: "Cortex 6.0",
-        bookmarkMcaTitle: "MCA Paks Digital - Reusable Assets Portal",
+        bookmarkMcaTitle: "MCA Paks Digital",
         bookmarkDesc: "Primera version de la nueva area. Pronto con creacion, busqueda y filtros de bookmarks.",
-        bookmarkClickHere: "Haz clic aquí",
+        bookmarkResourcesLabel: "ACCESO DIRECTO A RECURSOS CLAVE (3 EN TOTAL)",
+        bookmarkColResource: "Recurso",
+        bookmarkColDesc: "Descripcion breve",
+        bookmarkColStatus: "Estado",
+        bookmarkColAction: "Accion",
+        bookmarkPrimaryResourceName: "LATAM Bookmark Central",
+        bookmarkPrimaryResourceDesc: "Plataforma principal para referencias regionales unificadas.",
+        bookmarkPrimaryResourceStatus: "VERIFICADO",
+        bookmarkPortalAction: "IR AL PORTAL",
+        bookmarkCortexDesc: "Motor de analisis de datos e IA avanzado.",
+        bookmarkCortexAction: "EXPLORAR",
+        bookmarkMcaDesc: "Catalogo de activos digitales reutilizables.",
+        bookmarkMcaAction: "EXPLORAR",
         bookmarkExp1Title: "Biblioteca de enlaces",
         bookmarkExp1Text: "Consolida documentos, dashboards, playbooks y referencias en un solo lugar.",
         bookmarkExp2Title: "Navegacion por tema",
@@ -1863,9 +2099,21 @@
         bookmarkMainDesc: "New section in progress based on AI Catalogue to speed up curation and reuse of key links.",
         bookmarkTitle: "LATAM Bookmark Central",
         bookmarkCortexTitle: "Cortex 6.0",
-        bookmarkMcaTitle: "MCA Paks Digital - Reusable Assets Portal",
+        bookmarkMcaTitle: "MCA Paks Digital",
         bookmarkDesc: "First version of the new area. Bookmark creation, search, and filters are coming soon.",
-        bookmarkClickHere: "Click here",
+        bookmarkResourcesLabel: "DIRECT ACCESS TO KEY RESOURCES (3 TOTAL)",
+        bookmarkColResource: "Resource",
+        bookmarkColDesc: "Short description",
+        bookmarkColStatus: "Status",
+        bookmarkColAction: "Action",
+        bookmarkPrimaryResourceName: "LATAM Bookmark Central",
+        bookmarkPrimaryResourceDesc: "Main platform for unified regional references.",
+        bookmarkPrimaryResourceStatus: "VERIFIED",
+        bookmarkPortalAction: "GO TO PORTAL",
+        bookmarkCortexDesc: "Advanced data and AI analysis engine.",
+        bookmarkCortexAction: "EXPLORE",
+        bookmarkMcaDesc: "Catalog of reusable digital assets.",
+        bookmarkMcaAction: "EXPLORE",
         bookmarkExp1Title: "Link library",
         bookmarkExp1Text: "Consolidate documents, dashboards, playbooks, and references in one place.",
         bookmarkExp2Title: "Topic navigation",
@@ -2379,9 +2627,19 @@
       document.getElementById("bookmarkCortexTitle").textContent = x.bookmarkCortexTitle;
       document.getElementById("bookmarkMcaTitle").textContent = x.bookmarkMcaTitle;
       document.getElementById("bookmarkDesc").textContent = x.bookmarkDesc;
-      bookmarkClickBox.textContent = x.bookmarkClickHere;
-      bookmarkCortexClickBox.textContent = x.bookmarkClickHere;
-      bookmarkMcaClickBox.textContent = x.bookmarkClickHere;
+      document.getElementById("bookmarkResourcesLabel").textContent = x.bookmarkResourcesLabel;
+      document.getElementById("bookmarkColResource").textContent = x.bookmarkColResource;
+      document.getElementById("bookmarkColDesc").textContent = x.bookmarkColDesc;
+      document.getElementById("bookmarkColStatus").textContent = x.bookmarkColStatus;
+      document.getElementById("bookmarkColAction").textContent = x.bookmarkColAction;
+      document.getElementById("bookmarkPrimaryResourceName").textContent = x.bookmarkPrimaryResourceName;
+      document.getElementById("bookmarkPrimaryResourceDesc").textContent = x.bookmarkPrimaryResourceDesc;
+      document.getElementById("bookmarkPrimaryResourceStatus").textContent = x.bookmarkPrimaryResourceStatus;
+      document.getElementById("bookmarkCortexDesc").textContent = x.bookmarkCortexDesc;
+      document.getElementById("bookmarkMcaDesc").textContent = x.bookmarkMcaDesc;
+      bookmarkClickBox.textContent = x.bookmarkPortalAction;
+      bookmarkCortexClickBox.textContent = x.bookmarkCortexAction;
+      bookmarkMcaClickBox.textContent = x.bookmarkMcaAction;
       document.getElementById("bookmarkExp1Title").textContent = x.bookmarkExp1Title;
       document.getElementById("bookmarkExp1Text").textContent = x.bookmarkExp1Text;
       document.getElementById("bookmarkExp2Title").textContent = x.bookmarkExp2Title;
