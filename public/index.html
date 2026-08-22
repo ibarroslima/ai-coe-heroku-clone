@@ -2668,6 +2668,19 @@
     const BOOKMARK_LINK_DELETES_KEY = "bookmark_link_deletes_v1";
     const BOOKMARK_GROUP_ORDER_KEY = "bookmark_group_order_v1";
     const BOOKMARK_QUICK_CARDS_KEY = "bookmark_quick_cards_v1";
+    const BOOKMARK_BASE_GROUP_TITLE_KEYS = {
+      1: "bookmarkGroup1Title",
+      2: "bookmarkGroup2Title",
+      3: "bookmarkGroup3Title",
+      4: "bookmarkGroup4Title",
+      5: "bookmarkGroup5Title",
+      6: "bookmarkGroup6Title",
+      7: "bookmarkGroup7Title",
+      9: "bookmarkGroup9Title",
+      10: "bookmarkGroup10Title",
+      11: "bookmarkGroup11Title",
+      12: "bookmarkGroup12Title",
+    };
     const DEFAULT_AUTHORS = [
       "Alejandra Acuña",
       "Amanda Basilio",
@@ -2813,6 +2826,17 @@
         bookmarkGroupTitleLabel: "Titulo do grupo",
         bookmarkGroupEmojiLabel: "Emoji",
         bookmarkAddGroupSaveBtn: "Criar grupo",
+        bookmarkGroup1Title: "Links iniciais importantes",
+        bookmarkGroup2Title: "AI, inovacao e inteligencia interna",
+        bookmarkGroup3Title: "Processos e ferramentas do InApp SPW",
+        bookmarkGroup4Title: "Precificacao, estimativas e taxonomia",
+        bookmarkGroup5Title: "Contratos, SOW e gestao de riscos",
+        bookmarkGroup6Title: "Ativos de valor e metodologia de entregas",
+        bookmarkGroup7Title: "Change Orders",
+        bookmarkGroup9Title: "Apresentacoes e modelos de propostas",
+        bookmarkGroup10Title: "Modelos IKT e integracao de EM",
+        bookmarkGroup11Title: "Apontamento de horas e ferramentas",
+        bookmarkGroup12Title: "Desenvolvimento de competencias",
         quickAdminModalTitle: "Gerenciar destaques do carrossel",
         quickTagLabel: "Tag",
         quickTagColorLabel: "Cor da tag",
@@ -2964,6 +2988,17 @@
         bookmarkGroupTitleLabel: "Titulo del grupo",
         bookmarkGroupEmojiLabel: "Emoji",
         bookmarkAddGroupSaveBtn: "Crear grupo",
+        bookmarkGroup1Title: "Links iniciales importantes",
+        bookmarkGroup2Title: "AI, innovacion e inteligencia interna",
+        bookmarkGroup3Title: "Procesos y herramientas de InApp SPW",
+        bookmarkGroup4Title: "Precios, estimaciones y taxonomia",
+        bookmarkGroup5Title: "Contratos, SOW y gestion de riesgos",
+        bookmarkGroup6Title: "Activos de valor y metodologia de entregas",
+        bookmarkGroup7Title: "Change Orders",
+        bookmarkGroup9Title: "Presentaciones y modelos de propuestas",
+        bookmarkGroup10Title: "Modelos IKT e integracion de EM",
+        bookmarkGroup11Title: "Registro de horas y herramientas",
+        bookmarkGroup12Title: "Desarrollo de competencias",
         quickAdminModalTitle: "Gestionar destacados del carrusel",
         quickTagLabel: "Tag",
         quickTagColorLabel: "Color de la tag",
@@ -3115,6 +3150,17 @@
         bookmarkGroupTitleLabel: "Group title",
         bookmarkGroupEmojiLabel: "Emoji",
         bookmarkAddGroupSaveBtn: "Create group",
+        bookmarkGroup1Title: "Important initial links",
+        bookmarkGroup2Title: "AI, innovation and internal intelligence",
+        bookmarkGroup3Title: "InApp SPW processes and tools",
+        bookmarkGroup4Title: "Pricing, estimates and taxonomy",
+        bookmarkGroup5Title: "Contracts, SOW and risk management",
+        bookmarkGroup6Title: "Value assets and delivery methodology",
+        bookmarkGroup7Title: "Change Orders",
+        bookmarkGroup9Title: "Presentations and proposal templates",
+        bookmarkGroup10Title: "IKT templates and EM integration",
+        bookmarkGroup11Title: "Time tracking and tools",
+        bookmarkGroup12Title: "Skills development",
         quickAdminModalTitle: "Manage carousel highlights",
         quickTagLabel: "Tag",
         quickTagColorLabel: "Tag color",
@@ -4539,15 +4585,22 @@
         .trim();
     }
 
+    function getBookmarkGroupDisplayTitle(groupDef) {
+      const group = Number(groupDef?.group);
+      const key = BOOKMARK_BASE_GROUP_TITLE_KEYS[group];
+      const translated = key ? tx()[key] : "";
+      return translated || String(groupDef?.title || "").trim() || `Grupo ${group}`;
+    }
+
     function getOrderedBookmarkGroups(groups, linksByGroup) {
       const remaining = groups.slice();
-      const pickByTitle = (targetTitle) => {
-        const idx = remaining.findIndex((item) => normalizeGroupTitle(item.title) === normalizeGroupTitle(targetTitle));
+      const pickByGroup = (targetGroup) => {
+        const idx = remaining.findIndex((item) => Number(item.group) === Number(targetGroup));
         if (idx === -1) return null;
         return remaining.splice(idx, 1)[0];
       };
-      const first = pickByTitle("Links Iniciais Importantes");
-      const second = pickByTitle("AI, Inovacao e Inteligencia Interna");
+      const first = pickByGroup(1);
+      const second = pickByGroup(2);
       const preferredOrder = loadJsonArray(BOOKMARK_GROUP_ORDER_KEY).map((item) => Number(item)).filter((n) => Number.isFinite(n));
       const orderIndex = new Map(preferredOrder.map((group, idx) => [group, idx]));
       remaining.sort((a, b) => {
@@ -4562,14 +4615,8 @@
       return [first, second, ...remaining].filter(Boolean);
     }
 
-    function isFixedBookmarkGroupTitle(title) {
-      const normalized = normalizeGroupTitle(title);
-      return normalized === normalizeGroupTitle("Links Iniciais Importantes")
-        || normalized === normalizeGroupTitle("AI, Inovacao e Inteligencia Interna");
-    }
-
     function isFixedBookmarkGroup(groupDef) {
-      return isFixedBookmarkGroupTitle(groupDef?.title || "");
+      return [1, 2].includes(Number(groupDef?.group));
     }
 
     function saveManualBookmarkGroupOrderFromDom() {
@@ -4606,7 +4653,7 @@
       groups.forEach((item, index) => {
         const option = document.createElement("option");
         option.value = String(item.group);
-        option.textContent = `${index + 1}) ${item.title}`;
+        option.textContent = `${index + 1}) ${getBookmarkGroupDisplayTitle(item)}`;
         bookmarkLinkGroupEl.appendChild(option);
       });
       if (previousValue && Array.from(bookmarkLinkGroupEl.options).some((option) => option.value === previousValue)) {
@@ -4685,6 +4732,7 @@
       bookmarkLinksGroupsEl.innerHTML = "";
       orderedGroups.forEach((groupDef, index) => {
         const group = Number(groupDef.group);
+        const displayTitle = getBookmarkGroupDisplayTitle(groupDef);
         const article = document.createElement("article");
         article.className = "bookmark-links-group";
         article.dataset.group = String(group);
@@ -4692,7 +4740,7 @@
         article.draggable = Boolean(isAuthenticated && bookmarkReorderMode && !isFixed);
         article.classList.toggle("reorder-enabled", Boolean(isAuthenticated && bookmarkReorderMode && !isFixed));
         const h3 = document.createElement("h3");
-        h3.textContent = `${index + 1}) ${groupDef.title}`;
+        h3.textContent = `${index + 1}) ${displayTitle}`;
         const emoji = document.createElement("span");
         emoji.className = "bookmark-group-emoji";
         emoji.setAttribute("aria-hidden", "true");
