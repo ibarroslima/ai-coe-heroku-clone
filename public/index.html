@@ -206,6 +206,182 @@
     .portal-circle p { margin: 0; color: var(--muted); line-height: 1.35; max-width: 290px; }
     .portal-circle .pill-btn { margin-top: 4px; }
     .bookmark-preview-grid { margin: 0 0 56px; display: grid; gap: 10px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .bookmark-quick-carousel {
+      margin: 0 0 30px;
+    }
+    .bookmark-quick-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+      padding: 0 8px;
+    }
+    .bookmark-quick-kicker {
+      margin: 0;
+      font-size: 11px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #1970c4;
+      font-weight: 800;
+    }
+    .bookmark-quick-title {
+      margin: 2px 0 0;
+      font-size: 18px;
+      line-height: 1.15;
+      color: #153563;
+      font-weight: 800;
+    }
+    .bookmark-quick-nav {
+      display: inline-flex;
+      gap: 8px;
+    }
+    .bookmark-quick-manage {
+      border: 1px solid #9ec0ea;
+      background: #fff;
+      color: #24578f;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      padding: 7px 12px;
+      cursor: pointer;
+    }
+    .bookmark-quick-manage:hover { background: #edf5ff; }
+    .bookmark-quick-arrow {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      border: 1px solid #9ec0ea;
+      background: #fff;
+      color: #2661a1;
+      font-size: 16px;
+      font-weight: 800;
+      line-height: 1;
+      cursor: pointer;
+      box-shadow: 0 1px 3px rgba(22, 63, 117, 0.16);
+    }
+    .bookmark-quick-arrow:hover { background: #edf5ff; }
+    .bookmark-quick-mask {
+      mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
+    }
+    .bookmark-quick-track {
+      display: flex;
+      gap: 20px;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      padding: 8px 32px 4px;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      scroll-snap-type: x proximity;
+    }
+    .bookmark-quick-track::-webkit-scrollbar { display: none; }
+    .bookmark-quick-card {
+      min-width: 260px;
+      width: 260px;
+      border: 1px solid #dce9f8;
+      border-radius: 16px;
+      background: #ffffff;
+      padding: 14px;
+      display: grid;
+      gap: 8px;
+      align-content: space-between;
+      scroll-snap-align: center;
+      box-shadow: 0 4px 12px rgba(21, 54, 98, 0.08);
+    }
+    .bookmark-quick-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .bookmark-quick-tag {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 3px 9px;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.35px;
+      text-transform: uppercase;
+      background: #e8f2ff;
+      color: #365f95;
+    }
+    .bookmark-quick-tag.ai { background: #f0e5ff; color: #7a3fd1; }
+    .bookmark-quick-tag.contracts { background: #dfeeff; color: #2f61c7; }
+    .bookmark-quick-tag.gtm { background: #ddf7ea; color: #1f8e61; }
+    .bookmark-quick-tag.pricing { background: #fff1cf; color: #b07a06; }
+    .bookmark-quick-tag.delivery { background: #e5f6ff; color: #0c7aa5; }
+    .bookmark-quick-tag.time { background: #ecebff; color: #4f46b6; }
+    .bookmark-quick-tag.pitch { background: #ffe6f1; color: #b03a70; }
+    .bookmark-quick-tag.compliance { background: #e7f8e9; color: #248147; }
+    .bookmark-quick-emoji {
+      font-size: 20px;
+      line-height: 1;
+      filter: saturate(1.08);
+    }
+    .bookmark-quick-card h4 {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.2;
+      color: #1d3458;
+      font-weight: 800;
+    }
+    .bookmark-quick-card p {
+      margin: 0;
+      font-size: 11px;
+      line-height: 1.32;
+      color: #496080;
+      min-height: 34px;
+    }
+    .bookmark-quick-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      border: 1px solid #0f67cf;
+      background: #1e87d8;
+      color: #fff;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+      padding: 7px 10px;
+    }
+    .bookmark-quick-link:hover { filter: brightness(1.04); }
+    .bookmark-quick-admin-modal .bookmark-add-link-card {
+      width: min(780px, 96vw);
+      max-height: 84vh;
+      overflow: auto;
+    }
+    .bookmark-quick-admin-list {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .bookmark-quick-admin-item {
+      border: 1px solid #d6e4f5;
+      border-radius: 10px;
+      background: #fff;
+      padding: 8px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .bookmark-quick-admin-item b { color: #1d3458; font-size: 13px; }
+    .bookmark-quick-admin-actions { display: inline-flex; gap: 6px; }
+    .bookmark-quick-admin-btn {
+      border: 1px solid #bcd1ea;
+      background: #fff;
+      color: #2a4d79;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 8px;
+      cursor: pointer;
+    }
+    .bookmark-quick-admin-btn.delete { border-color: #e0b5b5; color: #8b2f2f; }
     .bookmark-resources {
       border: 1px solid #d5e4f8;
       border-radius: 18px;
@@ -325,6 +501,241 @@
       display: grid;
       gap: 6px;
       justify-items: start;
+    }
+    .bookmark-links-section {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 2200;
+      background: rgba(9, 21, 48, 0.72);
+      padding: 20px;
+      overflow: auto;
+    }
+    .bookmark-links-section.show { display: block; }
+    .bookmark-links-panel {
+      max-width: 980px;
+      margin: 0 auto;
+      border: 1px solid #d5e4f8;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(237, 246, 255, 0.96) 0%, rgba(232, 244, 255, 0.92) 100%);
+      box-shadow: 0 12px 28px rgba(10, 26, 58, 0.25);
+      padding: 12px;
+    }
+    .bookmark-links-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+    .bookmark-links-topbar-actions {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .bookmark-links-add {
+      border: 1px solid #0d6efd;
+      background: linear-gradient(135deg, #0d6efd, #2ea7ff);
+      color: #fff;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+      padding: 7px 12px;
+      cursor: pointer;
+      box-shadow: 0 6px 14px rgba(13, 110, 253, 0.28);
+    }
+    .bookmark-links-add:hover { filter: brightness(1.04); }
+    .bookmark-links-group-add {
+      border: 1px solid #4f83cc;
+      background: #ffffff;
+      color: #1c3f73;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+      padding: 7px 12px;
+      cursor: pointer;
+    }
+    .bookmark-links-group-add:hover { background: #eef5ff; }
+    .bookmark-links-reorder {
+      border: 1px solid #95b8e6;
+      background: #ffffff;
+      color: #1a3766;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+      padding: 7px 12px;
+      cursor: pointer;
+    }
+    .bookmark-links-reorder.active {
+      border-color: #0d6efd;
+      color: #0d4ca8;
+      background: #e8f1ff;
+    }
+    .bookmark-links-group.reorder-enabled {
+      cursor: move;
+      border-style: dashed;
+    }
+    .bookmark-links-group.drag-over {
+      border-color: #0d6efd;
+      box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.2);
+    }
+    .bookmark-links-group-fixed {
+      display: inline-flex;
+      margin-left: 8px;
+      font-size: 10px;
+      font-weight: 800;
+      color: #6a7f9c;
+      border: 1px solid #c7d8eb;
+      border-radius: 999px;
+      padding: 2px 7px;
+      vertical-align: middle;
+    }
+    .bookmark-links-close {
+      border: 1px solid #95b8e6;
+      background: #ffffff;
+      color: #1a3766;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+      padding: 7px 12px;
+      cursor: pointer;
+    }
+    .bookmark-links-close:hover { background: #eef5ff; }
+    .bookmark-links-head {
+      margin: 0 0 8px;
+      font-size: 18px;
+      font-weight: 800;
+      color: #1b2f55;
+    }
+    .bookmark-links-sub {
+      margin: 0 0 12px;
+      color: #2a4067;
+      font-size: 13px;
+    }
+    .bookmark-links-footer {
+      margin-top: 18px;
+      padding-top: 8px;
+      border-top: 1px solid #c8daef;
+      font-size: 12px;
+      color: #2a4067;
+    }
+    .bookmark-links-footer a {
+      color: #0f4ca3;
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .bookmark-links-footer a:hover { text-decoration: underline; }
+    .bookmark-links-groups {
+      display: grid;
+      gap: 8px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .bookmark-links-group {
+      position: relative;
+      border: 1px solid #c8daef;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.86);
+      padding: 8px 48px 8px 10px;
+    }
+    .bookmark-links-group h3 {
+      margin: 0 0 6px;
+      font-size: 15px;
+      font-weight: 800;
+      color: #1a325a;
+    }
+    .bookmark-group-emoji {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 34px;
+      opacity: 0.58;
+      filter: saturate(1.2);
+      pointer-events: none;
+      user-select: none;
+    }
+    .bookmark-links-list {
+      margin: 0;
+      padding-left: 18px;
+      display: grid;
+      gap: 2px;
+    }
+    .bookmark-links-list a {
+      color: #0f4ca3;
+      text-decoration: none;
+      font-size: 13px;
+      line-height: 1.28;
+    }
+    .bookmark-links-list a:hover { text-decoration: underline; }
+    .bookmark-link-admin {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+    .bookmark-link-mini-btn {
+      border: 1px solid #b8cde8;
+      background: #ffffff;
+      color: #244474;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 800;
+      line-height: 1;
+      padding: 4px 7px;
+      cursor: pointer;
+    }
+    .bookmark-link-mini-btn.delete {
+      border-color: #e2b8b8;
+      color: #8f2f2f;
+    }
+    .bookmark-add-link-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 2300;
+      background: rgba(8, 17, 40, 0.64);
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .bookmark-add-link-modal.show { display: flex; }
+    .bookmark-add-link-card {
+      width: min(560px, 96vw);
+      border: 1px solid #bfd5f2;
+      border-radius: 16px;
+      background: #f5faff;
+      box-shadow: 0 16px 34px rgba(10, 26, 58, 0.32);
+      padding: 14px;
+      display: grid;
+      gap: 10px;
+    }
+    .bookmark-add-link-card h3 {
+      margin: 0;
+      color: #193665;
+      font-size: 18px;
+    }
+    .bookmark-add-link-grid {
+      display: grid;
+      gap: 8px;
+    }
+    .bookmark-add-link-grid label {
+      font-size: 13px;
+      font-weight: 700;
+      color: #264574;
+    }
+    .bookmark-add-link-grid .input,
+    .bookmark-add-link-grid .select {
+      width: 100%;
+    }
+    .bookmark-add-link-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
     }
     .bookmark-side-resources {
       display: grid;
@@ -853,6 +1264,58 @@
       background: linear-gradient(180deg, rgba(17, 34, 63, 0.95) 0%, rgba(16, 31, 56, 0.92) 100%);
       box-shadow: 0 14px 24px rgba(0, 0, 0, 0.45);
     }
+    body.dark .bookmark-quick-kicker { color: #7dbdff; }
+    body.dark .bookmark-quick-title { color: #d5e9ff; }
+    body.dark .bookmark-quick-arrow {
+      border-color: #4d6c96;
+      background: #22395e;
+      color: #e1eeff;
+    }
+    body.dark .bookmark-quick-arrow:hover { background: #284675; }
+    body.dark .bookmark-quick-manage {
+      border-color: #4d6c96;
+      background: #22395e;
+      color: #e1eeff;
+    }
+    body.dark .bookmark-quick-manage:hover { background: #284675; }
+    body.dark .bookmark-quick-card {
+      border-color: #3f5f8b;
+      background: rgba(23, 41, 70, 0.92);
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.33);
+    }
+    body.dark .bookmark-quick-tag {
+      background: #264571;
+      color: #cbe0ff;
+    }
+    body.dark .bookmark-quick-tag.ai { background: #4d2f78; color: #e6d7ff; }
+    body.dark .bookmark-quick-tag.contracts { background: #284d86; color: #d4e5ff; }
+    body.dark .bookmark-quick-tag.gtm { background: #1f5a45; color: #ccf3e3; }
+    body.dark .bookmark-quick-tag.pricing { background: #66501e; color: #ffe6a8; }
+    body.dark .bookmark-quick-tag.delivery { background: #1f5573; color: #d4efff; }
+    body.dark .bookmark-quick-tag.time { background: #3d3b7a; color: #ddd9ff; }
+    body.dark .bookmark-quick-tag.pitch { background: #6f3555; color: #ffd9ea; }
+    body.dark .bookmark-quick-tag.compliance { background: #25593b; color: #d6f8e4; }
+    body.dark .bookmark-quick-card h4 { color: #e7f1ff; }
+    body.dark .bookmark-quick-card p { color: #bfd5f5; }
+    body.dark .bookmark-quick-link {
+      border-color: #5b96d5;
+      background: #2b6fb9;
+    }
+    body.dark .bookmark-quick-admin-item {
+      border-color: #3f5f8b;
+      background: rgba(23, 41, 70, 0.92);
+    }
+    body.dark .bookmark-quick-admin-item b { color: #e7f1ff; }
+    body.dark .bookmark-quick-admin-btn {
+      border-color: #4a6992;
+      background: #203a63;
+      color: #d8e9ff;
+    }
+    body.dark .bookmark-quick-admin-btn.delete {
+      border-color: #8e5252;
+      color: #ffd0d0;
+      background: #552a2a;
+    }
     body.dark .bookmark-resources-label { color: #cde5ff; }
     body.dark .bookmark-main-resource {
       border-color: #36557f;
@@ -900,6 +1363,67 @@
     }
     body.dark .bookmark-side-text h2 { color: #f1f6ff; }
     body.dark .bookmark-side-text p { color: #c9ddfb; }
+    body.dark .bookmark-links-section { background: rgba(2, 7, 18, 0.78); }
+    body.dark .bookmark-links-panel {
+      border-color: #355684;
+      background: linear-gradient(180deg, rgba(17, 34, 63, 0.95) 0%, rgba(16, 31, 56, 0.92) 100%);
+      box-shadow: 0 14px 24px rgba(0, 0, 0, 0.45);
+    }
+    body.dark .bookmark-links-close {
+      border-color: #4e6f99;
+      background: #22395e;
+      color: #e1eeff;
+    }
+    body.dark .bookmark-links-close:hover { background: #284675; }
+    body.dark .bookmark-links-reorder {
+      border-color: #4e6f99;
+      background: #22395e;
+      color: #e1eeff;
+    }
+    body.dark .bookmark-links-reorder.active {
+      border-color: #5ca7ff;
+      background: #214a7a;
+      color: #d7ebff;
+    }
+    body.dark .bookmark-links-head { color: #cde5ff; }
+    body.dark .bookmark-links-sub { color: #b8d3f5; }
+    body.dark .bookmark-links-footer {
+      border-top-color: #3c5e89;
+      color: #b8d3f5;
+    }
+    body.dark .bookmark-links-footer a { color: #8fc2ff; }
+    body.dark .bookmark-links-group {
+      border-color: #3c5e89;
+      background: rgba(18, 35, 63, 0.85);
+    }
+    body.dark .bookmark-links-group h3 { color: #dcecff; }
+    body.dark .bookmark-links-list a { color: #8fc2ff; }
+    body.dark .bookmark-group-emoji { opacity: 0.46; }
+    body.dark .bookmark-link-mini-btn {
+      border-color: #4a6992;
+      background: #203a63;
+      color: #d8e9ff;
+    }
+    body.dark .bookmark-link-mini-btn.delete {
+      border-color: #8e5252;
+      color: #ffd0d0;
+      background: #552a2a;
+    }
+    body.dark .bookmark-links-group-fixed {
+      color: #bdd7fb;
+      border-color: #45658f;
+      background: rgba(28, 52, 84, 0.55);
+    }
+    body.dark .bookmark-links-add {
+      border-color: #63b7ff;
+      background: linear-gradient(135deg, #1f5ed6, #1a82d1);
+    }
+    body.dark .bookmark-add-link-card {
+      border-color: #365784;
+      background: #152b4e;
+    }
+    body.dark .bookmark-add-link-card h3 { color: #d8e9ff; }
+    body.dark .bookmark-add-link-grid label { color: #bdd7fb; }
     body.dark .brand-portal-btn {
       background: rgba(26, 42, 94, 0.72);
       border-color: #38508d;
@@ -1193,6 +1717,11 @@
       .bookmark-resource-table td { padding: 7px; }
       .bookmark-side-card { padding: 9px 10px; }
       .bookmark-action-btn { font-size: 11px; padding: 6px 10px; }
+      .bookmark-quick-title { font-size: 17px; }
+      .bookmark-quick-card { min-width: 238px; width: 238px; }
+      .bookmark-links-groups { grid-template-columns: 1fr; }
+      .bookmark-links-group { padding-right: 42px; }
+      .bookmark-group-emoji { font-size: 28px; right: 10px; }
       .hero-layout { flex-direction: column; align-items: center; }
       .hero-banner { text-align: center; }
       .hero-main-actions { justify-content: center; }
@@ -1311,6 +1840,12 @@
         </div>
         <div id="recentCards" class="recent-cards"></div>
       </section>
+      <div class="bookmark-links-footer">
+        <strong class="contacts-label">Contatos:</strong>
+        <a href="https://slack.com/archives/G01GC2HUZV4" target="_blank" rel="noopener noreferrer">#csg-proservices-latam-em-team</a>
+        ·
+        <a href="https://salesforce.enterprise.slack.com/team/U0AKUR9AU9W" target="_blank" rel="noopener noreferrer">@Igor Barros Lima</a>
+      </div>
     </div>
     <div id="catalogView" class="container hidden">
       <div class="catalog-badge-wrap">
@@ -1397,6 +1932,22 @@
           <p id="bookmarkExp3Text">Permita que o time LATAM compartilhe e mantenha referências atualizadas.</p>
         </article>
       </section>
+      <section class="bookmark-quick-carousel">
+        <div class="bookmark-quick-head">
+          <div>
+            <p id="bookmarkQuickKicker" class="bookmark-quick-kicker">Acesso Rapido</p>
+            <h3 id="bookmarkQuickTitle" class="bookmark-quick-title">Recursos Mais Acessados</h3>
+          </div>
+          <div class="bookmark-quick-nav">
+            <button id="bookmarkQuickManageBtn" type="button" class="bookmark-quick-manage admin-only">Gerenciar Destaques</button>
+            <button id="bookmarkQuickPrev" type="button" class="bookmark-quick-arrow" aria-label="anterior">‹</button>
+            <button id="bookmarkQuickNext" type="button" class="bookmark-quick-arrow" aria-label="proximo">›</button>
+          </div>
+        </div>
+        <div class="bookmark-quick-mask">
+          <div id="bookmarkQuickTrack" class="bookmark-quick-track"></div>
+        </div>
+      </section>
       <section class="bookmark-resources">
         <p id="bookmarkResourcesLabel" class="bookmark-resources-label">ACCESO DIRECTO A RECURSOS CLAVE (3 EN TOTAL)</p>
         <div class="bookmark-resources-grid">
@@ -1428,7 +1979,7 @@
                   <td id="bookmarkPrimaryResourceDesc">Plataforma principal para referencias regionales unificadas.</td>
                   <td><span id="bookmarkPrimaryResourceStatus" class="bookmark-status-pill">VERIFICADO</span></td>
                   <td>
-                    <a id="bookmarkClickBox" class="bookmark-action-btn" href="https://salesforce.enterprise.slack.com/docs/T01G0063H29/F0BQ3AQG5HN" target="_blank" rel="noopener noreferrer">IR AL PORTAL</a>
+                    <a id="bookmarkClickBox" class="bookmark-action-btn" href="#bookmarkLibraryBoard">VER BIBLIOTECA</a>
                   </td>
                 </tr>
                 <tr>
@@ -1465,6 +2016,263 @@
           </article>
         </div>
       </section>
+      <div class="bookmark-links-footer">
+        <strong class="contacts-label">Contatos:</strong>
+        <a href="https://slack.com/archives/G01GC2HUZV4" target="_blank" rel="noopener noreferrer">#csg-proservices-latam-em-team</a>
+        ·
+        <a href="https://salesforce.enterprise.slack.com/team/U0AKUR9AU9W" target="_blank" rel="noopener noreferrer">@Igor Barros Lima</a>
+        ·
+        <a href="https://salesforce.enterprise.slack.com/team/U039DQ7C4U9" target="_blank" rel="noopener noreferrer">@Alejandra Acuña</a>
+        ·
+        <a href="https://salesforce.enterprise.slack.com/team/U0239T1SVB2" target="_blank" rel="noopener noreferrer">@Emmanuel Moreno</a>
+      </div>
+      <section id="bookmarkLibraryBoard" class="bookmark-links-section">
+        <div class="bookmark-links-panel">
+          <div class="bookmark-links-topbar">
+            <h2 id="bookmarkLibraryBoardTitle" class="bookmark-links-head">LATAM Bookmark Central FY27</h2>
+            <div class="bookmark-links-topbar-actions">
+              <button id="bookmarkLibraryAddBtn" type="button" class="bookmark-links-add">Agregar Link</button>
+              <button id="bookmarkLibraryGroupBtn" type="button" class="bookmark-links-group-add admin-only">Novo Grupo</button>
+              <button id="bookmarkLibraryReorderBtn" type="button" class="bookmark-links-reorder admin-only">Reordenar grupos</button>
+              <button id="bookmarkLibraryCloseBtn" type="button" class="bookmark-links-close">FECHAR</button>
+            </div>
+          </div>
+          <p id="bookmarkLibraryBoardSub" class="bookmark-links-sub">Biblioteca organizada com links clicaveis por grupo.</p>
+          <div class="bookmark-links-groups">
+          <article class="bookmark-links-group">
+            <h3>1) Links Iniciais Importantes</h3>
+            <span class="bookmark-group-emoji" aria-hidden="true">📍</span>
+            <ol id="bookmarkGroupList1" class="bookmark-links-list">
+              <li><a href="https://sfservices.my.site.com/ServicesCentral/s/page-viewer?name=Go-to-Market---GTM" target="_blank" rel="noopener noreferrer">Services Central</a></li>
+              <li><a href="https://salesforce.quip.com/4arNAW5DseNI" target="_blank" rel="noopener noreferrer">Pre-Sales Guidelines for GTM & Delivery Teams</a></li>
+              <li><a href="https://basecamp.salesforce.com/" target="_blank" rel="noopener noreferrer">Basecamp</a></li>
+            </ol>
+          </article>
+          <article class="bookmark-links-group">
+            <h3>2) AI, Inovacao e Inteligencia Interna</h3>
+            <span class="bookmark-group-emoji" aria-hidden="true">🤖</span>
+            <ol id="bookmarkGroupList2" class="bookmark-links-list">
+              <li><a href="https://damp-plateau-53219-042e4179fc0a.herokuapp.com/" target="_blank" rel="noopener noreferrer">AI CoE ProServ</a></li>
+              <li><a href="https://git.soma.salesforce.com/pages/wblair/quantum-leap/practitioner-readiness.html" target="_blank" rel="noopener noreferrer">Quantum Leap</a></li>
+              <li><a href="https://salesforce.enterprise.slack.com/docs/T01G0063H29/F094Y9G0RB5" target="_blank" rel="noopener noreferrer">LATAM Strategy and Presales: AI Solutions Library</a></li>
+              <li><a href="https://salesforce.enterprise.slack.com/docs/T01G0063H29/F08RM3WBETZ" target="_blank" rel="noopener noreferrer">AI & Notebook LM Solutions Library</a></li>
+            </ol>
+          </article>
+          <article class="bookmark-links-group">
+            <h3>3) Processos e Ferramentas do InApp SPW</h3>
+            <span class="bookmark-group-emoji" aria-hidden="true">🛠️</span>
+            <ol id="bookmarkGroupList3" class="bookmark-links-list">
+              <li><a href="https://org62.lightning.force.com/lightning/r/Report/00O3y00000Ail7BEAR/view?queryScope=userFolders" target="_blank" rel="noopener noreferrer">List of Primary Product Skills for InApp SPW</a></li>
+              <li><a href="https://salesforce.quip.com/zPsLAvT55TWl" target="_blank" rel="noopener noreferrer">Risk Quip for InApp SPW</a></li>
+              <li><a href="https://docs.google.com/spreadsheets/d/1KiSpv2JbR4nrjlrJ6xqaT7DF6r_GT2Z22Ehs7cv9Iik/edit?gid=451316549#gid=451316549" target="_blank" rel="noopener noreferrer">Risk Breakdown Structure 1.0</a></li>
+              <li><a href="https://salesforce.quip.com/JJ1nAIeS9W4r" target="_blank" rel="noopener noreferrer">Alert Tile Definitions</a></li>
+            </ol>
+          </article>
+          <article class="bookmark-links-group">
+            <h3>4) Precificacao, Estimativas e Taxonomia</h3>
+            <span class="bookmark-group-emoji" aria-hidden="true">💹</span>
+            <ol id="bookmarkGroupList4" class="bookmark-links-list">
+              <li><a href="https://docs.google.com/spreadsheets/d/1M37BPVChd3C9UvIAKTQwJql8YyLuaNelc85n80XuVJ4/edit?gid=1735176962#gid=1735176962" target="_blank" rel="noopener noreferrer">FY27 BluePrint Roles/Grades</a></li>
+              <li><a href="https://salesforce.quip.com/eBXXAy9w4OED" target="_blank" rel="noopener noreferrer">Multi-Year Guide (YoY Pricing)</a></li>
+              <li><a href="https://salesforce.quip.com/ZhaYAQYuJdOZ" target="_blank" rel="noopener noreferrer">How to Clone an Estimate</a></li>
+              <li><a href="https://salesforce.quip.com/DvF2AmY1d1Ja" target="_blank" rel="noopener noreferrer">How to create a $0 SWE Estimate</a></li>
+              <li><a href="https://docs.google.com/presentation/d/13iresqzZcjmIszYrvY9_LwG_ERKnA04uedBhGqZYtLk/edit?usp=sharing" target="_blank" rel="noopener noreferrer">FY26 Offerings Tracking</a></li>
+              <li><a href="https://docs.google.com/spreadsheets/d/15kOsZzqNUjc9JDwi3RCJ-TKehOX3Vqd_z6VIcoskC1g/edit?usp=sharing" target="_blank" rel="noopener noreferrer">FY27 Offering Contribution - Updated Taxonomy</a></li>
+              <li><a href="https://docs.google.com/spreadsheets/d/1dH1euiLYa4nyI476dOqcfDrryXOjjlabKsbfQq9tr68/edit?gid=1669958951#gid=1669958951" target="_blank" rel="noopener noreferrer">FY26→FY27 Taxonomy Mapping</a></li>
+              <li><a href="https://docs.google.com/presentation/d/1P4M2USzV_BXemP4pSekOHgUL6t0tKH67StftgXRFKN4/edit?slide=id.g324f6b31ab6_0_557#slide=id.g324f6b31ab6_0_557" target="_blank" rel="noopener noreferrer">Pricing Transformation Tips & Tricks</a></li>
+              <li><a href="https://sfdc.co/spw_sales" target="_blank" rel="noopener noreferrer">SPW Sales</a></li>
+              <li><a href="https://sfdc.co/spw_full" target="_blank" rel="noopener noreferrer">SPW Full</a></li>
+              <li><a href="https://salesforce.quip.com/2piBAakPPDZD" target="_blank" rel="noopener noreferrer">Ironclad Access Instructions</a></li>
+            </ol>
+          </article>
+          <article class="bookmark-links-group">
+            <h3>5) Contratos, SOW e Gestao de Riscos</h3>
+            <span class="bookmark-group-emoji" aria-hidden="true">⚖️</span>
+            <ol id="bookmarkGroupList5" class="bookmark-links-list">
+              <li><a href="https://org62.lightning.force.com/lightning/r/ContentDocument/0690M000007exwzQAA/view?0.source=aloha" target="_blank" rel="noopener noreferrer">Standard Language Library</a></li>
+              <li><a href="https://docs.google.com/document/d/1p3clvY95Qv5DOO8dUEL__fFZ8OWgHQFyjkxkGmwbRnA/edit?tab=t.0#heading=h.tf4n9t5ovjq5" target="_blank" rel="noopener noreferrer">SOW Checklist</a></li>
+              <li><a href="https://docs.google.com/document/d/1p3clvY95Qv5DOO8dUEL__fFZ8OWgHQFyjkxkGmwbRnA/edit?tab=t.0#heading=h.bbinycmrckit" target="_blank" rel="noopener noreferrer">SOW Definitions Glossary</a></li>
+              <li><a href="https://docs.google.com/document/d/1p3clvY95Qv5DOO8dUEL__fFZ8OWgHQFyjkxkGmwbRnA/edit?tab=t.0#heading=h.p8uyr1pszy2x" target="_blank" rel="noopener noreferrer">Baseline Assumptions & Exclusions Library</a></li>
+              <li><a href="https://docs.google.com/document/d/1p3clvY95Qv5DOO8dUEL__fFZ8OWgHQFyjkxkGmwbRnA/edit?tab=t.0#heading=h.z3x0rb5zrbwn" target="_blank" rel="noopener noreferrer">Assumptions & Exclusions for DDs/ROMs</a></li>
+              <li><a href="https://docs.google.com/document/d/1p3clvY95Qv5DOO8dUEL__fFZ8OWgHQFyjkxkGmwbRnA/edit?tab=t.0#heading=h.xdb0sb501dm6" target="_blank" rel="noopener noreferrer">Customer Prerequisite Examples (Fixed Fee SOW)</a></li>
+              <li><a href="https://docs.google.com/document/d/1p3clvY95Qv5DOO8dUEL__fFZ8OWgHQFyjkxkGmwbRnA/edit?tab=t.0#heading=h.73cravjwg717" target="_blank" rel="noopener noreferrer">Drafting Fixed Fee SOWs</a></li>
+              <li><a href="https://docs.google.com/document/d/1jArTiL8kng_41iT0ZdCCwwWIIGLzwviCrOPyl3izqbM/edit?tab=t.0" target="_blank" rel="noopener noreferrer">Sub-Processor List</a></li>
+              <li><a href="https://docs.google.com/document/d/1P1AcUxplJnjNzmFdNJ_C1f-bOh80lwtqfY2yEpYTk18/edit?tab=t.0" target="_blank" rel="noopener noreferrer">GSRM Fixed Price Risk Reserve Guidelines</a></li>
+              <li><a href="https://salesforce.quip.com/rJiQAANU8DRk#GTYAAAc1HVK" target="_blank" rel="noopener noreferrer">Adding Risk Reserve to Fixed Fee SPWs</a></li>
+              <li><a href="https://docs.google.com/document/d/1Bx_MnJWsJrJ3hEMANaE_Vk3FqoaIbV6qOLvketzEC9E/edit?tab=t.0" target="_blank" rel="noopener noreferrer">Adding Risk Reserve to InApp</a></li>
+              <li><a href="https://org62.lightning.force.com/lightning/r/ContentDocument/0693y00000BJOuuAAH/view" target="_blank" rel="noopener noreferrer">Fixed Price GSRM Guidelines</a></li>
+            </ol>
+          </article>
+          <article class="bookmark-links-group">
+            <h3>6) Ativos de Valor e Metodologia de Entregas</h3>
+            <span class="bookmark-group-emoji" aria-hidden="true">📈</span>
+            <ol id="bookmarkGroupList6" class="bookmark-links-list">
+              <li><a href="https://docs.google.com/presentation/d/1zHiDn1J7b-oa2MJg0mA1Q3ZHhsxV2gdB2_bZ5ma3w2Q/edit?slide=id.g18d29405784_357_646#slide=id.g18d29405784_357_646" target="_blank" rel="noopener noreferrer">Fundamentals</a></li>
+              <li><a href="https://docs.google.com/presentation/d/1zubmekh02EN6MfyyBih_b-ereY3SqI3bFA6oJHF6adk/edit?slide=id.g2dfce35e4bb_0_16#slide=id.g2dfce35e4bb_0_16" target="_blank" rel="noopener noreferrer">What is it?</a></li>
+              <li><a href="https://docs.google.com/presentation/d/187OOj4jPwscWW-gr9k9HjT4zSZJtBSHhmjiIrCGT_1Q/edit?slide=id.g25a7d22b2d5_0_1954#slide=id.g25a7d22b2d5_0_1954" target="_blank" rel="noopener noreferrer">Customer Success Metrics - Industry Highlights</a></li>
+              <li><a href="https://docs.google.com/presentation/d/1YvubMbEtijFfGPUAoaJ88lNmUY-pwwsaLaI6NBZM0ww/edit?slide=id.g1157a81605c_3_0#slide=id.g1157a81605c_3_0" target="_blank" rel="noopener noreferrer">Value Map Slides</a></li>
+              <li><a href="https://docs.google.com/presentation/d/12vhn9HFepvR1v5O-MQsIIACja9pI_doeSExDhw-hYxw/edit?slide=id.p#slide=id.p" target="_blank" rel="noopener noreferrer">Guiding Principles</a></li>
+              <li><a href="https://docs.google.com/presentation/d/1Q6j89QXKLr0X1oN7ZJJKFBP62MIPq97smwxn49dyjoY/edit?slide=id.g3a25d7ff389_2_819#slide=id.g3a25d7ff389_2_819" target="_blank" rel="noopener noreferrer">SPSM Methodology</a></li>
+              <li><a href="https://docs.google.com/presentation/d/1PuzIV1Z9idB31RRdA7EqOD1VLOdhWKSPKxI4F7MhTQs/edit?slide=id.g365bb26a058_0_1666#slide=id.g365bb26a058_0_1666" target="_blank" rel="noopener noreferrer">Epics and User Stories Examples</a></li>
+              <li><a href="https://docs.google.com/presentation/d/11bz9fS2Fo9-3um7P7S2sCd5QMZAaqWnhOPyLX10SNCs/edit?slide=id.g3278ede5d1c_2_17#slide=id.g3278ede5d1c_2_17" target="_blank" rel="noopener noreferrer">AI Tool Usage Guidance Project Delivery</a></li>
+              <li><a href="https://docs.google.com/presentation/d/1FFK0QypK063LB3KZsvkhsGTLhwhwvNMFPfqeWqYuob4/edit#slide=id.g2762c037e9a_0_8230" target="_blank" rel="noopener noreferrer">Converting an In App Estimate to a Delivery SPW</a></li>
+            </ol>
+          </article>
+          <article class="bookmark-links-group">
+            <h3>7) Change Orders</h3>
+            <span class="bookmark-group-emoji" aria-hidden="true">🔄</span>
+            <ol id="bookmarkGroupList7" class="bookmark-links-list">
+              <li><a href="https://docs.google.com/presentation/d/1n1YewLaTT4lQZqsqi2JFBkNDLuAFEV0eXYchjjU45xg/edit?slide=id.g3eb3f40a9fa_0_1006#slide=id.g3eb3f40a9fa_0_1006" target="_blank" rel="noopener noreferrer">Step by Step Guide to Drafting CO's</a></li>
+              <li><a href="https://docs.google.com/videos/d/1_KiZC_Sj9u6TsX--JODYtYqMi4dT8VbB3C_rCQc0sxQ/edit?is_id=1n1YewLaTT4lQZqsqi2JFBkNDLuAFEV0eXYchjjU45xg&amp;is_title=Step+by+Step+Guide+to+draftign+Change+Orders&amp;is_mt=application%2Fvnd.google-apps.punch&amp;is_ph=205740&amp;is_pw=365760&amp;is_pc=16&amp;is_psl=1%2C1%2C1%2C1%2C1%2C1%2C1%2C1%2C1%2C1%2C1%2C1%2C1%2C1%2C1%2C1&amp;is_ep=punch_sidebar&amp;is_rv=4737&amp;is_rvatk=oSXK5VqR8DgVgg&amp;scene=id.g57641576_0_1#scene=id.g57641576_0_1" target="_blank" rel="noopener noreferrer">AI Generated Video of Drafting a CO (3.5 mins)</a></li>
+            </ol>
+          </article>
+          <article class="bookmark-links-group">
+            <h3>9) Apresentacoes e Modelos de Propostas</h3>
+            <span class="bookmark-group-emoji" aria-hidden="true">🧩</span>
+            <ol id="bookmarkGroupList9" class="bookmark-links-list">
+              <li><a href="https://docs.google.com/presentation/d/1L6vKx2LjXjXlCy6IQsOm8MNj7DoG_QIIMD87L4kufuo/edit#slide=id.p" target="_blank" rel="noopener noreferrer">Proposal Front Section Slides</a></li>
+              <li><a href="https://docs.google.com/presentation/d/1ahNeKY2OFlLwolO_cwuhMucKQiFAOt5A3kko2AeztNY/edit#slide=id.g2ef986c843b_0_936" target="_blank" rel="noopener noreferrer">Our Expertise - Case Studies Slides</a></li>
+              <li><a href="https://docs.google.com/presentation/d/1XwwgyPD50HpgVL8gDZFxTU_JRAghfQCQAaU6eJ_2Edc/edit#slide=id.g2efa4a9b46b_0_10468" target="_blank" rel="noopener noreferrer">Overview + Exec Summary Examples Slides</a></li>
+              <li><a href="https://docs.google.com/presentation/d/1KgOSi0znMx2Ph5igk6QFy5R2on48JZuwu9_lBkHmyXE/edit#slide=id.p" target="_blank" rel="noopener noreferrer">Goals + Objectives + Benefits + Outcomes Slides</a></li>
+              <li><a href="https://docs.google.com/presentation/d/13R050PMRQDVW5bhayYqTrQ5kVKfxxaD-ylbqdnw9iFE/edit#slide=id.p" target="_blank" rel="noopener noreferrer">Solution Overview + Journey-Process Flow + Scope Slides</a></li>
+              <li><a href="https://docs.google.com/presentation/d/1bmVaLNA74Bda9szQRl5AppEBremoJis-AeUQictSFwM/edit#slide=id.p" target="_blank" rel="noopener noreferrer">Deliverables + Outputs Slides</a></li>
+              <li><a href="https://docs.google.com/presentation/d/10anTnyk4jq_8bdhv0VbkDlNgqY5YhX4Ip1IP_EiWlYA/edit#slide=id.p" target="_blank" rel="noopener noreferrer">Our Approach</a></li>
+              <li><a href="https://docs.google.com/presentation/d/1Q6LDUb9wLor6g9N3OFxL0iUrG7qQLvQlpPE84U8axus/edit#slide=id.p" target="_blank" rel="noopener noreferrer">Implementation Timeline</a></li>
+              <li><a href="https://docs.google.com/presentation/d/1mwu9mSUSnNvDqzELtP3nJz6esI0gbDeKMWFSD2i1HOY/edit#slide=id.p" target="_blank" rel="noopener noreferrer">Change & Training Slides</a></li>
+              <li><a href="https://docs.google.com/presentation/d/1KLiRz2Sp-TE3rCxVe8OxE8qZBhiw1k_6m1yNMaUE74M/edit#slide=id.g2efa424f659_0_15850" target="_blank" rel="noopener noreferrer">Roles + Responsibilities + Bio Slides</a></li>
+              <li><a href="https://docs.google.com/presentation/d/1syDzFGXYoVGS9QcF573IHBMA2a29mxneHzRMIHo2fXs/edit#slide=id.g16ff0bebf04_0_3163" target="_blank" rel="noopener noreferrer">Commercials + Assumptions + Exclusions + Dependencies Slides</a></li>
+              <li><a href="https://docs.google.com/presentation/d/1U_BstnUzOaWl2QrZzJgXFSERTyBWY3PiTw7prIiBx_Q/edit?slide=id.g23dea6885d1_0_0#slide=id.g23dea6885d1_0_0" target="_blank" rel="noopener noreferrer">FY27 LATAM Quick Start DD - Slide Library</a></li>
+              <li><a href="https://docs.google.com/presentation/d/1Q6j89QXKLr0X1oN7ZJJKFBP62MIPq97smwxn49dyjoY/edit?slide=id.g22d8205ff98_0_0#slide=id.g22d8205ff98_0_0" target="_blank" rel="noopener noreferrer">Methodology Primer Deck</a></li>
+              <li><a href="https://docs.google.com/presentation/d/1oSg10IMWDeofIXYuAfWezKmx3itNTl5sk6zPE0GGO4E/edit?slide=id.g3af0cc7b38e_0_1290#slide=id.g3af0cc7b38e_0_1290" target="_blank" rel="noopener noreferrer">Salesforce Professional Services - First Call Deck - FY27</a></li>
+              <li><a href="https://docs.google.com/presentation/d/1B-9H1bNuCcGcQfQ5NQqONcwsRTsX-nbPOa6bpAmYDms/edit?slide=id.g3c99d836b79_752_448#slide=id.g3c99d836b79_752_448" target="_blank" rel="noopener noreferrer">Salesforce Corporate Presentations - First Call Deck - FY27</a></li>
+              <li><a href="https://docs.google.com/presentation/d/1b6-Y_W9Ulhb7MMV2rBdlOsX7BhsQJhvPFyxc_K3YlFw/edit#slide=id.g2c661871526_0_22650" target="_blank" rel="noopener noreferrer">Define, Design Slides</a></li>
+            </ol>
+          </article>
+          <article class="bookmark-links-group">
+            <h3>10) Modelos IKT e Integracao de EM</h3>
+            <span class="bookmark-group-emoji" aria-hidden="true">📚</span>
+            <ol id="bookmarkGroupList10" class="bookmark-links-list">
+              <li><a href="https://salesforce.quip.com/GRASAKa3GJnc" target="_blank" rel="noopener noreferrer">IKT Template</a></li>
+              <li><a href="https://salesforce.enterprise.slack.com/docs/T01G0063H29/F089STF478U" target="_blank" rel="noopener noreferrer">IKT Slack Canvas Template</a></li>
+              <li><a href="https://docs.google.com/spreadsheets/d/118Up3liVl8QiUVnnlnrdHJ341kbxl6jM/edit#gid=1691630824" target="_blank" rel="noopener noreferrer">EM Onboarding Plan Template</a></li>
+              <li><a href="https://readiness.my.site.com/act/curriculum-detail?id=a6LHu000000Pj63MAC" target="_blank" rel="noopener noreferrer">CSG Skill Up: EM Curriculum (ACT 2.0 Course)</a></li>
+              <li><a href="https://salesforce.quip.com/1Lh6AEkrBOIQ" target="_blank" rel="noopener noreferrer">Step by Step - Executable SOW</a></li>
+            </ol>
+          </article>
+          <article class="bookmark-links-group">
+            <h3>11) Apontamento de Horas e Ferramentas</h3>
+            <span class="bookmark-group-emoji" aria-hidden="true">⏱️</span>
+            <ol id="bookmarkGroupList11" class="bookmark-links-list">
+              <li><a href="https://docs.google.com/presentation/d/1xT77m1YsET965_0MTRT3is0D4HJv4N1knnJgKPA2B-Y/edit#slide=id.g2d8c9749f42_0_1" target="_blank" rel="noopener noreferrer">Time Tracking Toolkit (FY26)</a></li>
+              <li><a href="https://basecamp.salesforce.com/content/techforce-services-internal-non-billable-global-project-time-tracking" target="_blank" rel="noopener noreferrer">Non-Billable Project Time Tracking</a></li>
+              <li><a href="https://salesforce.quip.com/BeS1Af0s3vFl" target="_blank" rel="noopener noreferrer">Z-Code Definition</a></li>
+              <li><a href="https://salesforce.quip.com/6SAtAjUCK8Kg" target="_blank" rel="noopener noreferrer">Resource Planner Quip</a></li>
+              <li><a href="https://drive.google.com/file/d/1FV2D_dWhSLAJe3hbBuwegYHLC7okkwXe/view" target="_blank" rel="noopener noreferrer">Resource Planner Video</a></li>
+            </ol>
+          </article>
+          <article class="bookmark-links-group">
+            <h3>12) Desenvolvimento de Competencias</h3>
+            <span class="bookmark-group-emoji" aria-hidden="true">🎯</span>
+            <ol id="bookmarkGroupList12" class="bookmark-links-list">
+              <li><a href="https://salesforce.vidyard.com/watch/WPHZSAhEfK2R1psWiSBDgN?" target="_blank" rel="noopener noreferrer">Skills 360 Video (How to Assess Your Skills)</a></li>
+              <li><a href="https://sfservices.lightning.force.com/lightning/n/Talent_Management" target="_blank" rel="noopener noreferrer">Skills Insights</a></li>
+              <li><a href="https://salesforce.quip.com/JFRhA03buudl" target="_blank" rel="noopener noreferrer">User Guide</a></li>
+              <li><a href="https://docs.google.com/presentation/d/17mfUYQxhRuV_ZOpaO5rEFdhdV12QkGI9Dt3GOvJ3ik0/edit#slide=id.g2bf858e5fff_0_979" target="_blank" rel="noopener noreferrer">How to Validate Skills (Leaders)</a></li>
+            </ol>
+          </article>
+        </div>
+        <div class="bookmark-links-footer">
+          <strong class="contacts-label">Contatos:</strong>
+          <a href="https://slack.com/archives/G01GC2HUZV4" target="_blank" rel="noopener noreferrer">#csg-proservices-latam-em-team</a>
+          ·
+          <a href="https://salesforce.enterprise.slack.com/team/U0AKUR9AU9W" target="_blank" rel="noopener noreferrer">@Igor Barros Lima</a>
+          ·
+          <a href="https://salesforce.enterprise.slack.com/team/U039DQ7C4U9" target="_blank" rel="noopener noreferrer">@Alejandra Acuña</a>
+          ·
+          <a href="https://salesforce.enterprise.slack.com/team/U0239T1SVB2" target="_blank" rel="noopener noreferrer">@Emmanuel Moreno</a>
+        </div>
+        </div>
+      </section>
+      <div id="bookmarkAddLinkModal" class="bookmark-add-link-modal">
+        <div class="bookmark-add-link-card">
+          <h3 id="bookmarkAddLinkModalTitle">Agregar novo link</h3>
+          <div class="bookmark-add-link-grid">
+            <label id="bookmarkLinkGroupLabel" for="bookmarkLinkGroup">Grupo</label>
+            <select id="bookmarkLinkGroup" class="select">
+              <option value="1">1) Links Iniciais Importantes</option>
+              <option value="2">2) AI, Inovacao e Inteligencia Interna</option>
+              <option value="3">3) Processos e Ferramentas do InApp SPW</option>
+              <option value="4">4) Precificacao, Estimativas e Taxonomia</option>
+              <option value="5">5) Contratos, SOW e Gestao de Riscos</option>
+              <option value="6">6) Ativos de Valor e Metodologia de Entregas</option>
+              <option value="7">7) Change Orders</option>
+              <option value="9">9) Apresentacoes e Modelos de Propostas</option>
+              <option value="10">10) Modelos IKT e Integracao de EM</option>
+              <option value="11">11) Apontamento de Horas e Ferramentas</option>
+              <option value="12">12) Desenvolvimento de Competencias</option>
+            </select>
+            <label id="bookmarkLinkTitleLabel" for="bookmarkLinkTitle">Titulo do link</label>
+            <input id="bookmarkLinkTitle" class="input" placeholder="Ex.: Guia de Scoping FY27" />
+            <label id="bookmarkLinkUrlLabel" for="bookmarkLinkUrl">URL do link</label>
+            <input id="bookmarkLinkUrl" class="input" placeholder="https://..." />
+          </div>
+          <div class="bookmark-add-link-actions">
+            <button id="bookmarkAddLinkCancelBtn" type="button" class="pill-btn">Cancelar</button>
+            <button id="bookmarkAddLinkSaveBtn" type="button" class="pill-btn primary">Salvar</button>
+          </div>
+        </div>
+      </div>
+      <div id="bookmarkAddGroupModal" class="bookmark-add-link-modal">
+        <div class="bookmark-add-link-card">
+          <h3 id="bookmarkGroupModalTitle">Novo grupo de links</h3>
+          <div class="bookmark-add-link-grid">
+            <label id="bookmarkGroupTitleLabel" for="bookmarkGroupTitle">Titulo do grupo</label>
+            <input id="bookmarkGroupTitle" class="input" placeholder="Ex.: Materiais Complementares" />
+            <label id="bookmarkGroupEmojiLabel" for="bookmarkGroupEmoji">Emoji</label>
+            <input id="bookmarkGroupEmoji" class="input" placeholder="Ex.: 📁" maxlength="4" />
+          </div>
+          <div class="bookmark-add-link-actions">
+            <button id="bookmarkAddGroupCancelBtn" type="button" class="pill-btn">Cancelar</button>
+            <button id="bookmarkAddGroupSaveBtn" type="button" class="pill-btn primary">Criar grupo</button>
+          </div>
+        </div>
+      </div>
+      <div id="bookmarkQuickAdminModal" class="bookmark-add-link-modal bookmark-quick-admin-modal">
+        <div class="bookmark-add-link-card">
+          <h3 id="quickAdminModalTitle">Gerenciar Destaques do Carrossel</h3>
+          <div id="bookmarkQuickAdminList" class="bookmark-quick-admin-list"></div>
+          <div class="bookmark-add-link-grid">
+            <label id="quickTagLabel" for="quickTag">Tag</label>
+            <input id="quickTag" class="input" placeholder="Ex.: GTM & Sales" />
+            <label id="quickTagColorLabel" for="quickTagColor">Cor da tag</label>
+            <select id="quickTagColor" class="select">
+              <option value="ai">AI (roxo)</option>
+              <option value="contracts">Contratos (azul)</option>
+              <option value="gtm">GTM/Sales (verde)</option>
+              <option value="pricing">Pricing (amarelo)</option>
+              <option value="delivery">Delivery (ciano)</option>
+              <option value="time">Time Tracking (índigo)</option>
+              <option value="pitch">Pitch/Oferta (rosa)</option>
+              <option value="compliance">Compliance (verde escuro)</option>
+            </select>
+            <label id="quickEmojiLabel" for="quickEmoji">Emoji</label>
+            <input id="quickEmoji" class="input" maxlength="4" placeholder="Ex.: 📊" />
+            <label id="quickTitleLabel" for="quickTitle">Titulo</label>
+            <input id="quickTitle" class="input" placeholder="Ex.: Services Central" />
+            <label id="quickDescLabel" for="quickDesc">Descricao curta</label>
+            <input id="quickDesc" class="input" placeholder="Resumo do destaque..." />
+            <label id="quickCtaLabel" for="quickCta">Texto do botao</label>
+            <input id="quickCta" class="input" placeholder="Ex.: Acessar Portal" />
+            <label id="quickUrlLabel" for="quickUrl">URL</label>
+            <input id="quickUrl" class="input" placeholder="https://..." />
+          </div>
+          <div class="bookmark-add-link-actions">
+            <button id="quickCancelEditBtn" type="button" class="pill-btn">Cancelar edicao</button>
+            <button id="quickSaveBtn" type="button" class="pill-btn primary">Salvar destaque</button>
+            <button id="quickCloseBtn" type="button" class="pill-btn">Fechar</button>
+          </div>
+        </div>
+      </div>
     </div>
   </main>
   <div id="modalWrap" class="modal-wrap">
@@ -1739,11 +2547,45 @@
     const catalogViewEl = document.getElementById("catalogView");
     const aboutViewEl = document.getElementById("aboutView");
     const bookmarkViewEl = document.getElementById("bookmarkView");
+    const bookmarkQuickTrackEl = document.getElementById("bookmarkQuickTrack");
+    const bookmarkQuickPrevBtn = document.getElementById("bookmarkQuickPrev");
+    const bookmarkQuickNextBtn = document.getElementById("bookmarkQuickNext");
+    const bookmarkQuickManageBtn = document.getElementById("bookmarkQuickManageBtn");
+    const bookmarkQuickAdminModal = document.getElementById("bookmarkQuickAdminModal");
+    const bookmarkQuickAdminList = document.getElementById("bookmarkQuickAdminList");
+    const quickTagEl = document.getElementById("quickTag");
+    const quickTagColorEl = document.getElementById("quickTagColor");
+    const quickEmojiEl = document.getElementById("quickEmoji");
+    const quickTitleEl = document.getElementById("quickTitle");
+    const quickDescEl = document.getElementById("quickDesc");
+    const quickCtaEl = document.getElementById("quickCta");
+    const quickUrlEl = document.getElementById("quickUrl");
+    const quickCancelEditBtn = document.getElementById("quickCancelEditBtn");
+    const quickSaveBtn = document.getElementById("quickSaveBtn");
+    const quickCloseBtn = document.getElementById("quickCloseBtn");
     const heroViewCatalogBtn = document.getElementById("heroViewCatalogBtn");
     const heroAddCaseBtn = document.getElementById("heroAddCaseBtn");
     const portalGoCatalogBtn = document.getElementById("portalGoCatalogBtn");
     const portalGoBookmarkBtn = document.getElementById("portalGoBookmarkBtn");
     const bookmarkClickBox = document.getElementById("bookmarkClickBox");
+    const bookmarkLibraryBoardEl = document.getElementById("bookmarkLibraryBoard");
+    const bookmarkLinksGroupsEl = bookmarkLibraryBoardEl.querySelector(".bookmark-links-groups");
+    const bookmarkLibraryAddBtn = document.getElementById("bookmarkLibraryAddBtn");
+    const bookmarkLibraryGroupBtn = document.getElementById("bookmarkLibraryGroupBtn");
+    const bookmarkLibraryReorderBtn = document.getElementById("bookmarkLibraryReorderBtn");
+    const bookmarkLibraryCloseBtn = document.getElementById("bookmarkLibraryCloseBtn");
+    const bookmarkAddLinkModal = document.getElementById("bookmarkAddLinkModal");
+    const bookmarkAddLinkModalTitle = document.getElementById("bookmarkAddLinkModalTitle");
+    const bookmarkLinkGroupEl = document.getElementById("bookmarkLinkGroup");
+    const bookmarkLinkTitleEl = document.getElementById("bookmarkLinkTitle");
+    const bookmarkLinkUrlEl = document.getElementById("bookmarkLinkUrl");
+    const bookmarkAddLinkCancelBtn = document.getElementById("bookmarkAddLinkCancelBtn");
+    const bookmarkAddLinkSaveBtn = document.getElementById("bookmarkAddLinkSaveBtn");
+    const bookmarkAddGroupModal = document.getElementById("bookmarkAddGroupModal");
+    const bookmarkGroupTitleEl = document.getElementById("bookmarkGroupTitle");
+    const bookmarkGroupEmojiEl = document.getElementById("bookmarkGroupEmoji");
+    const bookmarkAddGroupCancelBtn = document.getElementById("bookmarkAddGroupCancelBtn");
+    const bookmarkAddGroupSaveBtn = document.getElementById("bookmarkAddGroupSaveBtn");
     const bookmarkCortexClickBox = document.getElementById("bookmarkCortexClickBox");
     const bookmarkMcaGitClickBox = document.getElementById("bookmarkMcaGitClickBox");
     const bookmarkMcaAwsClickBox = document.getElementById("bookmarkMcaAwsClickBox");
@@ -1805,12 +2647,27 @@
     let pendingDeleteId = "";
     let currentDetailCaseId = "";
     let detailRequestSeq = 0;
+    let bookmarkStaticLinks = [];
+    let bookmarkBaseGroups = [];
+    let bookmarkEditingLinkId = "";
+    let bookmarkRenderedLinksById = {};
+    let bookmarkOrderedGroups = [];
+    let bookmarkReorderMode = false;
+    let bookmarkDraggingGroupId = "";
+    let bookmarkQuickCards = [];
+    let bookmarkQuickEditingIndex = -1;
 
     const AUTHORS_STORAGE_KEY = "ai_coe_authors_v1";
     const AUTHOR_PHOTOS_STORAGE_KEY = "ai_coe_author_photos_v1";
     const CLIENT_ID_STORAGE_KEY = "ai_coe_client_id_v1";
     const USE_CASES_CACHE_KEY = "ai_coe_cases_cache_v1";
     const CREATOR_NAME_STORAGE_KEY = "ai_coe_creator_name_v1";
+    const BOOKMARK_CUSTOM_LINKS_KEY = "bookmark_custom_links_v1";
+    const BOOKMARK_GROUPS_KEY = "bookmark_groups_v1";
+    const BOOKMARK_LINK_OVERRIDES_KEY = "bookmark_link_overrides_v1";
+    const BOOKMARK_LINK_DELETES_KEY = "bookmark_link_deletes_v1";
+    const BOOKMARK_GROUP_ORDER_KEY = "bookmark_group_order_v1";
+    const BOOKMARK_QUICK_CARDS_KEY = "bookmark_quick_cards_v1";
     const DEFAULT_AUTHORS = [
       "Alejandra Acuña",
       "Amanda Basilio",
@@ -1923,7 +2780,7 @@
         bookmarkPrimaryResourceName: "Bookmark Central",
         bookmarkPrimaryResourceDesc: "Plataforma principal para referencias regionais unificadas.",
         bookmarkPrimaryResourceStatus: "VERIFICADO",
-        bookmarkPortalAction: "IR AO PORTAL",
+        bookmarkPortalAction: "VER BIBLIOTECA",
         bookmarkCortexDesc: "Motor avancado de analise de dados e IA.",
         bookmarkCortexAction: "EXPLORAR",
         bookmarkMcaDesc: "Catalogo de ativos digitais reutilizaveis.",
@@ -1935,6 +2792,54 @@
         bookmarkExp2Text: "Estruture bookmarks por pais, tecnologia, squad e tipo de material.",
         bookmarkExp3Title: "Colaboracao regional",
         bookmarkExp3Text: "Permita que o time LATAM compartilhe e mantenha referencias atualizadas.",
+        contactsLabel: "Contatos:",
+        bookmarkQuickKicker: "Acesso rapido",
+        bookmarkQuickTitle: "Recursos mais acessados",
+        bookmarkQuickManageBtn: "Gerenciar destaques",
+        bookmarkLibraryBoardTitle: "LATAM Bookmark Central FY27",
+        bookmarkLibraryBoardSub: "Biblioteca organizada com links clicaveis por grupo.",
+        bookmarkLibraryAddBtn: "Agregar Link",
+        bookmarkLibraryGroupBtn: "Novo grupo",
+        bookmarkLibraryReorderBtn: "Reordenar grupos",
+        bookmarkLibraryCloseBtn: "Fechar",
+        bookmarkAddLinkNewTitle: "Agregar novo link",
+        bookmarkAddLinkEditTitle: "Editar link",
+        bookmarkAddLinkSaveBtn: "Salvar",
+        bookmarkAddLinkSaveEditBtn: "Salvar alteracoes",
+        bookmarkLinkGroupLabel: "Grupo",
+        bookmarkLinkTitleLabel: "Titulo do link",
+        bookmarkLinkUrlLabel: "URL do link",
+        bookmarkAddGroupTitle: "Novo grupo de links",
+        bookmarkGroupTitleLabel: "Titulo do grupo",
+        bookmarkGroupEmojiLabel: "Emoji",
+        bookmarkAddGroupSaveBtn: "Criar grupo",
+        quickAdminModalTitle: "Gerenciar destaques do carrossel",
+        quickTagLabel: "Tag",
+        quickTagColorLabel: "Cor da tag",
+        quickEmojiLabel: "Emoji",
+        quickTitleLabel: "Titulo",
+        quickDescLabel: "Descricao curta",
+        quickCtaLabel: "Texto do botao",
+        quickUrlLabel: "URL",
+        quickCancelEditBtn: "Cancelar edicao",
+        quickSaveBtn: "Salvar destaque",
+        quickCloseBtn: "Fechar",
+        quickColorAi: "AI (roxo)",
+        quickColorContracts: "Contratos (azul)",
+        quickColorGtm: "GTM/Sales (verde)",
+        quickColorPricing: "Pricing (amarelo)",
+        quickColorDelivery: "Delivery (ciano)",
+        quickColorTime: "Time Tracking (indigo)",
+        quickColorPitch: "Pitch/Oferta (rosa)",
+        quickColorCompliance: "Compliance (verde escuro)",
+        quickMoveUp: "Subir",
+        quickMoveDown: "Descer",
+        quickEdit: "Editar",
+        quickDelete: "Excluir",
+        quickRequiredAlert: "Titulo e URL sao obrigatorios.",
+        linkRequiredAlert: "Preencha grupo, titulo e link.",
+        groupRequiredAlert: "Informe um titulo valido para o grupo.",
+        reorderInProgressLabel: "Reordenando",
         actionComplete: "Marcar concluido",
         actionReopen: "Reabrir",
         detailBack: "← Voltar ao catalogo",
@@ -2026,7 +2931,7 @@
         bookmarkPrimaryResourceName: "Bookmark Central",
         bookmarkPrimaryResourceDesc: "Plataforma principal para referencias regionales unificadas.",
         bookmarkPrimaryResourceStatus: "VERIFICADO",
-        bookmarkPortalAction: "IR AL PORTAL",
+        bookmarkPortalAction: "VER BIBLIOTECA",
         bookmarkCortexDesc: "Motor de analisis de datos e IA avanzado.",
         bookmarkCortexAction: "EXPLORAR",
         bookmarkMcaDesc: "Catalogo de activos digitales reutilizables.",
@@ -2038,6 +2943,54 @@
         bookmarkExp2Text: "Estructura bookmarks por pais, tecnologia, squad y tipo de material.",
         bookmarkExp3Title: "Colaboracion regional",
         bookmarkExp3Text: "Permite que el equipo LATAM comparta y mantenga referencias actualizadas.",
+        contactsLabel: "Contactos:",
+        bookmarkQuickKicker: "Acceso rapido",
+        bookmarkQuickTitle: "Recursos mas accedidos",
+        bookmarkQuickManageBtn: "Gestionar destacados",
+        bookmarkLibraryBoardTitle: "LATAM Bookmark Central FY27",
+        bookmarkLibraryBoardSub: "Biblioteca organizada con enlaces clicables por grupo.",
+        bookmarkLibraryAddBtn: "Agregar link",
+        bookmarkLibraryGroupBtn: "Nuevo grupo",
+        bookmarkLibraryReorderBtn: "Reordenar grupos",
+        bookmarkLibraryCloseBtn: "Cerrar",
+        bookmarkAddLinkNewTitle: "Agregar nuevo link",
+        bookmarkAddLinkEditTitle: "Editar link",
+        bookmarkAddLinkSaveBtn: "Guardar",
+        bookmarkAddLinkSaveEditBtn: "Guardar cambios",
+        bookmarkLinkGroupLabel: "Grupo",
+        bookmarkLinkTitleLabel: "Titulo del link",
+        bookmarkLinkUrlLabel: "URL del link",
+        bookmarkAddGroupTitle: "Nuevo grupo de links",
+        bookmarkGroupTitleLabel: "Titulo del grupo",
+        bookmarkGroupEmojiLabel: "Emoji",
+        bookmarkAddGroupSaveBtn: "Crear grupo",
+        quickAdminModalTitle: "Gestionar destacados del carrusel",
+        quickTagLabel: "Tag",
+        quickTagColorLabel: "Color de la tag",
+        quickEmojiLabel: "Emoji",
+        quickTitleLabel: "Titulo",
+        quickDescLabel: "Descripcion corta",
+        quickCtaLabel: "Texto del boton",
+        quickUrlLabel: "URL",
+        quickCancelEditBtn: "Cancelar edicion",
+        quickSaveBtn: "Guardar destacado",
+        quickCloseBtn: "Cerrar",
+        quickColorAi: "AI (morado)",
+        quickColorContracts: "Contratos (azul)",
+        quickColorGtm: "GTM/Sales (verde)",
+        quickColorPricing: "Pricing (amarillo)",
+        quickColorDelivery: "Delivery (cian)",
+        quickColorTime: "Time Tracking (indigo)",
+        quickColorPitch: "Pitch/Oferta (rosa)",
+        quickColorCompliance: "Compliance (verde oscuro)",
+        quickMoveUp: "Subir",
+        quickMoveDown: "Bajar",
+        quickEdit: "Editar",
+        quickDelete: "Eliminar",
+        quickRequiredAlert: "Titulo y URL son obligatorios.",
+        linkRequiredAlert: "Completa grupo, titulo y link.",
+        groupRequiredAlert: "Ingresa un titulo valido para el grupo.",
+        reorderInProgressLabel: "Reordenando",
         actionComplete: "Marcar completado",
         actionReopen: "Reabrir",
         detailBack: "← Volver al catalogo",
@@ -2129,7 +3082,7 @@
         bookmarkPrimaryResourceName: "Bookmark Central",
         bookmarkPrimaryResourceDesc: "Main platform for unified regional references.",
         bookmarkPrimaryResourceStatus: "VERIFIED",
-        bookmarkPortalAction: "GO TO PORTAL",
+        bookmarkPortalAction: "VIEW LIBRARY",
         bookmarkCortexDesc: "Advanced data and AI analysis engine.",
         bookmarkCortexAction: "EXPLORE",
         bookmarkMcaDesc: "Catalog of reusable digital assets.",
@@ -2141,6 +3094,54 @@
         bookmarkExp2Text: "Organize bookmarks by country, technology, squad, and material type.",
         bookmarkExp3Title: "Regional collaboration",
         bookmarkExp3Text: "Enable the LATAM team to share and keep references updated.",
+        contactsLabel: "Contacts:",
+        bookmarkQuickKicker: "Quick access",
+        bookmarkQuickTitle: "Most accessed resources",
+        bookmarkQuickManageBtn: "Manage highlights",
+        bookmarkLibraryBoardTitle: "LATAM Bookmark Central FY27",
+        bookmarkLibraryBoardSub: "Organized library with clickable links by group.",
+        bookmarkLibraryAddBtn: "Add link",
+        bookmarkLibraryGroupBtn: "New group",
+        bookmarkLibraryReorderBtn: "Reorder groups",
+        bookmarkLibraryCloseBtn: "Close",
+        bookmarkAddLinkNewTitle: "Add new link",
+        bookmarkAddLinkEditTitle: "Edit link",
+        bookmarkAddLinkSaveBtn: "Save",
+        bookmarkAddLinkSaveEditBtn: "Save changes",
+        bookmarkLinkGroupLabel: "Group",
+        bookmarkLinkTitleLabel: "Link title",
+        bookmarkLinkUrlLabel: "Link URL",
+        bookmarkAddGroupTitle: "New link group",
+        bookmarkGroupTitleLabel: "Group title",
+        bookmarkGroupEmojiLabel: "Emoji",
+        bookmarkAddGroupSaveBtn: "Create group",
+        quickAdminModalTitle: "Manage carousel highlights",
+        quickTagLabel: "Tag",
+        quickTagColorLabel: "Tag color",
+        quickEmojiLabel: "Emoji",
+        quickTitleLabel: "Title",
+        quickDescLabel: "Short description",
+        quickCtaLabel: "Button text",
+        quickUrlLabel: "URL",
+        quickCancelEditBtn: "Cancel editing",
+        quickSaveBtn: "Save highlight",
+        quickCloseBtn: "Close",
+        quickColorAi: "AI (purple)",
+        quickColorContracts: "Contracts (blue)",
+        quickColorGtm: "GTM/Sales (green)",
+        quickColorPricing: "Pricing (yellow)",
+        quickColorDelivery: "Delivery (cyan)",
+        quickColorTime: "Time Tracking (indigo)",
+        quickColorPitch: "Pitch/Offer (pink)",
+        quickColorCompliance: "Compliance (dark green)",
+        quickMoveUp: "Move up",
+        quickMoveDown: "Move down",
+        quickEdit: "Edit",
+        quickDelete: "Delete",
+        quickRequiredAlert: "Title and URL are required.",
+        linkRequiredAlert: "Please fill group, title, and link.",
+        groupRequiredAlert: "Please provide a valid group title.",
+        reorderInProgressLabel: "Reordering",
         actionComplete: "Mark completed",
         actionReopen: "Reopen",
         detailBack: "← Back to catalog",
@@ -2670,6 +3671,54 @@
       document.getElementById("bookmarkExp2Text").textContent = x.bookmarkExp2Text;
       document.getElementById("bookmarkExp3Title").textContent = x.bookmarkExp3Title;
       document.getElementById("bookmarkExp3Text").textContent = x.bookmarkExp3Text;
+      document.getElementById("bookmarkQuickKicker").textContent = x.bookmarkQuickKicker;
+      document.getElementById("bookmarkQuickTitle").textContent = x.bookmarkQuickTitle;
+      bookmarkQuickManageBtn.textContent = x.bookmarkQuickManageBtn;
+      document.getElementById("bookmarkLibraryBoardTitle").textContent = x.bookmarkLibraryBoardTitle;
+      document.getElementById("bookmarkLibraryBoardSub").textContent = x.bookmarkLibraryBoardSub;
+      bookmarkLibraryAddBtn.textContent = x.bookmarkLibraryAddBtn;
+      bookmarkLibraryGroupBtn.textContent = x.bookmarkLibraryGroupBtn;
+      bookmarkLibraryReorderBtn.textContent = bookmarkReorderMode ? `${x.bookmarkLibraryReorderBtn}...` : x.bookmarkLibraryReorderBtn;
+      bookmarkLibraryCloseBtn.textContent = x.bookmarkLibraryCloseBtn;
+      bookmarkAddLinkModalTitle.textContent = bookmarkEditingLinkId ? x.bookmarkAddLinkEditTitle : x.bookmarkAddLinkNewTitle;
+      document.getElementById("bookmarkLinkGroupLabel").textContent = x.bookmarkLinkGroupLabel;
+      document.getElementById("bookmarkLinkTitleLabel").textContent = x.bookmarkLinkTitleLabel;
+      document.getElementById("bookmarkLinkUrlLabel").textContent = x.bookmarkLinkUrlLabel;
+      document.getElementById("bookmarkGroupModalTitle").textContent = x.bookmarkAddGroupTitle;
+      document.getElementById("bookmarkGroupTitleLabel").textContent = x.bookmarkGroupTitleLabel;
+      document.getElementById("bookmarkGroupEmojiLabel").textContent = x.bookmarkGroupEmojiLabel;
+      bookmarkAddGroupSaveBtn.textContent = x.bookmarkAddGroupSaveBtn;
+      document.getElementById("quickAdminModalTitle").textContent = x.quickAdminModalTitle;
+      document.getElementById("quickTagLabel").textContent = x.quickTagLabel;
+      document.getElementById("quickTagColorLabel").textContent = x.quickTagColorLabel;
+      const quickColorLabels = {
+        ai: x.quickColorAi,
+        contracts: x.quickColorContracts,
+        gtm: x.quickColorGtm,
+        pricing: x.quickColorPricing,
+        delivery: x.quickColorDelivery,
+        time: x.quickColorTime,
+        pitch: x.quickColorPitch,
+        compliance: x.quickColorCompliance,
+      };
+      Array.from(quickTagColorEl.options).forEach((opt) => {
+        if (quickColorLabels[opt.value]) opt.textContent = quickColorLabels[opt.value];
+      });
+      document.getElementById("quickEmojiLabel").textContent = x.quickEmojiLabel;
+      document.getElementById("quickTitleLabel").textContent = x.quickTitleLabel;
+      document.getElementById("quickDescLabel").textContent = x.quickDescLabel;
+      document.getElementById("quickCtaLabel").textContent = x.quickCtaLabel;
+      document.getElementById("quickUrlLabel").textContent = x.quickUrlLabel;
+      quickCancelEditBtn.textContent = x.quickCancelEditBtn;
+      quickSaveBtn.textContent = x.quickSaveBtn;
+      quickCloseBtn.textContent = x.quickCloseBtn;
+      bookmarkAddLinkCancelBtn.textContent = i.cancel;
+      bookmarkAddGroupCancelBtn.textContent = i.cancel;
+      document.querySelectorAll(".contacts-label").forEach((el) => { el.textContent = x.contactsLabel; });
+      if (!localStorage.getItem(BOOKMARK_QUICK_CARDS_KEY)) {
+        bookmarkQuickCards = defaultQuickCards(currentLang);
+        renderQuickCarousel();
+      }
       document.getElementById("catalogTitle").textContent = i.catalogTitle;
       document.getElementById("emptyTitle").textContent = i.emptyTitle;
       document.getElementById("emptyDesc").textContent = i.emptyDesc;
@@ -2765,9 +3814,18 @@
     function updateAuthLabel() {
       authBtn.textContent = isAuthenticated ? t().authOut : t().authIn;
       openModalBtn.textContent = t().addCase;
-      exportCsvBtn.classList.toggle("show", isAuthenticated);
-      translateAllBtn.classList.toggle("show", isAuthenticated);
-      manageUsersBtn.classList.toggle("show", isAuthenticated);
+      document.querySelectorAll(".admin-only").forEach((el) => {
+        el.classList.toggle("show", isAuthenticated);
+      });
+      if (!isAuthenticated) {
+        bookmarkReorderMode = false;
+        bookmarkLibraryReorderBtn.classList.remove("active");
+        bookmarkLibraryReorderBtn.textContent = tx().bookmarkLibraryReorderBtn;
+        closeQuickAdminModal();
+      }
+      if (bookmarkLibraryBoardEl.classList.contains("show")) {
+        renderBookmarkLibrary();
+      }
     }
 
     function updateCaseModalTitle() {
@@ -3174,6 +4232,7 @@
 
     function switchSection(section) {
       currentSection = section;
+      bookmarkLibraryBoardEl.classList.remove("show");
       const isCatalogSection = section === "catalog";
       topTabsEl.classList.toggle("hidden", !isCatalogSection);
       portalViewEl.classList.toggle("hidden", section !== "portal");
@@ -3242,6 +4301,482 @@
       deleteConfirmWrap.style.display = "none";
     }
 
+    function openBookmarkLibraryBoard() {
+      renderBookmarkLibrary();
+      bookmarkLibraryBoardEl.classList.add("show");
+    }
+
+    function closeBookmarkLibraryBoard() {
+      bookmarkLibraryBoardEl.classList.remove("show");
+      bookmarkReorderMode = false;
+      bookmarkLibraryReorderBtn.classList.remove("active");
+      bookmarkLibraryReorderBtn.textContent = tx().bookmarkLibraryReorderBtn;
+    }
+
+    function parseGroupHeader(headerText) {
+      const text = String(headerText || "").trim();
+      const match = text.match(/^(\d+)\)\s*(.*)$/);
+      if (!match) return null;
+      return { group: Number(match[1]), title: String(match[2] || "").trim() };
+    }
+
+    function normalizeUrl(rawUrl) {
+      const value = String(rawUrl || "").trim();
+      if (!value) return "";
+      return /^https?:\/\//i.test(value) ? value : `https://${value}`;
+    }
+
+    function loadJsonArray(storageKey) {
+      try {
+        const data = JSON.parse(localStorage.getItem(storageKey) || "[]");
+        return Array.isArray(data) ? data : [];
+      } catch (_error) {
+        return [];
+      }
+    }
+
+    function saveJsonArray(storageKey, items) {
+      localStorage.setItem(storageKey, JSON.stringify(items));
+    }
+
+    function loadJsonObject(storageKey) {
+      try {
+        const data = JSON.parse(localStorage.getItem(storageKey) || "{}");
+        return data && typeof data === "object" && !Array.isArray(data) ? data : {};
+      } catch (_error) {
+        return {};
+      }
+    }
+
+    function saveJsonObject(storageKey, value) {
+      localStorage.setItem(storageKey, JSON.stringify(value || {}));
+    }
+
+    function defaultQuickCards(lang = "pt") {
+      const base = [
+        { key: "gtm", color: "gtm", emoji: "📊", title: "Services Central", url: "https://sfservices.my.site.com/ServicesCentral/s/page-viewer?name=Go-to-Market---GTM" },
+        { key: "contracts", color: "contracts", emoji: "📜", title: "SOW Master Base", url: "https://docs.google.com/document/d/1p3clvY95Qv5DOO8dUEL__fFZ8OWgHQFyjkxkGmwbRnA/edit?tab=t.0#heading=h.tf4n9t5ovjq5" },
+        { key: "timeline", color: "delivery", emoji: "🗓️", title: "Implementation Timeline", url: "https://docs.google.com/presentation/d/1Q6LDUb9wLor6g9N3OFxL0iUrG7qQLvQlpPE84U8axus/edit#slide=id.p" },
+        { key: "epics", color: "delivery", emoji: "🧩", title: "Epics and User Stories Examples", url: "https://docs.google.com/presentation/d/1PuzIV1Z9idB31RRdA7EqOD1VLOdhWKSPKxI4F7MhTQs/edit?slide=id.g365bb26a058_0_1666#slide=id.g365bb26a058_0_1666" },
+        { key: "time", color: "time", emoji: "⏱️", title: "Non-Billable Project Time Tracking", url: "https://basecamp.salesforce.com/content/techforce-services-internal-non-billable-global-project-time-tracking" },
+        { key: "ai", color: "ai", emoji: "🧠", title: "Quantum Leap", url: "https://git.soma.salesforce.com/pages/wblair/quantum-leap/practitioner-readiness.html" },
+        { key: "deck", color: "pitch", emoji: "🎤", title: "First Call Deck - FY27", url: "https://docs.google.com/presentation/d/1oSg10IMWDeofIXYuAfWezKmx3itNTl5sk6zPE0GGO4E/edit?slide=id.g3af0cc7b38e_0_1290#slide=id.g3af0cc7b38e_0_1290" },
+        { key: "checklist", color: "compliance", emoji: "✅", title: "SOW Checklist", url: "https://docs.google.com/document/d/1p3clvY95Qv5DOO8dUEL__fFZ8OWgHQFyjkxkGmwbRnA/edit?tab=t.0#heading=h.tf4n9t5ovjq5" },
+      ];
+      const copy = {
+        pt: {
+          gtm: ["GTM & Sales", "Sales plays, ferramentas de Go-To-Market e ProServ Analytics para priorizacao comercial.", "Acessar Portal"],
+          contracts: ["Contratos & SOW", "Base principal com checklist, glossario e diretrizes oficiais para elaboracao de SOWs.", "Abrir Documento"],
+          timeline: ["Delivery Planning", "Modelos de cronograma para organizar milestones e sequenciamento de entregas do projeto.", "Ver Timeline"],
+          epics: ["Metodologia", "Exemplos praticos para estruturar backlog com qualidade e facilitar execucao em squads.", "Abrir Exemplo"],
+          time: ["Time Tracking", "Referencia para lancamento correto de horas nao faturaveis nos projetos internos.", "Ver Timecard"],
+          ai: ["AI & Inovacao", "Repositorio de metodologia, praticas e materiais para acelerar iniciativas de IA aplicada.", "Explorar"],
+          deck: ["Pitch & Oferta", "Apresentacao oficial de Professional Services para primeiras conversas e alinhamento executivo.", "Abrir Deck"],
+          checklist: ["Compliance", "Checklist de qualidade para revisao final da SOW antes de envio e assinatura com o cliente.", "Ver Checklist"],
+        },
+        es: {
+          gtm: ["GTM & Sales", "Sales plays, herramientas de Go-To-Market y ProServ Analytics para priorizacion comercial.", "Acceder Portal"],
+          contracts: ["Contratos & SOW", "Base principal con checklist, glosario y directrices oficiales para elaboracion de SOWs.", "Abrir Documento"],
+          timeline: ["Delivery Planning", "Modelos de cronograma para organizar hitos y secuencia de entregas del proyecto.", "Ver Timeline"],
+          epics: ["Metodologia", "Ejemplos practicos para estructurar backlog con calidad y facilitar ejecucion en squads.", "Abrir Ejemplo"],
+          time: ["Time Tracking", "Referencia para registrar correctamente horas no facturables en proyectos internos.", "Ver Timecard"],
+          ai: ["AI & Innovacion", "Repositorio de metodologia, practicas y materiales para acelerar iniciativas de IA aplicada.", "Explorar"],
+          deck: ["Pitch & Oferta", "Presentacion oficial de Professional Services para primeras conversaciones y alineacion ejecutiva.", "Abrir Deck"],
+          checklist: ["Compliance", "Checklist de calidad para revision final de la SOW antes de envio y firma con el cliente.", "Ver Checklist"],
+        },
+        en: {
+          gtm: ["GTM & Sales", "Sales plays, Go-To-Market tools, and ProServ Analytics for commercial prioritization.", "Open Portal"],
+          contracts: ["Contracts & SOW", "Core base with checklist, glossary, and official guidance for SOW drafting.", "Open Document"],
+          timeline: ["Delivery Planning", "Timeline templates to organize milestones and delivery sequencing.", "View Timeline"],
+          epics: ["Methodology", "Practical examples to structure high-quality backlog and improve squad execution.", "Open Example"],
+          time: ["Time Tracking", "Reference for correctly logging non-billable hours on internal projects.", "View Timecard"],
+          ai: ["AI & Innovation", "Repository of methodology, practices, and materials to accelerate applied AI initiatives.", "Explore"],
+          deck: ["Pitch & Offer", "Official Professional Services deck for first conversations and executive alignment.", "Open Deck"],
+          checklist: ["Compliance", "Quality checklist for final SOW review before customer submission and signature.", "View Checklist"],
+        },
+      };
+      const pack = copy[lang] || copy.pt;
+      return base.map((item) => {
+        const [tag, desc, cta] = pack[item.key];
+        return { ...item, tag, desc, cta };
+      });
+    }
+
+    function loadQuickCards() {
+      const raw = loadJsonArray(BOOKMARK_QUICK_CARDS_KEY);
+      if (!raw.length) return defaultQuickCards(currentLang);
+      return raw
+        .map((item) => ({
+          tag: String(item.tag || "").trim(),
+          color: String(item.color || "").trim(),
+          emoji: String(item.emoji || "🔗").trim() || "🔗",
+          title: String(item.title || "").trim(),
+          desc: String(item.desc || "").trim(),
+          cta: String(item.cta || "Acessar").trim() || "Acessar",
+          url: normalizeUrl(item.url || ""),
+        }))
+        .filter((item) => item.title && item.url);
+    }
+
+    function saveQuickCards() {
+      saveJsonArray(BOOKMARK_QUICK_CARDS_KEY, bookmarkQuickCards);
+    }
+
+    function renderQuickCarousel() {
+      bookmarkQuickTrackEl.innerHTML = "";
+      bookmarkQuickCards.forEach((item) => {
+        const tagVariant = String(item.color || "").trim() || "delivery";
+        const article = document.createElement("article");
+        article.className = "bookmark-quick-card";
+        article.innerHTML = `
+          <div class="bookmark-quick-row">
+            <span class="bookmark-quick-tag"></span>
+            <span class="bookmark-quick-emoji" aria-hidden="true"></span>
+          </div>
+          <h4></h4>
+          <p></p>
+          <a class="bookmark-quick-link" target="_blank" rel="noopener noreferrer"></a>
+        `;
+        const tagEl = article.querySelector(".bookmark-quick-tag");
+        tagEl.textContent = item.tag;
+        tagEl.classList.add(tagVariant);
+        article.querySelector(".bookmark-quick-emoji").textContent = item.emoji || "🔗";
+        article.querySelector("h4").textContent = item.title;
+        article.querySelector("p").textContent = item.desc;
+        const anchor = article.querySelector("a");
+        anchor.textContent = item.cta;
+        anchor.href = item.url;
+        bookmarkQuickTrackEl.appendChild(article);
+      });
+    }
+
+    function resetQuickCardForm() {
+      bookmarkQuickEditingIndex = -1;
+      quickTagEl.value = "";
+      quickTagColorEl.value = "delivery";
+      quickEmojiEl.value = "🔗";
+      quickTitleEl.value = "";
+      quickDescEl.value = "";
+      quickCtaEl.value = "Acessar";
+      quickUrlEl.value = "";
+    }
+
+    function populateQuickCardForm(index) {
+      const card = bookmarkQuickCards[index];
+      if (!card) return;
+      bookmarkQuickEditingIndex = index;
+      quickTagEl.value = card.tag;
+      quickTagColorEl.value = card.color || "delivery";
+      quickEmojiEl.value = card.emoji;
+      quickTitleEl.value = card.title;
+      quickDescEl.value = card.desc;
+      quickCtaEl.value = card.cta;
+      quickUrlEl.value = card.url;
+    }
+
+    function renderQuickAdminList() {
+      const x = tx();
+      bookmarkQuickAdminList.innerHTML = "";
+      bookmarkQuickCards.forEach((item, index) => {
+        const row = document.createElement("div");
+        row.className = "bookmark-quick-admin-item";
+        row.innerHTML = `
+          <b>${index + 1}. ${item.title}</b>
+          <span class="bookmark-quick-admin-actions">
+            <button type="button" class="bookmark-quick-admin-btn up" data-index="${index}">${x.quickMoveUp}</button>
+            <button type="button" class="bookmark-quick-admin-btn down" data-index="${index}">${x.quickMoveDown}</button>
+            <button type="button" class="bookmark-quick-admin-btn edit" data-index="${index}">${x.quickEdit}</button>
+            <button type="button" class="bookmark-quick-admin-btn delete" data-index="${index}">${x.quickDelete}</button>
+          </span>
+        `;
+        bookmarkQuickAdminList.appendChild(row);
+      });
+    }
+
+    function openQuickAdminModal() {
+      if (!isAuthenticated) return;
+      renderQuickAdminList();
+      resetQuickCardForm();
+      bookmarkQuickAdminModal.classList.add("show");
+    }
+
+    function closeQuickAdminModal() {
+      bookmarkQuickAdminModal.classList.remove("show");
+      resetQuickCardForm();
+    }
+
+    function loadCustomBookmarkLinks() {
+      return loadJsonArray(BOOKMARK_CUSTOM_LINKS_KEY);
+    }
+
+    function saveCustomBookmarkLinks(items) {
+      saveJsonArray(BOOKMARK_CUSTOM_LINKS_KEY, items);
+    }
+
+    function loadBookmarkGroups() {
+      const stored = loadJsonArray(BOOKMARK_GROUPS_KEY).filter((item) => Number.isFinite(Number(item.group)));
+      if (stored.length) {
+        return stored
+          .map((item) => ({
+            group: Number(item.group),
+            title: String(item.title || "").trim() || `Grupo ${item.group}`,
+            emoji: String(item.emoji || "📁").trim() || "📁",
+          }))
+          .sort((a, b) => a.group - b.group);
+      }
+      return bookmarkBaseGroups.slice().sort((a, b) => a.group - b.group);
+    }
+
+    function saveBookmarkGroups(groups) {
+      saveJsonArray(BOOKMARK_GROUPS_KEY, groups);
+    }
+
+    function normalizeGroupTitle(value) {
+      return String(value || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim();
+    }
+
+    function getOrderedBookmarkGroups(groups, linksByGroup) {
+      const remaining = groups.slice();
+      const pickByTitle = (targetTitle) => {
+        const idx = remaining.findIndex((item) => normalizeGroupTitle(item.title) === normalizeGroupTitle(targetTitle));
+        if (idx === -1) return null;
+        return remaining.splice(idx, 1)[0];
+      };
+      const first = pickByTitle("Links Iniciais Importantes");
+      const second = pickByTitle("AI, Inovacao e Inteligencia Interna");
+      const preferredOrder = loadJsonArray(BOOKMARK_GROUP_ORDER_KEY).map((item) => Number(item)).filter((n) => Number.isFinite(n));
+      const orderIndex = new Map(preferredOrder.map((group, idx) => [group, idx]));
+      remaining.sort((a, b) => {
+        const ia = orderIndex.has(Number(a.group)) ? orderIndex.get(Number(a.group)) : Number.MAX_SAFE_INTEGER;
+        const ib = orderIndex.has(Number(b.group)) ? orderIndex.get(Number(b.group)) : Number.MAX_SAFE_INTEGER;
+        if (ia !== ib) return ia - ib;
+        const countA = (linksByGroup[Number(a.group)] || []).length;
+        const countB = (linksByGroup[Number(b.group)] || []).length;
+        if (countA !== countB) return countB - countA;
+        return String(a.title || "").localeCompare(String(b.title || ""));
+      });
+      return [first, second, ...remaining].filter(Boolean);
+    }
+
+    function isFixedBookmarkGroupTitle(title) {
+      const normalized = normalizeGroupTitle(title);
+      return normalized === normalizeGroupTitle("Links Iniciais Importantes")
+        || normalized === normalizeGroupTitle("AI, Inovacao e Inteligencia Interna");
+    }
+
+    function isFixedBookmarkGroup(groupDef) {
+      return isFixedBookmarkGroupTitle(groupDef?.title || "");
+    }
+
+    function saveManualBookmarkGroupOrderFromDom() {
+      const ids = Array.from(bookmarkLinksGroupsEl.querySelectorAll(".bookmark-links-group"))
+        .map((card) => Number(card.dataset.group))
+        .filter((group) => Number.isFinite(group));
+      const nonFixed = ids.filter((group) => {
+        const item = bookmarkOrderedGroups.find((g) => Number(g.group) === group);
+        return item && !isFixedBookmarkGroup(item);
+      });
+      saveJsonArray(BOOKMARK_GROUP_ORDER_KEY, nonFixed);
+    }
+
+    function loadDeletedBookmarkLinkIds() {
+      return new Set(loadJsonArray(BOOKMARK_LINK_DELETES_KEY).map((id) => String(id)));
+    }
+
+    function saveDeletedBookmarkLinkIds(idsSet) {
+      saveJsonArray(BOOKMARK_LINK_DELETES_KEY, Array.from(idsSet));
+    }
+
+    function loadBookmarkLinkOverrides() {
+      return loadJsonObject(BOOKMARK_LINK_OVERRIDES_KEY);
+    }
+
+    function saveBookmarkLinkOverrides(overrides) {
+      saveJsonObject(BOOKMARK_LINK_OVERRIDES_KEY, overrides);
+    }
+
+    function updateBookmarkGroupSelectOptions() {
+      const groups = bookmarkOrderedGroups.length ? bookmarkOrderedGroups : loadBookmarkGroups();
+      const previousValue = String(bookmarkLinkGroupEl.value || "");
+      bookmarkLinkGroupEl.innerHTML = "";
+      groups.forEach((item, index) => {
+        const option = document.createElement("option");
+        option.value = String(item.group);
+        option.textContent = `${index + 1}) ${item.title}`;
+        bookmarkLinkGroupEl.appendChild(option);
+      });
+      if (previousValue && Array.from(bookmarkLinkGroupEl.options).some((option) => option.value === previousValue)) {
+        bookmarkLinkGroupEl.value = previousValue;
+      }
+    }
+
+    function initializeBookmarkLibraryData() {
+      const groupCards = Array.from(bookmarkLinksGroupsEl.querySelectorAll(".bookmark-links-group"));
+      bookmarkBaseGroups = [];
+      bookmarkStaticLinks = [];
+      groupCards.forEach((card) => {
+        const h3 = card.querySelector("h3");
+        const emojiEl = card.querySelector(".bookmark-group-emoji");
+        const listEl = card.querySelector(".bookmark-links-list");
+        if (!h3 || !listEl) return;
+        const parsed = parseGroupHeader(h3.textContent);
+        if (!parsed) return;
+        const group = parsed.group;
+        card.dataset.group = String(group);
+        const defaultEmoji = emojiEl ? String(emojiEl.textContent || "").trim() : "📁";
+        bookmarkBaseGroups.push({ group, title: parsed.title, emoji: defaultEmoji || "📁" });
+        const anchors = Array.from(listEl.querySelectorAll("li > a"));
+        anchors.forEach((a, index) => {
+          bookmarkStaticLinks.push({
+            id: `s-${group}-${index + 1}`,
+            group,
+            title: String(a.textContent || "").trim(),
+            url: String(a.getAttribute("href") || "").trim(),
+            kind: "static",
+          });
+        });
+      });
+      updateBookmarkGroupSelectOptions();
+    }
+
+    function renderBookmarkLibrary() {
+      const groups = loadBookmarkGroups();
+      const deletedIds = loadDeletedBookmarkLinkIds();
+      const overrides = loadBookmarkLinkOverrides();
+      const custom = loadCustomBookmarkLinks();
+      const normalizedCustom = custom
+        .map((item) => ({
+          id: String(item.id || ""),
+          group: Number(item.group),
+          title: String(item.title || "").trim(),
+          url: String(item.url || "").trim(),
+          kind: "custom",
+        }))
+        .filter((item) => item.id && item.group && item.title && item.url && !deletedIds.has(item.id));
+      const staticLinks = bookmarkStaticLinks
+        .filter((item) => !deletedIds.has(item.id))
+        .map((item) => {
+          const override = overrides[item.id] || {};
+          return {
+            id: item.id,
+            group: Number(override.group || item.group),
+            title: String(override.title || item.title).trim(),
+            url: String(override.url || item.url).trim(),
+            kind: "static",
+          };
+        });
+      const links = [...staticLinks, ...normalizedCustom];
+      const linksByGroup = {};
+      bookmarkRenderedLinksById = {};
+      links.forEach((item) => {
+        const group = Number(item.group);
+        if (!linksByGroup[group]) linksByGroup[group] = [];
+        linksByGroup[group].push(item);
+        bookmarkRenderedLinksById[item.id] = item;
+      });
+
+      const orderedGroups = getOrderedBookmarkGroups(groups, linksByGroup);
+      bookmarkOrderedGroups = orderedGroups.slice();
+
+      bookmarkLinksGroupsEl.innerHTML = "";
+      orderedGroups.forEach((groupDef, index) => {
+        const group = Number(groupDef.group);
+        const article = document.createElement("article");
+        article.className = "bookmark-links-group";
+        article.dataset.group = String(group);
+        const isFixed = isFixedBookmarkGroup(groupDef);
+        article.draggable = Boolean(isAuthenticated && bookmarkReorderMode && !isFixed);
+        article.classList.toggle("reorder-enabled", Boolean(isAuthenticated && bookmarkReorderMode && !isFixed));
+        const h3 = document.createElement("h3");
+        h3.textContent = `${index + 1}) ${groupDef.title}`;
+        const emoji = document.createElement("span");
+        emoji.className = "bookmark-group-emoji";
+        emoji.setAttribute("aria-hidden", "true");
+        emoji.textContent = groupDef.emoji || "📁";
+        const list = document.createElement("ol");
+        list.id = `bookmarkGroupList${group}`;
+        list.className = "bookmark-links-list";
+
+        const groupLinks = linksByGroup[group] || [];
+        groupLinks.forEach((link) => {
+          const li = document.createElement("li");
+          li.dataset.linkId = link.id;
+          const a = document.createElement("a");
+          a.href = link.url;
+          a.target = "_blank";
+          a.rel = "noopener noreferrer";
+          a.textContent = link.title;
+          li.appendChild(a);
+
+          if (isAuthenticated) {
+            const controls = document.createElement("span");
+            controls.className = "bookmark-link-admin";
+            const editBtn = document.createElement("button");
+            editBtn.type = "button";
+            editBtn.className = "bookmark-link-mini-btn edit";
+            editBtn.dataset.linkId = link.id;
+            editBtn.textContent = "Editar";
+            const deleteBtn = document.createElement("button");
+            deleteBtn.type = "button";
+            deleteBtn.className = "bookmark-link-mini-btn delete";
+            deleteBtn.dataset.linkId = link.id;
+            deleteBtn.textContent = "Excluir";
+            controls.appendChild(editBtn);
+            controls.appendChild(deleteBtn);
+            li.appendChild(controls);
+          }
+          list.appendChild(li);
+        });
+
+        article.appendChild(h3);
+        article.appendChild(emoji);
+        article.appendChild(list);
+        bookmarkLinksGroupsEl.appendChild(article);
+      });
+      updateBookmarkGroupSelectOptions();
+    }
+
+    function openAddLinkModal(link) {
+      const x = tx();
+      bookmarkEditingLinkId = link ? String(link.id || "") : "";
+      bookmarkAddLinkModalTitle.textContent = bookmarkEditingLinkId ? x.bookmarkAddLinkEditTitle : x.bookmarkAddLinkNewTitle;
+      bookmarkAddLinkSaveBtn.textContent = bookmarkEditingLinkId ? x.bookmarkAddLinkSaveEditBtn : x.bookmarkAddLinkSaveBtn;
+      if (link) {
+        bookmarkLinkGroupEl.value = String(link.group);
+        bookmarkLinkTitleEl.value = link.title;
+        bookmarkLinkUrlEl.value = link.url;
+      } else {
+        const firstOption = bookmarkLinkGroupEl.options[0] ? bookmarkLinkGroupEl.options[0].value : "1";
+        bookmarkLinkGroupEl.value = firstOption;
+        bookmarkLinkTitleEl.value = "";
+        bookmarkLinkUrlEl.value = "";
+      }
+      bookmarkAddLinkModal.classList.add("show");
+      bookmarkLinkTitleEl.focus();
+    }
+
+    function closeAddLinkModal() {
+      bookmarkEditingLinkId = "";
+      bookmarkAddLinkModal.classList.remove("show");
+    }
+
+    function openAddGroupModal() {
+      const x = tx();
+      bookmarkGroupTitleEl.value = "";
+      bookmarkGroupEmojiEl.value = "📁";
+      document.getElementById("bookmarkGroupModalTitle").textContent = x.bookmarkAddGroupTitle;
+      bookmarkAddGroupModal.classList.add("show");
+      bookmarkGroupTitleEl.focus();
+    }
+
+    function closeAddGroupModal() {
+      bookmarkAddGroupModal.classList.remove("show");
+    }
+
     openModalBtn.addEventListener("click", () => {
       currentEditingAttachments = [];
       existingAttachmentsDataEl.value = "[]";
@@ -3256,6 +4791,219 @@
     });
     portalGoBookmarkBtn.addEventListener("click", () => {
       switchSection("bookmark");
+    });
+    bookmarkQuickPrevBtn.addEventListener("click", () => {
+      const firstCard = bookmarkQuickTrackEl.querySelector(".bookmark-quick-card");
+      const step = firstCard ? firstCard.getBoundingClientRect().width + 20 : 280;
+      bookmarkQuickTrackEl.scrollBy({ left: -step, behavior: "smooth" });
+    });
+    bookmarkQuickNextBtn.addEventListener("click", () => {
+      const firstCard = bookmarkQuickTrackEl.querySelector(".bookmark-quick-card");
+      const step = firstCard ? firstCard.getBoundingClientRect().width + 20 : 280;
+      bookmarkQuickTrackEl.scrollBy({ left: step, behavior: "smooth" });
+    });
+    bookmarkQuickManageBtn.addEventListener("click", openQuickAdminModal);
+    quickCloseBtn.addEventListener("click", closeQuickAdminModal);
+    quickCancelEditBtn.addEventListener("click", resetQuickCardForm);
+    bookmarkQuickAdminModal.addEventListener("click", (event) => {
+      if (event.target === bookmarkQuickAdminModal) closeQuickAdminModal();
+    });
+    bookmarkQuickAdminList.addEventListener("click", (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLElement)) return;
+      const index = Number(target.dataset.index);
+      if (!Number.isFinite(index) || !bookmarkQuickCards[index]) return;
+      if (target.classList.contains("edit")) {
+        populateQuickCardForm(index);
+        quickTitleEl.focus();
+        return;
+      }
+      if (target.classList.contains("delete")) {
+        if (!window.confirm(`Excluir destaque "${bookmarkQuickCards[index].title}"?`)) return;
+        bookmarkQuickCards.splice(index, 1);
+      } else if (target.classList.contains("up") && index > 0) {
+        const tmp = bookmarkQuickCards[index - 1];
+        bookmarkQuickCards[index - 1] = bookmarkQuickCards[index];
+        bookmarkQuickCards[index] = tmp;
+      } else if (target.classList.contains("down") && index < bookmarkQuickCards.length - 1) {
+        const tmp = bookmarkQuickCards[index + 1];
+        bookmarkQuickCards[index + 1] = bookmarkQuickCards[index];
+        bookmarkQuickCards[index] = tmp;
+      }
+      saveQuickCards();
+      renderQuickCarousel();
+      renderQuickAdminList();
+      if (bookmarkQuickEditingIndex >= bookmarkQuickCards.length) resetQuickCardForm();
+    });
+    quickSaveBtn.addEventListener("click", () => {
+      if (!isAuthenticated) return;
+      const payload = {
+        tag: String(quickTagEl.value || "").trim() || "Destaque",
+        color: String(quickTagColorEl.value || "delivery").trim() || "delivery",
+        emoji: String(quickEmojiEl.value || "").trim() || "🔗",
+        title: String(quickTitleEl.value || "").trim(),
+        desc: String(quickDescEl.value || "").trim(),
+        cta: String(quickCtaEl.value || "").trim() || "Acessar",
+        url: normalizeUrl(quickUrlEl.value || ""),
+      };
+      if (!payload.title || !payload.url) {
+        alert(tx().quickRequiredAlert);
+        return;
+      }
+      if (bookmarkQuickEditingIndex >= 0 && bookmarkQuickCards[bookmarkQuickEditingIndex]) {
+        bookmarkQuickCards[bookmarkQuickEditingIndex] = payload;
+      } else {
+        bookmarkQuickCards.push(payload);
+      }
+      saveQuickCards();
+      renderQuickCarousel();
+      renderQuickAdminList();
+      resetQuickCardForm();
+    });
+    bookmarkClickBox.addEventListener("click", (event) => {
+      event.preventDefault();
+      openBookmarkLibraryBoard();
+    });
+    bookmarkLibraryAddBtn.addEventListener("click", () => openAddLinkModal(null));
+    bookmarkLibraryGroupBtn.addEventListener("click", () => {
+      if (!isAuthenticated) return;
+      openAddGroupModal();
+    });
+    bookmarkLibraryReorderBtn.addEventListener("click", () => {
+      if (!isAuthenticated) return;
+      bookmarkReorderMode = !bookmarkReorderMode;
+      bookmarkLibraryReorderBtn.classList.toggle("active", bookmarkReorderMode);
+      bookmarkLibraryReorderBtn.textContent = bookmarkReorderMode ? `${tx().reorderInProgressLabel}...` : tx().bookmarkLibraryReorderBtn;
+      renderBookmarkLibrary();
+    });
+    bookmarkLibraryCloseBtn.addEventListener("click", closeBookmarkLibraryBoard);
+    bookmarkLibraryBoardEl.addEventListener("click", (event) => {
+      if (event.target === bookmarkLibraryBoardEl) closeBookmarkLibraryBoard();
+    });
+    bookmarkLinksGroupsEl.addEventListener("dragstart", (event) => {
+      const card = event.target instanceof HTMLElement ? event.target.closest(".bookmark-links-group") : null;
+      if (!card || !bookmarkReorderMode || !isAuthenticated || card.draggable !== true) return;
+      bookmarkDraggingGroupId = String(card.dataset.group || "");
+      event.dataTransfer.effectAllowed = "move";
+      event.dataTransfer.setData("text/plain", bookmarkDraggingGroupId);
+    });
+    bookmarkLinksGroupsEl.addEventListener("dragover", (event) => {
+      if (!bookmarkReorderMode || !isAuthenticated) return;
+      const card = event.target instanceof HTMLElement ? event.target.closest(".bookmark-links-group") : null;
+      if (!card || card.draggable !== true) return;
+      event.preventDefault();
+      event.dataTransfer.dropEffect = "move";
+      bookmarkLinksGroupsEl.querySelectorAll(".bookmark-links-group.drag-over").forEach((el) => el.classList.remove("drag-over"));
+      card.classList.add("drag-over");
+    });
+    bookmarkLinksGroupsEl.addEventListener("dragleave", (event) => {
+      const card = event.target instanceof HTMLElement ? event.target.closest(".bookmark-links-group") : null;
+      if (card) card.classList.remove("drag-over");
+    });
+    bookmarkLinksGroupsEl.addEventListener("drop", (event) => {
+      if (!bookmarkReorderMode || !isAuthenticated) return;
+      event.preventDefault();
+      const target = event.target instanceof HTMLElement ? event.target.closest(".bookmark-links-group") : null;
+      const dragged = bookmarkLinksGroupsEl.querySelector(`.bookmark-links-group[data-group="${bookmarkDraggingGroupId}"]`);
+      if (!target || !dragged || target === dragged || target.draggable !== true) return;
+      target.classList.remove("drag-over");
+      const targetRect = target.getBoundingClientRect();
+      const shouldPlaceAfter = event.clientY > targetRect.top + targetRect.height / 2;
+      if (shouldPlaceAfter) {
+        target.insertAdjacentElement("afterend", dragged);
+      } else {
+        target.insertAdjacentElement("beforebegin", dragged);
+      }
+      saveManualBookmarkGroupOrderFromDom();
+      renderBookmarkLibrary();
+    });
+    bookmarkLinksGroupsEl.addEventListener("dragend", () => {
+      bookmarkDraggingGroupId = "";
+      bookmarkLinksGroupsEl.querySelectorAll(".bookmark-links-group.drag-over").forEach((el) => el.classList.remove("drag-over"));
+    });
+    bookmarkLinksGroupsEl.addEventListener("click", (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLElement) || !isAuthenticated) return;
+      const editBtn = target.closest(".bookmark-link-mini-btn.edit");
+      const deleteBtn = target.closest(".bookmark-link-mini-btn.delete");
+      if (editBtn) {
+        const linkId = editBtn.dataset.linkId || "";
+        const link = bookmarkRenderedLinksById[linkId];
+        if (link) openAddLinkModal(link);
+        return;
+      }
+      if (deleteBtn) {
+        const linkId = deleteBtn.dataset.linkId || "";
+        if (!linkId) return;
+        const link = bookmarkRenderedLinksById[linkId];
+        if (!link) return;
+        if (!window.confirm(`Excluir o link "${link.title}"?`)) return;
+        const custom = loadCustomBookmarkLinks();
+        const filteredCustom = custom.filter((item) => String(item.id || "") !== linkId);
+        if (filteredCustom.length !== custom.length) {
+          saveCustomBookmarkLinks(filteredCustom);
+        } else {
+          const deleted = loadDeletedBookmarkLinkIds();
+          deleted.add(linkId);
+          saveDeletedBookmarkLinkIds(deleted);
+        }
+        renderBookmarkLibrary();
+      }
+    });
+    bookmarkAddLinkCancelBtn.addEventListener("click", closeAddLinkModal);
+    bookmarkAddLinkModal.addEventListener("click", (event) => {
+      if (event.target === bookmarkAddLinkModal) closeAddLinkModal();
+    });
+    bookmarkAddGroupCancelBtn.addEventListener("click", closeAddGroupModal);
+    bookmarkAddGroupModal.addEventListener("click", (event) => {
+      if (event.target === bookmarkAddGroupModal) closeAddGroupModal();
+    });
+    bookmarkAddLinkSaveBtn.addEventListener("click", () => {
+      const group = Number(bookmarkLinkGroupEl.value || "1");
+      const title = String(bookmarkLinkTitleEl.value || "").trim();
+      const normalizedUrl = normalizeUrl(bookmarkLinkUrlEl.value || "");
+      if (!title || !normalizedUrl) {
+        alert(tx().linkRequiredAlert);
+        return;
+      }
+      if (bookmarkEditingLinkId) {
+        const custom = loadCustomBookmarkLinks();
+        const customIndex = custom.findIndex((item) => String(item.id || "") === bookmarkEditingLinkId);
+        if (customIndex >= 0) {
+          custom[customIndex] = { ...custom[customIndex], group, title, url: normalizedUrl };
+          saveCustomBookmarkLinks(custom);
+        } else {
+          const overrides = loadBookmarkLinkOverrides();
+          overrides[bookmarkEditingLinkId] = { group, title, url: normalizedUrl };
+          saveBookmarkLinkOverrides(overrides);
+          const deleted = loadDeletedBookmarkLinkIds();
+          if (deleted.has(bookmarkEditingLinkId)) {
+            deleted.delete(bookmarkEditingLinkId);
+            saveDeletedBookmarkLinkIds(deleted);
+          }
+        }
+      } else {
+        const items = loadCustomBookmarkLinks();
+        items.push({ id: `c-${Date.now()}-${Math.random().toString(16).slice(2, 8)}`, group, title, url: normalizedUrl });
+        saveCustomBookmarkLinks(items);
+      }
+      renderBookmarkLibrary();
+      closeAddLinkModal();
+    });
+    bookmarkAddGroupSaveBtn.addEventListener("click", () => {
+      if (!isAuthenticated) return;
+      const title = String(bookmarkGroupTitleEl.value || "").trim();
+      const emoji = String(bookmarkGroupEmojiEl.value || "").trim() || "📁";
+      if (!title) {
+        alert(tx().groupRequiredAlert);
+        return;
+      }
+      const groups = loadBookmarkGroups();
+      const group = groups.reduce((max, item) => Math.max(max, Number(item.group) || 0), 0) + 1;
+      groups.push({ group, title, emoji });
+      saveBookmarkGroups(groups);
+      renderBookmarkLibrary();
+      closeAddGroupModal();
     });
     goPortalBtn.addEventListener("click", () => {
       switchSection("portal");
@@ -3483,6 +5231,10 @@
       setSelectedAuthor("");
       createdByEl.value = localStorage.getItem(CREATOR_NAME_STORAGE_KEY) || "";
       statusEl.value = "in_progress";
+      bookmarkQuickCards = loadQuickCards();
+      renderQuickCarousel();
+      initializeBookmarkLibraryData();
+      renderBookmarkLibrary();
       hydrateCasesFromCache();
       updateStaticTranslations();
       switchSection("portal");
