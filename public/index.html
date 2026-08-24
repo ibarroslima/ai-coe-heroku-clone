@@ -490,11 +490,23 @@
       font-size: 16px;
       flex: 0 0 auto;
     }
+    .bookmark-resource-icon.book-icon {
+      background: linear-gradient(135deg, #d9e8fb, #b8d4f1);
+      border-color: #90b5dc;
+    }
+    .bookmark-resource-icon.gear-icon {
+      background: linear-gradient(135deg, #d5e2f2, #b2c8e2);
+      border-color: #8ca8c8;
+    }
     .bookmark-resource-icon.scopezilla-icon {
       background: linear-gradient(135deg, #d8ebde, #b8d8c4);
       border-color: #8eb299;
       font-size: 18px;
       line-height: 1;
+    }
+    .bookmark-resource-icon.box-icon {
+      background: linear-gradient(135deg, #e6dbcf, #d2bea8);
+      border-color: #b89c7f;
     }
     .bookmark-status-pill {
       display: inline-flex;
@@ -1388,9 +1400,21 @@
       border-color: #486791;
       color: #e0ecff;
     }
+    body.dark .bookmark-resource-icon.book-icon {
+      background: linear-gradient(135deg, #2b4268, #375a86);
+      border-color: #5c7fa9;
+    }
+    body.dark .bookmark-resource-icon.gear-icon {
+      background: linear-gradient(135deg, #2c3f57, #355270);
+      border-color: #597797;
+    }
     body.dark .bookmark-resource-icon.scopezilla-icon {
       background: linear-gradient(135deg, #2f4d3d, #3d6b53);
       border-color: #5f8f73;
+    }
+    body.dark .bookmark-resource-icon.box-icon {
+      background: linear-gradient(135deg, #564736, #705941);
+      border-color: #97795b;
     }
     body.dark .bookmark-status-pill {
       color: #cdf9d6;
@@ -2028,7 +2052,7 @@
                 <tr>
                   <td>
                     <div class="bookmark-resource-cell-name">
-                      <span class="bookmark-resource-icon" aria-hidden="true">📖</span>
+                      <span class="bookmark-resource-icon book-icon" aria-hidden="true">📖</span>
                       <span id="bookmarkPrimaryResourceName">Bookmark Central</span>
                     </div>
                   </td>
@@ -2042,7 +2066,7 @@
                 <tr>
                   <td>
                     <div class="bookmark-resource-cell-name">
-                      <span class="bookmark-resource-icon" aria-hidden="true">⚙️</span>
+                      <span class="bookmark-resource-icon gear-icon" aria-hidden="true">⚙️</span>
                       <span id="bookmarkCortexTitle">Cortex 6.0</span>
                     </div>
                   </td>
@@ -2070,7 +2094,7 @@
                 <tr>
                   <td>
                     <div class="bookmark-resource-cell-name">
-                      <span class="bookmark-resource-icon" aria-hidden="true">📦</span>
+                      <span class="bookmark-resource-icon box-icon" aria-hidden="true">📦</span>
                       <span id="bookmarkMcaTitle">MCA Paks Digital</span>
                     </div>
                   </td>
