@@ -508,6 +508,38 @@
       background: linear-gradient(135deg, #e6dbcf, #d2bea8);
       border-color: #b89c7f;
     }
+    .bookmark-resource-icon.library-icon {
+      background: linear-gradient(135deg, #d9e8fb, #bfd9f5);
+      border-color: #95b8de;
+    }
+    .bookmark-resource-icon.catalog-icon {
+      background: linear-gradient(135deg, #dcecf9, #c5ddf2);
+      border-color: #9ebfe0;
+    }
+    .bookmark-resource-icon.ai-icon {
+      background: linear-gradient(135deg, #e7dcfb, #d2c1f7);
+      border-color: #af95e6;
+    }
+    .bookmark-resource-icon.analytics-icon {
+      background: linear-gradient(135deg, #d7f0ec, #b7ddd6);
+      border-color: #8dc5bb;
+    }
+    .bookmark-resource-icon.process-icon {
+      background: linear-gradient(135deg, #d8f0f8, #b8dceb);
+      border-color: #8ebdd4;
+    }
+    .bookmark-resource-icon.strategy-icon {
+      background: linear-gradient(135deg, #ffe8d4, #f7cfac);
+      border-color: #e4b282;
+    }
+    .bookmark-resource-icon.security-icon {
+      background: linear-gradient(135deg, #e0f2e2, #c2dfc6);
+      border-color: #97c09c;
+    }
+    .bookmark-resource-icon.links-icon {
+      background: linear-gradient(135deg, #dfecff, #c3daf7);
+      border-color: #9fbde0;
+    }
     .bookmark-status-pill {
       display: inline-flex;
       align-items: center;
@@ -1415,6 +1447,38 @@
     body.dark .bookmark-resource-icon.box-icon {
       background: linear-gradient(135deg, #564736, #705941);
       border-color: #97795b;
+    }
+    body.dark .bookmark-resource-icon.library-icon {
+      background: linear-gradient(135deg, #2b4268, #3d5f8e);
+      border-color: #6689b6;
+    }
+    body.dark .bookmark-resource-icon.catalog-icon {
+      background: linear-gradient(135deg, #2a435f, #355978);
+      border-color: #5a83a8;
+    }
+    body.dark .bookmark-resource-icon.ai-icon {
+      background: linear-gradient(135deg, #4b3970, #624b8f);
+      border-color: #8770ba;
+    }
+    body.dark .bookmark-resource-icon.analytics-icon {
+      background: linear-gradient(135deg, #244f52, #2f6a6e);
+      border-color: #4d8e92;
+    }
+    body.dark .bookmark-resource-icon.process-icon {
+      background: linear-gradient(135deg, #244a5f, #2f617e);
+      border-color: #4d87aa;
+    }
+    body.dark .bookmark-resource-icon.strategy-icon {
+      background: linear-gradient(135deg, #5e4128, #7b5637);
+      border-color: #aa7b54;
+    }
+    body.dark .bookmark-resource-icon.security-icon {
+      background: linear-gradient(135deg, #2b4f34, #386946);
+      border-color: #5b956f;
+    }
+    body.dark .bookmark-resource-icon.links-icon {
+      background: linear-gradient(135deg, #29415c, #365a7f);
+      border-color: #5d87b1;
     }
     body.dark .bookmark-status-pill {
       color: #cdf9d6;
@@ -2345,6 +2409,10 @@
             <input id="bookmarkResourceDesc" class="input" placeholder="Resumo do recurso..." />
             <label id="bookmarkResourceStatusLabel" for="bookmarkResourceStatus">Estado</label>
             <input id="bookmarkResourceStatus" class="input" value="VERIFICADO" />
+            <label id="bookmarkResourceEmojiLabel" for="bookmarkResourceEmoji">Icone</label>
+            <select id="bookmarkResourceEmoji" class="select"></select>
+            <label id="bookmarkResourceEmojiPreviewLabel" for="bookmarkResourceEmojiPreview">Preview</label>
+            <span id="bookmarkResourceEmojiPreview" class="bookmark-resource-icon scopezilla-icon" aria-hidden="true">🦖</span>
             <label id="bookmarkResourceDateLabel" for="bookmarkResourceDate">Data de atualizacao</label>
             <input id="bookmarkResourceDate" class="input" type="date" />
             <label id="bookmarkResourceActionLabel" for="bookmarkResourceAction">Acao (link)</label>
@@ -2693,6 +2761,8 @@
     const bookmarkResourceNameEl = document.getElementById("bookmarkResourceName");
     const bookmarkResourceDescEl = document.getElementById("bookmarkResourceDesc");
     const bookmarkResourceStatusEl = document.getElementById("bookmarkResourceStatus");
+    const bookmarkResourceEmojiEl = document.getElementById("bookmarkResourceEmoji");
+    const bookmarkResourceEmojiPreviewEl = document.getElementById("bookmarkResourceEmojiPreview");
     const bookmarkResourceDateEl = document.getElementById("bookmarkResourceDate");
     const bookmarkResourceActionEl = document.getElementById("bookmarkResourceAction");
     const bookmarkAddResourceCancelBtn = document.getElementById("bookmarkAddResourceCancelBtn");
@@ -2938,6 +3008,8 @@
         bookmarkResourceNameLabel: "Recurso",
         bookmarkResourceDescLabel: "Descricao",
         bookmarkResourceStatusLabel: "Estado",
+        bookmarkResourceEmojiLabel: "Icone",
+        bookmarkResourceEmojiPreviewLabel: "Preview",
         bookmarkResourceDateLabel: "Data de atualizacao",
         bookmarkResourceActionLabel: "Acao (link)",
         bookmarkCustomActionBtn: "ABRIR",
@@ -3113,6 +3185,8 @@
         bookmarkResourceNameLabel: "Recurso",
         bookmarkResourceDescLabel: "Descripcion",
         bookmarkResourceStatusLabel: "Estado",
+        bookmarkResourceEmojiLabel: "Icono",
+        bookmarkResourceEmojiPreviewLabel: "Vista previa",
         bookmarkResourceDateLabel: "Fecha de actualizacion",
         bookmarkResourceActionLabel: "Accion (link)",
         bookmarkCustomActionBtn: "ABRIR",
@@ -3288,6 +3362,8 @@
         bookmarkResourceNameLabel: "Resource",
         bookmarkResourceDescLabel: "Description",
         bookmarkResourceStatusLabel: "Status",
+        bookmarkResourceEmojiLabel: "Icon",
+        bookmarkResourceEmojiPreviewLabel: "Preview",
         bookmarkResourceDateLabel: "Updated at",
         bookmarkResourceActionLabel: "Action (link)",
         bookmarkCustomActionBtn: "OPEN",
@@ -3884,6 +3960,8 @@
       document.getElementById("bookmarkResourceNameLabel").textContent = x.bookmarkResourceNameLabel;
       document.getElementById("bookmarkResourceDescLabel").textContent = x.bookmarkResourceDescLabel;
       document.getElementById("bookmarkResourceStatusLabel").textContent = x.bookmarkResourceStatusLabel;
+      document.getElementById("bookmarkResourceEmojiLabel").textContent = x.bookmarkResourceEmojiLabel;
+      document.getElementById("bookmarkResourceEmojiPreviewLabel").textContent = x.bookmarkResourceEmojiPreviewLabel;
       document.getElementById("bookmarkResourceDateLabel").textContent = x.bookmarkResourceDateLabel;
       document.getElementById("bookmarkResourceActionLabel").textContent = x.bookmarkResourceActionLabel;
       bookmarkAddResourceBtn.textContent = x.bookmarkAddResourceBtn;
@@ -4604,6 +4682,7 @@
           desc: String(item.desc || "").trim(),
           status: String(item.status || "VERIFICADO").trim() || "VERIFICADO",
           date: String(item.date || "").trim(),
+          emojiKey: String(item.emojiKey || "framework").trim() || "framework",
           url: normalizeUrl(item.url || ""),
         }))
         .filter((item) => item.name && item.url);
@@ -4611,6 +4690,54 @@
 
     function saveKeyResources(items) {
       saveJsonArray(BOOKMARK_KEY_RESOURCES_KEY, items);
+    }
+
+    const RESOURCE_EMOJI_PRESETS = [
+      { key: "docs", emoji: "📖", label: "Documentacao / Knowledge", iconClass: "book-icon" },
+      { key: "library", emoji: "📚", label: "Biblioteca / Playbooks", iconClass: "library-icon" },
+      { key: "catalog", emoji: "🗂️", label: "Repositorio / Catalogo", iconClass: "catalog-icon" },
+      { key: "platform", emoji: "⚙️", label: "Plataforma / Engine", iconClass: "gear-icon" },
+      { key: "ai", emoji: "🧠", label: "IA / Inovacao", iconClass: "ai-icon" },
+      { key: "agentforce", emoji: "🤖", label: "Agentforce / Bots", iconClass: "ai-icon" },
+      { key: "scopezilla", emoji: "🦖", label: "Scopezilla / Discovery", iconClass: "scopezilla-icon" },
+      { key: "assets", emoji: "📦", label: "Assets / Pacotes", iconClass: "box-icon" },
+      { key: "framework", emoji: "🧩", label: "Framework / Metodologia", iconClass: "process-icon" },
+      { key: "analytics", emoji: "📊", label: "Analytics / Dashboards", iconClass: "analytics-icon" },
+      { key: "kpi", emoji: "📈", label: "KPI / Performance", iconClass: "analytics-icon" },
+      { key: "process", emoji: "🧭", label: "Processo / Jornada", iconClass: "process-icon" },
+      { key: "strategy", emoji: "🎯", label: "Estrategia / Prioridade", iconClass: "strategy-icon" },
+      { key: "launch", emoji: "🚀", label: "Go-live / Aceleracao", iconClass: "strategy-icon" },
+      { key: "research", emoji: "🔍", label: "Pesquisa / Assessment", iconClass: "links-icon" },
+      { key: "security", emoji: "🛡️", label: "Seguranca / Compliance", iconClass: "security-icon" },
+      { key: "checklist", emoji: "✅", label: "Checklist / Quality Gate", iconClass: "security-icon" },
+      { key: "templates", emoji: "📝", label: "Templates / Guides", iconClass: "library-icon" },
+      { key: "links", emoji: "🔗", label: "Links uteis / Hub", iconClass: "links-icon" },
+      { key: "business", emoji: "💼", label: "Comercial / Pre-sales", iconClass: "strategy-icon" },
+      { key: "architecture", emoji: "🏗️", label: "Arquitetura / Design", iconClass: "catalog-icon" },
+      { key: "cloud", emoji: "☁️", label: "Cloud / Infra", iconClass: "process-icon" },
+      { key: "lab", emoji: "🧪", label: "Piloto / Experimentos", iconClass: "ai-icon" },
+      { key: "timeline", emoji: "📅", label: "Timeline / Planejamento", iconClass: "analytics-icon" },
+      { key: "collab", emoji: "👥", label: "Colaboracao / Comunidade", iconClass: "library-icon" },
+    ];
+
+    function getResourceEmojiPreset(key) {
+      return RESOURCE_EMOJI_PRESETS.find((item) => item.key === key) || RESOURCE_EMOJI_PRESETS.find((item) => item.key === "framework");
+    }
+
+    function renderResourceEmojiOptions() {
+      bookmarkResourceEmojiEl.innerHTML = "";
+      RESOURCE_EMOJI_PRESETS.forEach((item) => {
+        const option = document.createElement("option");
+        option.value = item.key;
+        option.textContent = `${item.emoji} ${item.label}`;
+        bookmarkResourceEmojiEl.appendChild(option);
+      });
+    }
+
+    function updateResourceEmojiPreview() {
+      const preset = getResourceEmojiPreset(bookmarkResourceEmojiEl.value);
+      bookmarkResourceEmojiPreviewEl.className = `bookmark-resource-icon ${preset.iconClass}`;
+      bookmarkResourceEmojiPreviewEl.textContent = preset.emoji;
     }
 
     function updateKeyResourcesLabel() {
@@ -4623,12 +4750,13 @@
       bookmarkResourceTableBodyEl.querySelectorAll(".bookmark-custom-resource-row").forEach((row) => row.remove());
       const resources = loadKeyResources();
       resources.forEach((item) => {
+        const preset = getResourceEmojiPreset(item.emojiKey);
         const tr = document.createElement("tr");
         tr.className = "bookmark-custom-resource-row";
         tr.innerHTML = `
           <td>
             <div class="bookmark-resource-cell-name">
-              <span class="bookmark-resource-icon" aria-hidden="true">🧩</span>
+              <span class="bookmark-resource-icon ${preset.iconClass}" aria-hidden="true">${preset.emoji}</span>
               <span></span>
             </div>
           </td>
@@ -4654,6 +4782,8 @@
       bookmarkResourceNameEl.value = "";
       bookmarkResourceDescEl.value = "";
       bookmarkResourceStatusEl.value = tx().bookmarkPrimaryResourceStatus || "VERIFICADO";
+      bookmarkResourceEmojiEl.value = "framework";
+      updateResourceEmojiPreview();
       bookmarkResourceDateEl.value = today;
       bookmarkResourceActionEl.value = "";
       bookmarkAddResourceModal.classList.add("show");
@@ -5140,12 +5270,14 @@
     bookmarkAddResourceModal.addEventListener("click", (event) => {
       if (event.target === bookmarkAddResourceModal) closeAddResourceModal();
     });
+    bookmarkResourceEmojiEl.addEventListener("change", updateResourceEmojiPreview);
     bookmarkAddResourceSaveBtn.addEventListener("click", () => {
       if (!isAuthenticated) return;
       const item = {
         name: String(bookmarkResourceNameEl.value || "").trim(),
         desc: String(bookmarkResourceDescEl.value || "").trim(),
         status: String(bookmarkResourceStatusEl.value || tx().bookmarkPrimaryResourceStatus || "VERIFICADO").trim(),
+        emojiKey: String(bookmarkResourceEmojiEl.value || "framework").trim() || "framework",
         date: String(bookmarkResourceDateEl.value || "").trim(),
         url: normalizeUrl(bookmarkResourceActionEl.value || ""),
       };
@@ -5587,6 +5719,8 @@
       setSelectedAuthor("");
       createdByEl.value = localStorage.getItem(CREATOR_NAME_STORAGE_KEY) || "";
       statusEl.value = "in_progress";
+      renderResourceEmojiOptions();
+      updateResourceEmojiPreview();
       bookmarkQuickCards = loadQuickCards();
       renderQuickCarousel();
       renderKeyResources();
