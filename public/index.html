@@ -390,13 +390,31 @@
       padding: 14px;
     }
     .bookmark-resources-label {
-      margin: 0 0 10px;
+      margin: 0;
       font-size: 18px;
       letter-spacing: 0.35px;
       font-weight: 800;
       text-transform: uppercase;
       color: #1b2f55;
     }
+    .bookmark-resources-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin: 0 0 10px;
+    }
+    .bookmark-resources-add {
+      border: 1px solid #0d6efd;
+      background: linear-gradient(135deg, #0d6efd, #2ea7ff);
+      color: #fff;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      padding: 7px 12px;
+      cursor: pointer;
+    }
+    .bookmark-resources-add:hover { filter: brightness(1.03); }
     .bookmark-resources-grid {
       display: grid;
       grid-template-columns: 1fr;
@@ -425,10 +443,11 @@
       table-layout: fixed;
       font-size: 14px;
     }
-    .bookmark-resource-table col:nth-child(1) { width: 28%; }
-    .bookmark-resource-table col:nth-child(2) { width: 30%; }
-    .bookmark-resource-table col:nth-child(3) { width: 18%; }
-    .bookmark-resource-table col:nth-child(4) { width: 24%; }
+    .bookmark-resource-table col:nth-child(1) { width: 24%; }
+    .bookmark-resource-table col:nth-child(2) { width: 29%; }
+    .bookmark-resource-table col:nth-child(3) { width: 14%; }
+    .bookmark-resource-table col:nth-child(4) { width: 15%; }
+    .bookmark-resource-table col:nth-child(5) { width: 18%; }
     .bookmark-resource-table th {
       text-align: left;
       padding: 7px 10px;
@@ -501,6 +520,16 @@
       display: grid;
       gap: 6px;
       justify-items: start;
+    }
+    .bookmark-action-inline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .bookmark-action-sep {
+      color: #5d78a2;
+      font-weight: 800;
     }
     .bookmark-links-section {
       display: none;
@@ -1317,6 +1346,10 @@
       background: #552a2a;
     }
     body.dark .bookmark-resources-label { color: #cde5ff; }
+    body.dark .bookmark-resources-add {
+      border-color: #63b7ff;
+      background: linear-gradient(135deg, #1f5ed6, #1a82d1);
+    }
     body.dark .bookmark-main-resource {
       border-color: #36557f;
       background: rgba(21, 37, 67, 0.9);
@@ -1715,6 +1748,7 @@
       .bookmark-resource-table { font-size: 13px; }
       .bookmark-resource-table th,
       .bookmark-resource-table td { padding: 7px; }
+      .bookmark-resources-head { flex-wrap: wrap; }
       .bookmark-side-card { padding: 9px 10px; }
       .bookmark-action-btn { font-size: 11px; padding: 6px 10px; }
       .bookmark-quick-title { font-size: 17px; }
@@ -1949,7 +1983,10 @@
         </div>
       </section>
       <section class="bookmark-resources">
-        <p id="bookmarkResourcesLabel" class="bookmark-resources-label">ACCESO DIRECTO A RECURSOS CLAVE (3 EN TOTAL)</p>
+        <div class="bookmark-resources-head">
+          <p id="bookmarkResourcesLabel" class="bookmark-resources-label">ACCESO DIRECTO A RECURSOS CLAVE (3 EN TOTAL)</p>
+          <button id="bookmarkAddResourceBtn" type="button" class="bookmark-resources-add admin-only">Adicionar recurso-chave</button>
+        </div>
         <div class="bookmark-resources-grid">
           <article class="bookmark-main-resource">
             <h1 id="bookmarkTitle">LATAM Bookmark Central</h1>
@@ -1965,10 +2002,11 @@
                   <th id="bookmarkColResource">Recurso</th>
                   <th id="bookmarkColDesc">Descripcion Breve</th>
                   <th id="bookmarkColStatus">Estado</th>
+                  <th id="bookmarkColUpdatedAt">Data de atualizacao</th>
                   <th id="bookmarkColAction">Accion</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="bookmarkResourceTableBody">
                 <tr>
                   <td>
                     <div class="bookmark-resource-cell-name">
@@ -1978,6 +2016,7 @@
                   </td>
                   <td id="bookmarkPrimaryResourceDesc">Plataforma principal para referencias regionales unificadas.</td>
                   <td><span id="bookmarkPrimaryResourceStatus" class="bookmark-status-pill">VERIFICADO</span></td>
+                  <td id="bookmarkPrimaryResourceDate">2026-08-21</td>
                   <td>
                     <a id="bookmarkClickBox" class="bookmark-action-btn" href="#bookmarkLibraryBoard">VER BIBLIOTECA</a>
                   </td>
@@ -1991,8 +2030,23 @@
                   </td>
                   <td id="bookmarkCortexDesc">Motor de analisis de datos e IA avanzado.</td>
                   <td><span id="bookmarkCortexStatus" class="bookmark-status-pill">VERIFICADO</span></td>
+                  <td id="bookmarkCortexDate">2026-08-19</td>
                   <td>
                     <a id="bookmarkCortexClickBox" class="bookmark-action-btn" href="https://damp-plateau-53219-042e4179fc0a.herokuapp.com/?case=595" target="_blank" rel="noopener noreferrer">EXPLORAR</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="bookmark-resource-cell-name">
+                      <span class="bookmark-resource-icon" aria-hidden="true">🦖🤖</span>
+                      <span id="bookmarkScopezillaTitle">Scopezilla</span>
+                    </div>
+                  </td>
+                  <td id="bookmarkScopezillaDesc">IA integrada a Claude Code que transforma las notas de descubrimiento en épicos, estimaciones, planes de trabajo y entregables completos para los proyectos.</td>
+                  <td><span id="bookmarkScopezillaStatus" class="bookmark-status-pill">VERIFICADO</span></td>
+                  <td id="bookmarkScopezillaDate">2026-08-24</td>
+                  <td>
+                    <a id="bookmarkScopezillaClickBox" class="bookmark-action-btn" href="https://salesforce.enterprise.slack.com/docs/T01G0063H29/F0AGMSEFX47" target="_blank" rel="noopener noreferrer">EXPLORAR</a>
                   </td>
                 </tr>
                 <tr>
@@ -2004,9 +2058,11 @@
                   </td>
                   <td id="bookmarkMcaDesc">Catalogo de activos digitales reutilizables.</td>
                   <td><span id="bookmarkMcaStatus" class="bookmark-status-pill">VERIFICADO</span></td>
+                  <td id="bookmarkMcaDate">2026-08-21</td>
                   <td>
-                    <div class="bookmark-action-stack">
+                    <div class="bookmark-action-inline">
                       <a id="bookmarkMcaGitClickBox" class="bookmark-action-btn" href="https://git.soma.salesforce.com/pages/kvilassa/digital-reusable-assets/" target="_blank" rel="noopener noreferrer">GIT</a>
+                      <span class="bookmark-action-sep">/</span>
                       <a id="bookmarkMcaAwsClickBox" class="bookmark-action-btn" href="https://cloudhosting.internal.salesforce.com/f/01KYASQVQ61C2J7T5T3GA72XF4" target="_blank" rel="noopener noreferrer">AWS</a>
                     </div>
                   </td>
@@ -2234,6 +2290,27 @@
           <div class="bookmark-add-link-actions">
             <button id="bookmarkAddGroupCancelBtn" type="button" class="pill-btn">Cancelar</button>
             <button id="bookmarkAddGroupSaveBtn" type="button" class="pill-btn primary">Criar grupo</button>
+          </div>
+        </div>
+      </div>
+      <div id="bookmarkAddResourceModal" class="bookmark-add-link-modal">
+        <div class="bookmark-add-link-card">
+          <h3 id="bookmarkAddResourceTitle">Adicionar recurso-chave</h3>
+          <div class="bookmark-add-link-grid">
+            <label id="bookmarkResourceNameLabel" for="bookmarkResourceName">Recurso</label>
+            <input id="bookmarkResourceName" class="input" placeholder="Ex.: Scopezilla" />
+            <label id="bookmarkResourceDescLabel" for="bookmarkResourceDesc">Descricao</label>
+            <input id="bookmarkResourceDesc" class="input" placeholder="Resumo do recurso..." />
+            <label id="bookmarkResourceStatusLabel" for="bookmarkResourceStatus">Estado</label>
+            <input id="bookmarkResourceStatus" class="input" value="VERIFICADO" />
+            <label id="bookmarkResourceDateLabel" for="bookmarkResourceDate">Data de atualizacao</label>
+            <input id="bookmarkResourceDate" class="input" type="date" />
+            <label id="bookmarkResourceActionLabel" for="bookmarkResourceAction">Acao (link)</label>
+            <input id="bookmarkResourceAction" class="input" placeholder="https://..." />
+          </div>
+          <div class="bookmark-add-link-actions">
+            <button id="bookmarkAddResourceCancelBtn" type="button" class="pill-btn">Cancelar</button>
+            <button id="bookmarkAddResourceSaveBtn" type="button" class="pill-btn primary">Salvar</button>
           </div>
         </div>
       </div>
@@ -2568,6 +2645,16 @@
     const portalGoCatalogBtn = document.getElementById("portalGoCatalogBtn");
     const portalGoBookmarkBtn = document.getElementById("portalGoBookmarkBtn");
     const bookmarkClickBox = document.getElementById("bookmarkClickBox");
+    const bookmarkAddResourceBtn = document.getElementById("bookmarkAddResourceBtn");
+    const bookmarkResourceTableBodyEl = document.getElementById("bookmarkResourceTableBody");
+    const bookmarkAddResourceModal = document.getElementById("bookmarkAddResourceModal");
+    const bookmarkResourceNameEl = document.getElementById("bookmarkResourceName");
+    const bookmarkResourceDescEl = document.getElementById("bookmarkResourceDesc");
+    const bookmarkResourceStatusEl = document.getElementById("bookmarkResourceStatus");
+    const bookmarkResourceDateEl = document.getElementById("bookmarkResourceDate");
+    const bookmarkResourceActionEl = document.getElementById("bookmarkResourceAction");
+    const bookmarkAddResourceCancelBtn = document.getElementById("bookmarkAddResourceCancelBtn");
+    const bookmarkAddResourceSaveBtn = document.getElementById("bookmarkAddResourceSaveBtn");
     const bookmarkLibraryBoardEl = document.getElementById("bookmarkLibraryBoard");
     const bookmarkLinksGroupsEl = bookmarkLibraryBoardEl.querySelector(".bookmark-links-groups");
     const bookmarkLibraryAddBtn = document.getElementById("bookmarkLibraryAddBtn");
@@ -2668,6 +2755,7 @@
     const BOOKMARK_LINK_DELETES_KEY = "bookmark_link_deletes_v1";
     const BOOKMARK_GROUP_ORDER_KEY = "bookmark_group_order_v1";
     const BOOKMARK_QUICK_CARDS_KEY = "bookmark_quick_cards_v1";
+    const BOOKMARK_KEY_RESOURCES_KEY = "bookmark_key_resources_v1";
     const BOOKMARK_BASE_GROUP_TITLE_KEYS = {
       1: "bookmarkGroup1Title",
       2: "bookmarkGroup2Title",
@@ -2789,6 +2877,7 @@
         bookmarkColResource: "Recurso",
         bookmarkColDesc: "Descricao breve",
         bookmarkColStatus: "Status",
+        bookmarkColUpdatedAt: "Data de atualizacao",
         bookmarkColAction: "Acao",
         bookmarkPrimaryResourceName: "Bookmark Central",
         bookmarkPrimaryResourceDesc: "Plataforma principal para referencias regionais unificadas.",
@@ -2799,6 +2888,18 @@
         bookmarkMcaDesc: "Catalogo de ativos digitais reutilizaveis.",
         bookmarkMcaGitAction: "GIT",
         bookmarkMcaAwsAction: "AWS",
+        bookmarkScopezillaTitle: "Scopezilla",
+        bookmarkScopezillaDesc: "IA integrada a Claude Code que transforma las notas de descubrimiento en epicos, estimaciones, planes de trabajo y entregables completos para los proyectos.",
+        bookmarkScopezillaAction: "EXPLORAR",
+        bookmarkAddResourceBtn: "Adicionar recurso-chave",
+        bookmarkAddResourceTitle: "Adicionar recurso-chave",
+        bookmarkResourceNameLabel: "Recurso",
+        bookmarkResourceDescLabel: "Descricao",
+        bookmarkResourceStatusLabel: "Estado",
+        bookmarkResourceDateLabel: "Data de atualizacao",
+        bookmarkResourceActionLabel: "Acao (link)",
+        bookmarkCustomActionBtn: "ABRIR",
+        bookmarkResourceRequiredAlert: "Preencha recurso e link do recurso.",
         bookmarkExp1Title: "Biblioteca de links",
         bookmarkExp1Text: "Consolide documentos, dashboards, playbooks e referencias em um so lugar.",
         bookmarkExp2Title: "Navegacao por tema",
@@ -2951,6 +3052,7 @@
         bookmarkColResource: "Recurso",
         bookmarkColDesc: "Descripcion breve",
         bookmarkColStatus: "Estado",
+        bookmarkColUpdatedAt: "Fecha de actualizacion",
         bookmarkColAction: "Accion",
         bookmarkPrimaryResourceName: "Bookmark Central",
         bookmarkPrimaryResourceDesc: "Plataforma principal para referencias regionales unificadas.",
@@ -2961,6 +3063,18 @@
         bookmarkMcaDesc: "Catalogo de activos digitales reutilizables.",
         bookmarkMcaGitAction: "GIT",
         bookmarkMcaAwsAction: "AWS",
+        bookmarkScopezillaTitle: "Scopezilla",
+        bookmarkScopezillaDesc: "IA integrada a Claude Code que transforma las notas de descubrimiento en epicos, estimaciones, planes de trabajo y entregables completos para los proyectos.",
+        bookmarkScopezillaAction: "EXPLORAR",
+        bookmarkAddResourceBtn: "Agregar recurso clave",
+        bookmarkAddResourceTitle: "Agregar recurso clave",
+        bookmarkResourceNameLabel: "Recurso",
+        bookmarkResourceDescLabel: "Descripcion",
+        bookmarkResourceStatusLabel: "Estado",
+        bookmarkResourceDateLabel: "Fecha de actualizacion",
+        bookmarkResourceActionLabel: "Accion (link)",
+        bookmarkCustomActionBtn: "ABRIR",
+        bookmarkResourceRequiredAlert: "Completa recurso y link del recurso.",
         bookmarkExp1Title: "Biblioteca de enlaces",
         bookmarkExp1Text: "Consolida documentos, dashboards, playbooks y referencias en un solo lugar.",
         bookmarkExp2Title: "Navegacion por tema",
@@ -3113,6 +3227,7 @@
         bookmarkColResource: "Resource",
         bookmarkColDesc: "Short description",
         bookmarkColStatus: "Status",
+        bookmarkColUpdatedAt: "Updated at",
         bookmarkColAction: "Action",
         bookmarkPrimaryResourceName: "Bookmark Central",
         bookmarkPrimaryResourceDesc: "Main platform for unified regional references.",
@@ -3123,6 +3238,18 @@
         bookmarkMcaDesc: "Catalog of reusable digital assets.",
         bookmarkMcaGitAction: "GIT",
         bookmarkMcaAwsAction: "AWS",
+        bookmarkScopezillaTitle: "Scopezilla",
+        bookmarkScopezillaDesc: "AI integrated with Claude Code that transforms discovery notes into epics, estimates, work plans, and complete project deliverables.",
+        bookmarkScopezillaAction: "EXPLORE",
+        bookmarkAddResourceBtn: "Add key resource",
+        bookmarkAddResourceTitle: "Add key resource",
+        bookmarkResourceNameLabel: "Resource",
+        bookmarkResourceDescLabel: "Description",
+        bookmarkResourceStatusLabel: "Status",
+        bookmarkResourceDateLabel: "Updated at",
+        bookmarkResourceActionLabel: "Action (link)",
+        bookmarkCustomActionBtn: "OPEN",
+        bookmarkResourceRequiredAlert: "Please fill resource and resource link.",
         bookmarkExp1Title: "Link library",
         bookmarkExp1Text: "Consolidate documents, dashboards, playbooks, and references in one place.",
         bookmarkExp2Title: "Topic navigation",
@@ -3699,16 +3826,28 @@
       document.getElementById("bookmarkColResource").textContent = x.bookmarkColResource;
       document.getElementById("bookmarkColDesc").textContent = x.bookmarkColDesc;
       document.getElementById("bookmarkColStatus").textContent = x.bookmarkColStatus;
+      document.getElementById("bookmarkColUpdatedAt").textContent = x.bookmarkColUpdatedAt;
       document.getElementById("bookmarkColAction").textContent = x.bookmarkColAction;
       document.getElementById("bookmarkPrimaryResourceName").textContent = x.bookmarkPrimaryResourceName;
       document.getElementById("bookmarkPrimaryResourceDesc").textContent = x.bookmarkPrimaryResourceDesc;
       document.getElementById("bookmarkPrimaryResourceStatus").textContent = x.bookmarkPrimaryResourceStatus;
       document.getElementById("bookmarkCortexStatus").textContent = x.bookmarkPrimaryResourceStatus;
       document.getElementById("bookmarkMcaStatus").textContent = x.bookmarkPrimaryResourceStatus;
+      document.getElementById("bookmarkScopezillaStatus").textContent = x.bookmarkPrimaryResourceStatus;
       document.getElementById("bookmarkCortexDesc").textContent = x.bookmarkCortexDesc;
       document.getElementById("bookmarkMcaDesc").textContent = x.bookmarkMcaDesc;
+      document.getElementById("bookmarkScopezillaTitle").textContent = x.bookmarkScopezillaTitle;
+      document.getElementById("bookmarkScopezillaDesc").textContent = x.bookmarkScopezillaDesc;
+      document.getElementById("bookmarkAddResourceTitle").textContent = x.bookmarkAddResourceTitle;
+      document.getElementById("bookmarkResourceNameLabel").textContent = x.bookmarkResourceNameLabel;
+      document.getElementById("bookmarkResourceDescLabel").textContent = x.bookmarkResourceDescLabel;
+      document.getElementById("bookmarkResourceStatusLabel").textContent = x.bookmarkResourceStatusLabel;
+      document.getElementById("bookmarkResourceDateLabel").textContent = x.bookmarkResourceDateLabel;
+      document.getElementById("bookmarkResourceActionLabel").textContent = x.bookmarkResourceActionLabel;
+      bookmarkAddResourceBtn.textContent = x.bookmarkAddResourceBtn;
       bookmarkClickBox.textContent = x.bookmarkPortalAction;
       bookmarkCortexClickBox.textContent = x.bookmarkCortexAction;
+      document.getElementById("bookmarkScopezillaClickBox").textContent = x.bookmarkScopezillaAction;
       bookmarkMcaGitClickBox.textContent = x.bookmarkMcaGitAction;
       bookmarkMcaAwsClickBox.textContent = x.bookmarkMcaAwsAction;
       document.getElementById("bookmarkExp1Title").textContent = x.bookmarkExp1Title;
@@ -3760,11 +3899,14 @@
       quickCloseBtn.textContent = x.quickCloseBtn;
       bookmarkAddLinkCancelBtn.textContent = i.cancel;
       bookmarkAddGroupCancelBtn.textContent = i.cancel;
+      bookmarkAddResourceCancelBtn.textContent = i.cancel;
+      bookmarkAddResourceSaveBtn.textContent = i.saveCase;
       document.querySelectorAll(".contacts-label").forEach((el) => { el.textContent = x.contactsLabel; });
       if (!localStorage.getItem(BOOKMARK_QUICK_CARDS_KEY)) {
         bookmarkQuickCards = defaultQuickCards(currentLang);
         renderQuickCarousel();
       }
+      renderKeyResources();
       document.getElementById("catalogTitle").textContent = i.catalogTitle;
       document.getElementById("emptyTitle").textContent = i.emptyTitle;
       document.getElementById("emptyDesc").textContent = i.emptyDesc;
@@ -4398,6 +4540,66 @@
       localStorage.setItem(storageKey, JSON.stringify(value || {}));
     }
 
+    function loadKeyResources() {
+      return loadJsonArray(BOOKMARK_KEY_RESOURCES_KEY)
+        .map((item) => ({
+          name: String(item.name || "").trim(),
+          desc: String(item.desc || "").trim(),
+          status: String(item.status || "VERIFICADO").trim() || "VERIFICADO",
+          date: String(item.date || "").trim(),
+          url: normalizeUrl(item.url || ""),
+        }))
+        .filter((item) => item.name && item.url);
+    }
+
+    function saveKeyResources(items) {
+      saveJsonArray(BOOKMARK_KEY_RESOURCES_KEY, items);
+    }
+
+    function renderKeyResources() {
+      bookmarkResourceTableBodyEl.querySelectorAll(".bookmark-custom-resource-row").forEach((row) => row.remove());
+      const resources = loadKeyResources();
+      resources.forEach((item) => {
+        const tr = document.createElement("tr");
+        tr.className = "bookmark-custom-resource-row";
+        tr.innerHTML = `
+          <td>
+            <div class="bookmark-resource-cell-name">
+              <span class="bookmark-resource-icon" aria-hidden="true">🧩</span>
+              <span></span>
+            </div>
+          </td>
+          <td></td>
+          <td><span class="bookmark-status-pill"></span></td>
+          <td></td>
+          <td><a class="bookmark-action-btn" target="_blank" rel="noopener noreferrer"></a></td>
+        `;
+        tr.querySelector(".bookmark-resource-cell-name span:last-child").textContent = item.name;
+        tr.children[1].textContent = item.desc;
+        tr.querySelector(".bookmark-status-pill").textContent = item.status;
+        tr.children[3].textContent = item.date || "-";
+        const link = tr.querySelector(".bookmark-action-btn");
+        link.href = item.url;
+        link.textContent = tx().bookmarkCustomActionBtn;
+        bookmarkResourceTableBodyEl.appendChild(tr);
+      });
+    }
+
+    function openAddResourceModal() {
+      const today = new Date().toISOString().slice(0, 10);
+      bookmarkResourceNameEl.value = "";
+      bookmarkResourceDescEl.value = "";
+      bookmarkResourceStatusEl.value = tx().bookmarkPrimaryResourceStatus || "VERIFICADO";
+      bookmarkResourceDateEl.value = today;
+      bookmarkResourceActionEl.value = "";
+      bookmarkAddResourceModal.classList.add("show");
+      bookmarkResourceNameEl.focus();
+    }
+
+    function closeAddResourceModal() {
+      bookmarkAddResourceModal.classList.remove("show");
+    }
+
     function defaultQuickCards(lang = "pt") {
       const base = [
         { key: "gtm", color: "gtm", emoji: "📊", title: "Services Central", url: "https://sfservices.my.site.com/ServicesCentral/s/page-viewer?name=Go-to-Market---GTM" },
@@ -4851,6 +5053,33 @@
       bookmarkQuickTrackEl.scrollBy({ left: step, behavior: "smooth" });
     });
     bookmarkQuickManageBtn.addEventListener("click", openQuickAdminModal);
+    bookmarkAddResourceBtn.addEventListener("click", () => {
+      if (!isAuthenticated) return;
+      openAddResourceModal();
+    });
+    bookmarkAddResourceCancelBtn.addEventListener("click", closeAddResourceModal);
+    bookmarkAddResourceModal.addEventListener("click", (event) => {
+      if (event.target === bookmarkAddResourceModal) closeAddResourceModal();
+    });
+    bookmarkAddResourceSaveBtn.addEventListener("click", () => {
+      if (!isAuthenticated) return;
+      const item = {
+        name: String(bookmarkResourceNameEl.value || "").trim(),
+        desc: String(bookmarkResourceDescEl.value || "").trim(),
+        status: String(bookmarkResourceStatusEl.value || tx().bookmarkPrimaryResourceStatus || "VERIFICADO").trim(),
+        date: String(bookmarkResourceDateEl.value || "").trim(),
+        url: normalizeUrl(bookmarkResourceActionEl.value || ""),
+      };
+      if (!item.name || !item.url) {
+        alert(tx().bookmarkResourceRequiredAlert);
+        return;
+      }
+      const current = loadKeyResources();
+      current.push(item);
+      saveKeyResources(current);
+      renderKeyResources();
+      closeAddResourceModal();
+    });
     quickCloseBtn.addEventListener("click", closeQuickAdminModal);
     quickCancelEditBtn.addEventListener("click", resetQuickCardForm);
     bookmarkQuickAdminModal.addEventListener("click", (event) => {
@@ -5281,6 +5510,7 @@
       statusEl.value = "in_progress";
       bookmarkQuickCards = loadQuickCards();
       renderQuickCarousel();
+      renderKeyResources();
       initializeBookmarkLibraryData();
       renderBookmarkLibrary();
       hydrateCasesFromCache();
