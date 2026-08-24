@@ -404,6 +404,12 @@
       gap: 10px;
       margin: 0 0 10px;
     }
+    .bookmark-resources-actions {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
     .bookmark-resources-add {
       border: 1px solid #0d6efd;
       background: linear-gradient(135deg, #0d6efd, #2ea7ff);
@@ -415,6 +421,17 @@
       cursor: pointer;
     }
     .bookmark-resources-add:hover { filter: brightness(1.03); }
+    .bookmark-resources-edit {
+      border: 1px solid #4f78a8;
+      background: linear-gradient(135deg, #f7fbff, #e6f1fc);
+      color: #2c4f7c;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      padding: 7px 12px;
+      cursor: pointer;
+    }
+    .bookmark-resources-edit:hover { filter: brightness(1.03); }
     .bookmark-resources-grid {
       display: grid;
       grid-template-columns: 1fr;
@@ -552,6 +569,11 @@
       background: #bfecc9;
       border: 1px solid #9ad8aa;
       white-space: nowrap;
+    }
+    .bookmark-status-pill.needs-review {
+      color: #9a4f00;
+      background: #ffd39a;
+      border-color: #f2b15e;
     }
     .bookmark-action-btn {
       display: inline-flex;
@@ -1408,6 +1430,11 @@
       border-color: #63b7ff;
       background: linear-gradient(135deg, #1f5ed6, #1a82d1);
     }
+    body.dark .bookmark-resources-edit {
+      border-color: #5f7ea3;
+      background: linear-gradient(135deg, #223a5d, #2b4b74);
+      color: #d5e8ff;
+    }
     body.dark .bookmark-main-resource {
       border-color: #36557f;
       background: rgba(21, 37, 67, 0.9);
@@ -1484,6 +1511,11 @@
       color: #cdf9d6;
       border-color: #4f8f5d;
       background: rgba(57, 126, 72, 0.45);
+    }
+    body.dark .bookmark-status-pill.needs-review {
+      color: #ffd9a6;
+      border-color: #9a6930;
+      background: rgba(138, 90, 30, 0.4);
     }
     body.dark .bookmark-action-btn {
       border-color: #4d6b94;
@@ -2091,7 +2123,10 @@
       <section class="bookmark-resources">
         <div class="bookmark-resources-head">
           <p id="bookmarkResourcesLabel" class="bookmark-resources-label">ACCESO DIRECTO A RECURSOS CLAVE (4 EN TOTAL)</p>
-          <button id="bookmarkAddResourceBtn" type="button" class="bookmark-resources-add admin-only">Adicionar recurso-chave</button>
+          <div class="bookmark-resources-actions">
+            <button id="bookmarkEditResourceBtn" type="button" class="bookmark-resources-edit admin-only">Editar recursos-chave</button>
+            <button id="bookmarkAddResourceBtn" type="button" class="bookmark-resources-add admin-only">Adicionar recurso-chave</button>
+          </div>
         </div>
         <div class="bookmark-resources-grid">
           <article class="bookmark-main-resource">
@@ -2116,7 +2151,7 @@
                 <tr>
                   <td>
                     <div class="bookmark-resource-cell-name">
-                      <span class="bookmark-resource-icon book-icon" aria-hidden="true">📖</span>
+                      <span id="bookmarkPrimaryResourceIcon" class="bookmark-resource-icon book-icon" aria-hidden="true">📖</span>
                       <span id="bookmarkPrimaryResourceName">Bookmark Central</span>
                     </div>
                   </td>
@@ -2130,7 +2165,7 @@
                 <tr>
                   <td>
                     <div class="bookmark-resource-cell-name">
-                      <span class="bookmark-resource-icon gear-icon" aria-hidden="true">⚙️</span>
+                      <span id="bookmarkCortexIcon" class="bookmark-resource-icon gear-icon" aria-hidden="true">⚙️</span>
                       <span id="bookmarkCortexTitle">Cortex 6.0</span>
                     </div>
                   </td>
@@ -2144,7 +2179,7 @@
                 <tr>
                   <td>
                     <div class="bookmark-resource-cell-name">
-                      <span class="bookmark-resource-icon scopezilla-icon" aria-hidden="true">🦖</span>
+                      <span id="bookmarkScopezillaIcon" class="bookmark-resource-icon scopezilla-icon" aria-hidden="true">🦖</span>
                       <span id="bookmarkScopezillaTitle">Scopezilla</span>
                     </div>
                   </td>
@@ -2158,7 +2193,7 @@
                 <tr>
                   <td>
                     <div class="bookmark-resource-cell-name">
-                      <span class="bookmark-resource-icon box-icon" aria-hidden="true">📦</span>
+                      <span id="bookmarkMcaIcon" class="bookmark-resource-icon box-icon" aria-hidden="true">📦</span>
                       <span id="bookmarkMcaTitle">MCA Paks Digital</span>
                     </div>
                   </td>
@@ -2421,6 +2456,15 @@
           <div class="bookmark-add-link-actions">
             <button id="bookmarkAddResourceCancelBtn" type="button" class="pill-btn">Cancelar</button>
             <button id="bookmarkAddResourceSaveBtn" type="button" class="pill-btn primary">Salvar</button>
+          </div>
+        </div>
+      </div>
+      <div id="bookmarkEditResourceModal" class="bookmark-add-link-modal">
+        <div class="bookmark-add-link-card">
+          <h3 id="bookmarkEditResourceTitle">Editar recursos-chave</h3>
+          <div id="bookmarkEditResourceList" class="bookmark-quick-admin-list"></div>
+          <div class="bookmark-add-link-actions">
+            <button id="bookmarkEditResourceCloseBtn" type="button" class="pill-btn">Fechar</button>
           </div>
         </div>
       </div>
@@ -2755,9 +2799,13 @@
     const portalGoCatalogBtn = document.getElementById("portalGoCatalogBtn");
     const portalGoBookmarkBtn = document.getElementById("portalGoBookmarkBtn");
     const bookmarkClickBox = document.getElementById("bookmarkClickBox");
+    const bookmarkEditResourceBtn = document.getElementById("bookmarkEditResourceBtn");
     const bookmarkAddResourceBtn = document.getElementById("bookmarkAddResourceBtn");
     const bookmarkResourceTableBodyEl = document.getElementById("bookmarkResourceTableBody");
     const bookmarkAddResourceModal = document.getElementById("bookmarkAddResourceModal");
+    const bookmarkEditResourceModal = document.getElementById("bookmarkEditResourceModal");
+    const bookmarkEditResourceList = document.getElementById("bookmarkEditResourceList");
+    const bookmarkEditResourceCloseBtn = document.getElementById("bookmarkEditResourceCloseBtn");
     const bookmarkResourceNameEl = document.getElementById("bookmarkResourceName");
     const bookmarkResourceDescEl = document.getElementById("bookmarkResourceDesc");
     const bookmarkResourceStatusEl = document.getElementById("bookmarkResourceStatus");
@@ -2855,6 +2903,7 @@
     let bookmarkDraggingGroupId = "";
     let bookmarkQuickCards = [];
     let bookmarkQuickEditingIndex = -1;
+    let bookmarkResourceEditing = null;
 
     const AUTHORS_STORAGE_KEY = "ai_coe_authors_v1";
     const AUTHOR_PHOTOS_STORAGE_KEY = "ai_coe_author_photos_v1";
@@ -2868,6 +2917,7 @@
     const BOOKMARK_GROUP_ORDER_KEY = "bookmark_group_order_v1";
     const BOOKMARK_QUICK_CARDS_KEY = "bookmark_quick_cards_v1";
     const BOOKMARK_KEY_RESOURCES_KEY = "bookmark_key_resources_v1";
+    const BOOKMARK_FIXED_RESOURCES_OVERRIDES_KEY = "bookmark_fixed_resources_overrides_v1";
     const BOOKMARK_BASE_GROUP_TITLE_KEYS = {
       1: "bookmarkGroup1Title",
       2: "bookmarkGroup2Title",
@@ -3003,7 +3053,11 @@
         bookmarkScopezillaTitle: "Scopezilla",
         bookmarkScopezillaDesc: "IA integrada a Claude Code que transforma las notas de descubrimiento en epicos, estimaciones, planes de trabajo y entregables completos para los proyectos.",
         bookmarkScopezillaAction: "EXPLORAR",
+        bookmarkStatusReview: "VERIFICAR",
         bookmarkAddResourceBtn: "Adicionar recurso-chave",
+        bookmarkEditResourceBtn: "Editar recursos-chave",
+        bookmarkEditResourceTitle: "Editar recursos-chave",
+        bookmarkEditResourceAction: "Editar",
         bookmarkAddResourceTitle: "Adicionar recurso-chave",
         bookmarkResourceNameLabel: "Recurso",
         bookmarkResourceDescLabel: "Descricao",
@@ -3180,7 +3234,11 @@
         bookmarkScopezillaTitle: "Scopezilla",
         bookmarkScopezillaDesc: "IA integrada a Claude Code que transforma las notas de descubrimiento en epicos, estimaciones, planes de trabajo y entregables completos para los proyectos.",
         bookmarkScopezillaAction: "EXPLORAR",
+        bookmarkStatusReview: "VERIFICAR",
         bookmarkAddResourceBtn: "Agregar recurso clave",
+        bookmarkEditResourceBtn: "Editar recursos clave",
+        bookmarkEditResourceTitle: "Editar recursos clave",
+        bookmarkEditResourceAction: "Editar",
         bookmarkAddResourceTitle: "Agregar recurso clave",
         bookmarkResourceNameLabel: "Recurso",
         bookmarkResourceDescLabel: "Descripcion",
@@ -3357,7 +3415,11 @@
         bookmarkScopezillaTitle: "Scopezilla",
         bookmarkScopezillaDesc: "AI integrated with Claude Code that transforms discovery notes into epics, estimates, work plans, and complete project deliverables.",
         bookmarkScopezillaAction: "EXPLORE",
+        bookmarkStatusReview: "REVIEW",
         bookmarkAddResourceBtn: "Add key resource",
+        bookmarkEditResourceBtn: "Edit key resources",
+        bookmarkEditResourceTitle: "Edit key resources",
+        bookmarkEditResourceAction: "Edit",
         bookmarkAddResourceTitle: "Add key resource",
         bookmarkResourceNameLabel: "Resource",
         bookmarkResourceDescLabel: "Description",
@@ -3965,6 +4027,8 @@
       document.getElementById("bookmarkResourceDateLabel").textContent = x.bookmarkResourceDateLabel;
       document.getElementById("bookmarkResourceActionLabel").textContent = x.bookmarkResourceActionLabel;
       bookmarkAddResourceBtn.textContent = x.bookmarkAddResourceBtn;
+      bookmarkEditResourceBtn.textContent = x.bookmarkEditResourceBtn;
+      document.getElementById("bookmarkEditResourceTitle").textContent = x.bookmarkEditResourceTitle;
       bookmarkClickBox.textContent = x.bookmarkPortalAction;
       bookmarkCortexClickBox.textContent = x.bookmarkCortexAction;
       document.getElementById("bookmarkScopezillaClickBox").textContent = x.bookmarkScopezillaAction;
@@ -4021,6 +4085,7 @@
       bookmarkAddGroupCancelBtn.textContent = i.cancel;
       bookmarkAddResourceCancelBtn.textContent = i.cancel;
       bookmarkAddResourceSaveBtn.textContent = i.saveCase;
+      bookmarkEditResourceCloseBtn.textContent = i.close;
       document.querySelectorAll(".contacts-label").forEach((el) => { el.textContent = x.contactsLabel; });
       if (!localStorage.getItem(BOOKMARK_QUICK_CARDS_KEY)) {
         bookmarkQuickCards = defaultQuickCards(currentLang);
@@ -4692,6 +4757,59 @@
       saveJsonArray(BOOKMARK_KEY_RESOURCES_KEY, items);
     }
 
+    function loadFixedResourceOverrides() {
+      return loadJsonObject(BOOKMARK_FIXED_RESOURCES_OVERRIDES_KEY);
+    }
+
+    function saveFixedResourceOverrides(value) {
+      saveJsonObject(BOOKMARK_FIXED_RESOURCES_OVERRIDES_KEY, value);
+    }
+
+    function fixedResourceDefs() {
+      return [
+        {
+          key: "primary",
+          rowSelector: "#bookmarkResourceTableBody tr:nth-child(1)",
+          nameId: "bookmarkPrimaryResourceName",
+          descId: "bookmarkPrimaryResourceDesc",
+          dateId: "bookmarkPrimaryResourceDate",
+          statusId: "bookmarkPrimaryResourceStatus",
+          iconId: "bookmarkPrimaryResourceIcon",
+          defaultIconClass: "book-icon",
+        },
+        {
+          key: "cortex",
+          rowSelector: "#bookmarkResourceTableBody tr:nth-child(2)",
+          nameId: "bookmarkCortexTitle",
+          descId: "bookmarkCortexDesc",
+          dateId: "bookmarkCortexDate",
+          statusId: "bookmarkCortexStatus",
+          iconId: "bookmarkCortexIcon",
+          defaultIconClass: "gear-icon",
+        },
+        {
+          key: "scopezilla",
+          rowSelector: "#bookmarkResourceTableBody tr:nth-child(3)",
+          nameId: "bookmarkScopezillaTitle",
+          descId: "bookmarkScopezillaDesc",
+          dateId: "bookmarkScopezillaDate",
+          statusId: "bookmarkScopezillaStatus",
+          iconId: "bookmarkScopezillaIcon",
+          defaultIconClass: "scopezilla-icon",
+        },
+        {
+          key: "mca",
+          rowSelector: "#bookmarkResourceTableBody tr:nth-child(4)",
+          nameId: "bookmarkMcaTitle",
+          descId: "bookmarkMcaDesc",
+          dateId: "bookmarkMcaDate",
+          statusId: "bookmarkMcaStatus",
+          iconId: "bookmarkMcaIcon",
+          defaultIconClass: "box-icon",
+        },
+      ];
+    }
+
     const RESOURCE_EMOJI_PRESETS = [
       { key: "docs", emoji: "📖", label: "Documentacao / Knowledge", iconClass: "book-icon" },
       { key: "library", emoji: "📚", label: "Biblioteca / Playbooks", iconClass: "library-icon" },
@@ -4740,6 +4858,90 @@
       bookmarkResourceEmojiPreviewEl.textContent = preset.emoji;
     }
 
+    function parseResourceDateForReview(value) {
+      const raw = String(value || "").trim();
+      if (!raw) return null;
+      const iso = raw.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+      if (iso) return new Date(Number(iso[1]), Number(iso[2]) - 1, Number(iso[3]));
+      const br = raw.match(/^(\d{2})\/(\d{2})\/(\d{2})$/);
+      if (br) {
+        const year = Number(br[3]) + 2000;
+        return new Date(year, Number(br[2]) - 1, Number(br[1]));
+      }
+      const parsed = new Date(raw);
+      return Number.isNaN(parsed.getTime()) ? null : parsed;
+    }
+
+    function shouldReviewResource(dateText) {
+      const date = parseResourceDateForReview(dateText);
+      if (!date) return false;
+      const now = new Date();
+      const diffDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
+      return diffDays >= 45;
+    }
+
+    function applyStatusForDate(statusEl, dateText, baseLabel) {
+      if (!statusEl) return;
+      const needsReview = shouldReviewResource(dateText);
+      statusEl.classList.toggle("needs-review", needsReview);
+      statusEl.textContent = needsReview ? (tx().bookmarkStatusReview || "VERIFICAR") : (baseLabel || tx().bookmarkPrimaryResourceStatus);
+    }
+
+    function applyFixedResourceOverrides() {
+      const overrides = loadFixedResourceOverrides();
+      fixedResourceDefs().forEach((def) => {
+        const override = overrides[def.key] || {};
+        const nameEl = document.getElementById(def.nameId);
+        const descEl = document.getElementById(def.descId);
+        const dateEl = document.getElementById(def.dateId);
+        const statusEl = document.getElementById(def.statusId);
+        const iconEl = document.getElementById(def.iconId);
+        if (override.name && nameEl) nameEl.textContent = override.name;
+        if (override.desc && descEl) descEl.textContent = override.desc;
+        if (override.date && dateEl) dateEl.textContent = formatResourceDate(override.date);
+        if (iconEl) {
+          const preset = getResourceEmojiPreset(override.emojiKey || "framework");
+          iconEl.className = `bookmark-resource-icon ${preset ? preset.iconClass : def.defaultIconClass}`;
+          iconEl.textContent = preset ? preset.emoji : iconEl.textContent;
+        }
+        applyStatusForDate(statusEl, dateEl ? dateEl.textContent : "", override.status || tx().bookmarkPrimaryResourceStatus);
+      });
+    }
+
+    function openEditResourceListModal() {
+      if (!isAuthenticated) return;
+      const x = tx();
+      bookmarkEditResourceList.innerHTML = "";
+      fixedResourceDefs().forEach((def) => {
+        const name = document.getElementById(def.nameId)?.textContent || def.key;
+        const row = document.createElement("div");
+        row.className = "bookmark-quick-admin-item";
+        row.innerHTML = `
+          <b>${name}</b>
+          <span class="bookmark-quick-admin-actions">
+            <button type="button" class="bookmark-quick-admin-btn edit" data-kind="fixed" data-key="${def.key}">${x.bookmarkEditResourceAction}</button>
+          </span>
+        `;
+        bookmarkEditResourceList.appendChild(row);
+      });
+      loadKeyResources().forEach((item, index) => {
+        const row = document.createElement("div");
+        row.className = "bookmark-quick-admin-item";
+        row.innerHTML = `
+          <b>${item.name}</b>
+          <span class="bookmark-quick-admin-actions">
+            <button type="button" class="bookmark-quick-admin-btn edit" data-kind="custom" data-index="${index}">${x.bookmarkEditResourceAction}</button>
+          </span>
+        `;
+        bookmarkEditResourceList.appendChild(row);
+      });
+      bookmarkEditResourceModal.classList.add("show");
+    }
+
+    function closeEditResourceListModal() {
+      bookmarkEditResourceModal.classList.remove("show");
+    }
+
     function updateKeyResourcesLabel() {
       const count = bookmarkResourceTableBodyEl.querySelectorAll("tr").length;
       const template = tx().bookmarkResourcesLabelTemplate || "DIRECT ACCESS TO KEY RESOURCES ({count} TOTAL)";
@@ -4767,30 +4969,35 @@
         `;
         tr.querySelector(".bookmark-resource-cell-name span:last-child").textContent = item.name;
         tr.children[1].textContent = item.desc;
-        tr.querySelector(".bookmark-status-pill").textContent = item.status;
+        const statusEl = tr.querySelector(".bookmark-status-pill");
         tr.children[3].textContent = formatResourceDate(item.date);
+        applyStatusForDate(statusEl, tr.children[3].textContent, item.status);
         const link = tr.querySelector(".bookmark-action-btn");
         link.href = item.url;
         link.textContent = tx().bookmarkCustomActionBtn;
         bookmarkResourceTableBodyEl.appendChild(tr);
       });
+      applyFixedResourceOverrides();
       updateKeyResourcesLabel();
     }
 
-    function openAddResourceModal() {
+    function openAddResourceModal(payload = null) {
       const today = new Date().toISOString().slice(0, 10);
-      bookmarkResourceNameEl.value = "";
-      bookmarkResourceDescEl.value = "";
-      bookmarkResourceStatusEl.value = tx().bookmarkPrimaryResourceStatus || "VERIFICADO";
-      bookmarkResourceEmojiEl.value = "framework";
+      bookmarkResourceEditing = payload;
+      bookmarkResourceNameEl.value = payload?.name || "";
+      bookmarkResourceDescEl.value = payload?.desc || "";
+      bookmarkResourceStatusEl.value = payload?.status || tx().bookmarkPrimaryResourceStatus || "VERIFICADO";
+      bookmarkResourceEmojiEl.value = payload?.emojiKey || "framework";
       updateResourceEmojiPreview();
-      bookmarkResourceDateEl.value = today;
-      bookmarkResourceActionEl.value = "";
+      bookmarkResourceDateEl.value = payload?.date || today;
+      bookmarkResourceActionEl.value = payload?.url || "";
       bookmarkAddResourceModal.classList.add("show");
+      document.getElementById("bookmarkAddResourceTitle").textContent = payload ? tx().bookmarkEditResourceTitle : tx().bookmarkAddResourceTitle;
       bookmarkResourceNameEl.focus();
     }
 
     function closeAddResourceModal() {
+      bookmarkResourceEditing = null;
       bookmarkAddResourceModal.classList.remove("show");
     }
 
@@ -5262,6 +5469,40 @@
       bookmarkQuickTrackEl.scrollBy({ left: step, behavior: "smooth" });
     });
     bookmarkQuickManageBtn.addEventListener("click", openQuickAdminModal);
+    bookmarkEditResourceBtn.addEventListener("click", openEditResourceListModal);
+    bookmarkEditResourceCloseBtn.addEventListener("click", closeEditResourceListModal);
+    bookmarkEditResourceModal.addEventListener("click", (event) => {
+      if (event.target === bookmarkEditResourceModal) closeEditResourceListModal();
+    });
+    bookmarkEditResourceList.addEventListener("click", (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLElement)) return;
+      if (!target.classList.contains("edit")) return;
+      const kind = String(target.dataset.kind || "");
+      if (kind === "fixed") {
+        const def = fixedResourceDefs().find((item) => item.key === target.dataset.key);
+        if (!def) return;
+        const iconEl = document.getElementById(def.iconId);
+        const payload = {
+          kind: "fixed",
+          key: def.key,
+          name: document.getElementById(def.nameId)?.textContent || "",
+          desc: document.getElementById(def.descId)?.textContent || "",
+          status: document.getElementById(def.statusId)?.textContent || tx().bookmarkPrimaryResourceStatus,
+          date: document.getElementById(def.dateId)?.textContent || "",
+          emojiKey: (RESOURCE_EMOJI_PRESETS.find((item) => item.emoji === (iconEl?.textContent || "").trim()) || {}).key || "framework",
+          url: "",
+        };
+        closeEditResourceListModal();
+        openAddResourceModal(payload);
+        return;
+      }
+      const customIndex = Number(target.dataset.index);
+      const custom = loadKeyResources()[customIndex];
+      if (!Number.isFinite(customIndex) || !custom) return;
+      closeEditResourceListModal();
+      openAddResourceModal({ kind: "custom", index: customIndex, ...custom });
+    });
     bookmarkAddResourceBtn.addEventListener("click", () => {
       if (!isAuthenticated) return;
       openAddResourceModal();
@@ -5281,13 +5522,29 @@
         date: String(bookmarkResourceDateEl.value || "").trim(),
         url: normalizeUrl(bookmarkResourceActionEl.value || ""),
       };
-      if (!item.name || !item.url) {
+      if (!item.name || (!bookmarkResourceEditing || bookmarkResourceEditing.kind === "custom") && !item.url) {
         alert(tx().bookmarkResourceRequiredAlert);
         return;
       }
-      const current = loadKeyResources();
-      current.push(item);
-      saveKeyResources(current);
+      if (bookmarkResourceEditing && bookmarkResourceEditing.kind === "fixed") {
+        const overrides = loadFixedResourceOverrides();
+        overrides[bookmarkResourceEditing.key] = {
+          name: item.name,
+          desc: item.desc,
+          status: item.status,
+          emojiKey: item.emojiKey,
+          date: item.date,
+        };
+        saveFixedResourceOverrides(overrides);
+      } else {
+        const current = loadKeyResources();
+        if (bookmarkResourceEditing && bookmarkResourceEditing.kind === "custom" && Number.isFinite(Number(bookmarkResourceEditing.index))) {
+          current[Number(bookmarkResourceEditing.index)] = item;
+        } else {
+          current.push(item);
+        }
+        saveKeyResources(current);
+      }
       renderKeyResources();
       closeAddResourceModal();
     });
