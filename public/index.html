@@ -2026,7 +2026,7 @@
       </section>
       <section class="bookmark-resources">
         <div class="bookmark-resources-head">
-          <p id="bookmarkResourcesLabel" class="bookmark-resources-label">ACCESO DIRECTO A RECURSOS CLAVE (3 EN TOTAL)</p>
+          <p id="bookmarkResourcesLabel" class="bookmark-resources-label">ACCESO DIRECTO A RECURSOS CLAVE (4 EN TOTAL)</p>
           <button id="bookmarkAddResourceBtn" type="button" class="bookmark-resources-add admin-only">Adicionar recurso-chave</button>
         </div>
         <div class="bookmark-resources-grid">
@@ -2915,7 +2915,7 @@
         bookmarkCortexTitle: "Cortex 6.0",
         bookmarkMcaTitle: "MCA Paks Digital",
         bookmarkDesc: "Primeira versao da nova area. Em breve com criacao, busca e filtros de bookmarks.",
-        bookmarkResourcesLabel: "ACESSO DIRETO A RECURSOS-CHAVE (3 NO TOTAL)",
+        bookmarkResourcesLabelTemplate: "ACESSO DIRETO A RECURSOS-CHAVE ({count} NO TOTAL)",
         bookmarkColResource: "Recurso",
         bookmarkColDesc: "Descricao breve",
         bookmarkColStatus: "Status",
@@ -3090,7 +3090,7 @@
         bookmarkCortexTitle: "Cortex 6.0",
         bookmarkMcaTitle: "MCA Paks Digital",
         bookmarkDesc: "Primera version de la nueva area. Pronto con creacion, busqueda y filtros de bookmarks.",
-        bookmarkResourcesLabel: "ACCESO DIRECTO A RECURSOS CLAVE (3 EN TOTAL)",
+        bookmarkResourcesLabelTemplate: "ACCESO DIRECTO A RECURSOS CLAVE ({count} EN TOTAL)",
         bookmarkColResource: "Recurso",
         bookmarkColDesc: "Descripcion breve",
         bookmarkColStatus: "Estado",
@@ -3265,7 +3265,7 @@
         bookmarkCortexTitle: "Cortex 6.0",
         bookmarkMcaTitle: "MCA Paks Digital",
         bookmarkDesc: "First version of the new area. Bookmark creation, search, and filters are coming soon.",
-        bookmarkResourcesLabel: "DIRECT ACCESS TO KEY RESOURCES (3 TOTAL)",
+        bookmarkResourcesLabelTemplate: "DIRECT ACCESS TO KEY RESOURCES ({count} TOTAL)",
         bookmarkColResource: "Resource",
         bookmarkColDesc: "Short description",
         bookmarkColStatus: "Status",
@@ -3864,7 +3864,7 @@
       document.getElementById("bookmarkCortexTitle").textContent = x.bookmarkCortexTitle;
       document.getElementById("bookmarkMcaTitle").textContent = x.bookmarkMcaTitle;
       document.getElementById("bookmarkDesc").textContent = x.bookmarkDesc;
-      document.getElementById("bookmarkResourcesLabel").textContent = x.bookmarkResourcesLabel;
+      updateKeyResourcesLabel();
       document.getElementById("bookmarkColResource").textContent = x.bookmarkColResource;
       document.getElementById("bookmarkColDesc").textContent = x.bookmarkColDesc;
       document.getElementById("bookmarkColStatus").textContent = x.bookmarkColStatus;
@@ -4613,6 +4613,12 @@
       saveJsonArray(BOOKMARK_KEY_RESOURCES_KEY, items);
     }
 
+    function updateKeyResourcesLabel() {
+      const count = bookmarkResourceTableBodyEl.querySelectorAll("tr").length;
+      const template = tx().bookmarkResourcesLabelTemplate || "DIRECT ACCESS TO KEY RESOURCES ({count} TOTAL)";
+      document.getElementById("bookmarkResourcesLabel").textContent = template.replace("{count}", String(count));
+    }
+
     function renderKeyResources() {
       bookmarkResourceTableBodyEl.querySelectorAll(".bookmark-custom-resource-row").forEach((row) => row.remove());
       const resources = loadKeyResources();
@@ -4640,6 +4646,7 @@
         link.textContent = tx().bookmarkCustomActionBtn;
         bookmarkResourceTableBodyEl.appendChild(tr);
       });
+      updateKeyResourcesLabel();
     }
 
     function openAddResourceModal() {
