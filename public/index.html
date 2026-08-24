@@ -4775,6 +4775,7 @@
           dateId: "bookmarkPrimaryResourceDate",
           statusId: "bookmarkPrimaryResourceStatus",
           iconId: "bookmarkPrimaryResourceIcon",
+          defaultEmojiKey: "docs",
           defaultIconClass: "book-icon",
         },
         {
@@ -4785,6 +4786,7 @@
           dateId: "bookmarkCortexDate",
           statusId: "bookmarkCortexStatus",
           iconId: "bookmarkCortexIcon",
+          defaultEmojiKey: "platform",
           defaultIconClass: "gear-icon",
         },
         {
@@ -4795,6 +4797,7 @@
           dateId: "bookmarkScopezillaDate",
           statusId: "bookmarkScopezillaStatus",
           iconId: "bookmarkScopezillaIcon",
+          defaultEmojiKey: "scopezilla",
           defaultIconClass: "scopezilla-icon",
         },
         {
@@ -4805,6 +4808,7 @@
           dateId: "bookmarkMcaDate",
           statusId: "bookmarkMcaStatus",
           iconId: "bookmarkMcaIcon",
+          defaultEmojiKey: "assets",
           defaultIconClass: "box-icon",
         },
       ];
@@ -4900,7 +4904,7 @@
         if (override.desc && descEl) descEl.textContent = override.desc;
         if (override.date && dateEl) dateEl.textContent = formatResourceDate(override.date);
         if (iconEl) {
-          const preset = getResourceEmojiPreset(override.emojiKey || "framework");
+          const preset = override.emojiKey ? getResourceEmojiPreset(override.emojiKey) : getResourceEmojiPreset(def.defaultEmojiKey);
           iconEl.className = `bookmark-resource-icon ${preset ? preset.iconClass : def.defaultIconClass}`;
           iconEl.textContent = preset ? preset.emoji : iconEl.textContent;
         }
