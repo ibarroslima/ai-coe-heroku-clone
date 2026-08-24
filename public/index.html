@@ -443,10 +443,10 @@
       table-layout: fixed;
       font-size: 14px;
     }
-    .bookmark-resource-table col:nth-child(1) { width: 24%; }
-    .bookmark-resource-table col:nth-child(2) { width: 29%; }
-    .bookmark-resource-table col:nth-child(3) { width: 14%; }
-    .bookmark-resource-table col:nth-child(4) { width: 15%; }
+    .bookmark-resource-table col:nth-child(1) { width: 20%; }
+    .bookmark-resource-table col:nth-child(2) { width: 36%; }
+    .bookmark-resource-table col:nth-child(3) { width: 12%; }
+    .bookmark-resource-table col:nth-child(4) { width: 14%; }
     .bookmark-resource-table col:nth-child(5) { width: 18%; }
     .bookmark-resource-table th {
       text-align: left;
@@ -463,6 +463,14 @@
       color: #1f2f49;
       vertical-align: middle;
       background: rgba(250, 253, 255, 0.9);
+    }
+    .bookmark-resource-table th:nth-child(3),
+    .bookmark-resource-table th:nth-child(4),
+    .bookmark-resource-table th:nth-child(5),
+    .bookmark-resource-table td:nth-child(3),
+    .bookmark-resource-table td:nth-child(4),
+    .bookmark-resource-table td:nth-child(5) {
+      text-align: center;
     }
     .bookmark-resource-cell-name {
       display: flex;
@@ -481,6 +489,11 @@
       place-items: center;
       font-size: 16px;
       flex: 0 0 auto;
+    }
+    .bookmark-resource-icon.scopezilla-icon {
+      background: linear-gradient(135deg, #d8ebde, #b8d8c4);
+      border-color: #8eb299;
+      font-size: 18px;
     }
     .bookmark-status-pill {
       display: inline-flex;
@@ -1374,6 +1387,10 @@
       border-color: #486791;
       color: #e0ecff;
     }
+    body.dark .bookmark-resource-icon.scopezilla-icon {
+      background: linear-gradient(135deg, #2f4d3d, #3d6b53);
+      border-color: #5f8f73;
+    }
     body.dark .bookmark-status-pill {
       color: #cdf9d6;
       border-color: #4f8f5d;
@@ -2016,7 +2033,7 @@
                   </td>
                   <td id="bookmarkPrimaryResourceDesc">Plataforma principal para referencias regionales unificadas.</td>
                   <td><span id="bookmarkPrimaryResourceStatus" class="bookmark-status-pill">VERIFICADO</span></td>
-                  <td id="bookmarkPrimaryResourceDate">2026-08-21</td>
+                  <td id="bookmarkPrimaryResourceDate">21/08/26</td>
                   <td>
                     <a id="bookmarkClickBox" class="bookmark-action-btn" href="#bookmarkLibraryBoard">VER BIBLIOTECA</a>
                   </td>
@@ -2030,7 +2047,7 @@
                   </td>
                   <td id="bookmarkCortexDesc">Motor de analisis de datos e IA avanzado.</td>
                   <td><span id="bookmarkCortexStatus" class="bookmark-status-pill">VERIFICADO</span></td>
-                  <td id="bookmarkCortexDate">2026-08-19</td>
+                  <td id="bookmarkCortexDate">19/08/26</td>
                   <td>
                     <a id="bookmarkCortexClickBox" class="bookmark-action-btn" href="https://damp-plateau-53219-042e4179fc0a.herokuapp.com/?case=595" target="_blank" rel="noopener noreferrer">EXPLORAR</a>
                   </td>
@@ -2038,13 +2055,13 @@
                 <tr>
                   <td>
                     <div class="bookmark-resource-cell-name">
-                      <span class="bookmark-resource-icon" aria-hidden="true">🦖🤖</span>
+                      <span class="bookmark-resource-icon scopezilla-icon" aria-hidden="true">🦾🦖</span>
                       <span id="bookmarkScopezillaTitle">Scopezilla</span>
                     </div>
                   </td>
                   <td id="bookmarkScopezillaDesc">IA integrada a Claude Code que transforma las notas de descubrimiento en épicos, estimaciones, planes de trabajo y entregables completos para los proyectos.</td>
                   <td><span id="bookmarkScopezillaStatus" class="bookmark-status-pill">VERIFICADO</span></td>
-                  <td id="bookmarkScopezillaDate">2026-08-24</td>
+                  <td id="bookmarkScopezillaDate">24/08/26</td>
                   <td>
                     <a id="bookmarkScopezillaClickBox" class="bookmark-action-btn" href="https://salesforce.enterprise.slack.com/docs/T01G0063H29/F0AGMSEFX47" target="_blank" rel="noopener noreferrer">EXPLORAR</a>
                   </td>
@@ -2058,7 +2075,7 @@
                   </td>
                   <td id="bookmarkMcaDesc">Catalogo de activos digitales reutilizables.</td>
                   <td><span id="bookmarkMcaStatus" class="bookmark-status-pill">VERIFICADO</span></td>
-                  <td id="bookmarkMcaDate">2026-08-21</td>
+                  <td id="bookmarkMcaDate">21/08/26</td>
                   <td>
                     <div class="bookmark-action-inline">
                       <a id="bookmarkMcaGitClickBox" class="bookmark-action-btn" href="https://git.soma.salesforce.com/pages/kvilassa/digital-reusable-assets/" target="_blank" rel="noopener noreferrer">GIT</a>
@@ -4540,6 +4557,21 @@
       localStorage.setItem(storageKey, JSON.stringify(value || {}));
     }
 
+    function formatResourceDate(dateValue) {
+      const raw = String(dateValue || "").trim();
+      if (!raw) return "-";
+      const isoMatch = raw.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+      if (isoMatch) return `${isoMatch[3]}/${isoMatch[2]}/${isoMatch[1].slice(-2)}`;
+      const shortBrMatch = raw.match(/^(\d{2})\/(\d{2})\/(\d{2})$/);
+      if (shortBrMatch) return raw;
+      const parsed = new Date(raw);
+      if (Number.isNaN(parsed.getTime())) return raw;
+      const day = String(parsed.getDate()).padStart(2, "0");
+      const month = String(parsed.getMonth() + 1).padStart(2, "0");
+      const year = String(parsed.getFullYear()).slice(-2);
+      return `${day}/${month}/${year}`;
+    }
+
     function loadKeyResources() {
       return loadJsonArray(BOOKMARK_KEY_RESOURCES_KEY)
         .map((item) => ({
@@ -4577,7 +4609,7 @@
         tr.querySelector(".bookmark-resource-cell-name span:last-child").textContent = item.name;
         tr.children[1].textContent = item.desc;
         tr.querySelector(".bookmark-status-pill").textContent = item.status;
-        tr.children[3].textContent = item.date || "-";
+        tr.children[3].textContent = formatResourceDate(item.date);
         const link = tr.querySelector(".bookmark-action-btn");
         link.href = item.url;
         link.textContent = tx().bookmarkCustomActionBtn;
