@@ -5428,10 +5428,10 @@
       const groups = bookmarkOrderedGroups.length ? bookmarkOrderedGroups : loadBookmarkGroups();
       const previousValue = String(bookmarkLinkGroupEl.value || "");
       bookmarkLinkGroupEl.innerHTML = "";
-      groups.forEach((item, index) => {
+      groups.forEach((item) => {
         const option = document.createElement("option");
         option.value = String(item.group);
-        option.textContent = `${index + 1}) ${getBookmarkGroupDisplayTitle(item)}`;
+        option.textContent = `${item.group}) ${getBookmarkGroupDisplayTitle(item)}`;
         bookmarkLinkGroupEl.appendChild(option);
       });
       if (previousValue && Array.from(bookmarkLinkGroupEl.options).some((option) => option.value === previousValue)) {
@@ -5512,7 +5512,7 @@
       bookmarkOrderedGroups = orderedGroups.slice();
 
       bookmarkLinksGroupsEl.innerHTML = "";
-      orderedGroups.forEach((groupDef, index) => {
+      orderedGroups.forEach((groupDef) => {
         const group = Number(groupDef.group);
         const displayTitle = getBookmarkGroupDisplayTitle(groupDef);
         const article = document.createElement("article");
@@ -5522,7 +5522,7 @@
         article.draggable = Boolean(isAuthenticated && bookmarkReorderMode && !isFixed);
         article.classList.toggle("reorder-enabled", Boolean(isAuthenticated && bookmarkReorderMode && !isFixed));
         const h3 = document.createElement("h3");
-        h3.textContent = `${index + 1}) ${displayTitle}`;
+        h3.textContent = `${group}) ${displayTitle}`;
         const emoji = document.createElement("span");
         emoji.className = "bookmark-group-emoji";
         emoji.setAttribute("aria-hidden", "true");
