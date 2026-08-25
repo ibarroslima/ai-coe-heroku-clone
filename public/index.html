@@ -5591,6 +5591,13 @@
       bookmarkAddGroupModal.classList.remove("show");
     }
 
+    function ensureAdminOrPrompt() {
+      if (isAuthenticated) return true;
+      authWrap.style.display = "flex";
+      alert("Sessao de ADMIN necessaria. Faça login para continuar.");
+      return false;
+    }
+
     openModalBtn.addEventListener("click", () => {
       currentEditingAttachments = [];
       existingAttachmentsDataEl.value = "[]";
@@ -5758,15 +5765,15 @@
       openBookmarkLibraryBoard();
     });
     bookmarkLibraryAddBtn.addEventListener("click", () => {
-      if (!isAuthenticated) return;
+      if (!ensureAdminOrPrompt()) return;
       openAddLinkModal(null);
     });
     bookmarkLibraryGroupBtn.addEventListener("click", () => {
-      if (!isAuthenticated) return;
+      if (!ensureAdminOrPrompt()) return;
       openAddGroupModal();
     });
     bookmarkLibraryReorderBtn.addEventListener("click", () => {
-      if (!isAuthenticated) return;
+      if (!ensureAdminOrPrompt()) return;
       bookmarkReorderMode = !bookmarkReorderMode;
       bookmarkLibraryReorderBtn.classList.toggle("active", bookmarkReorderMode);
       bookmarkLibraryReorderBtn.textContent = bookmarkReorderMode ? `${tx().reorderInProgressLabel}...` : tx().bookmarkLibraryReorderBtn;
@@ -5856,10 +5863,7 @@
       if (event.target === bookmarkAddGroupModal) closeAddGroupModal();
     });
     bookmarkAddLinkSaveBtn.addEventListener("click", async () => {
-      if (!isAuthenticated) {
-        alert("Apenas ADMIN pode adicionar/editar links.");
-        return;
-      }
+      if (!ensureAdminOrPrompt()) return;
       const group = Number(bookmarkLinkGroupEl.value || "1");
       const title = String(bookmarkLinkTitleEl.value || "").trim();
       const normalizedUrl = normalizeUrl(bookmarkLinkUrlEl.value || "");
@@ -5897,7 +5901,7 @@
       closeAddLinkModal();
     });
     bookmarkAddGroupSaveBtn.addEventListener("click", async () => {
-      if (!isAuthenticated) return;
+      if (!ensureAdminOrPrompt()) return;
       const title = String(bookmarkGroupTitleEl.value || "").trim();
       const emoji = String(bookmarkGroupEmojiEl.value || "").trim() || "📁";
       if (!title) {
