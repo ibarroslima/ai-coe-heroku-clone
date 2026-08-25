@@ -5332,15 +5332,23 @@
     function loadBookmarkGroups() {
       const stored = loadJsonArray(BOOKMARK_GROUPS_KEY).filter((item) => Number.isFinite(Number(item.group)));
       if (stored.length) {
-        return stored
+        const deduped = new Map();
+        stored
           .map((item) => ({
             group: Number(item.group),
             title: String(item.title || "").trim() || `Grupo ${item.group}`,
             emoji: String(item.emoji || "📁").trim() || "📁",
           }))
-          .sort((a, b) => a.group - b.group);
+          .forEach((item) => {
+            if (!deduped.has(item.group)) deduped.set(item.group, item);
+          });
+        return Array.from(deduped.values()).sort((a, b) => a.group - b.group);
       }
-      return bookmarkBaseGroups.slice().sort((a, b) => a.group - b.group);
+      const baseDeduped = new Map();
+      bookmarkBaseGroups.forEach((item) => {
+        if (!baseDeduped.has(item.group)) baseDeduped.set(item.group, item);
+      });
+      return Array.from(baseDeduped.values()).sort((a, b) => a.group - b.group);
     }
 
     function saveBookmarkGroups(groups) {
@@ -5433,6 +5441,7 @@
 
     function initializeBookmarkLibraryData() {
       const groupCards = Array.from(bookmarkLinksGroupsEl.querySelectorAll(".bookmark-links-group"));
+      const seenGroups = new Set();
       bookmarkBaseGroups = [];
       bookmarkStaticLinks = [];
       groupCards.forEach((card) => {
@@ -5445,7 +5454,10 @@
         const group = parsed.group;
         card.dataset.group = String(group);
         const defaultEmoji = emojiEl ? String(emojiEl.textContent || "").trim() : "📁";
-        bookmarkBaseGroups.push({ group, title: parsed.title, emoji: defaultEmoji || "📁" });
+        if (!seenGroups.has(group)) {
+          bookmarkBaseGroups.push({ group, title: parsed.title, emoji: defaultEmoji || "📁" });
+          seenGroups.add(group);
+        }
         const anchors = Array.from(listEl.querySelectorAll("li > a"));
         anchors.forEach((a, index) => {
           bookmarkStaticLinks.push({
