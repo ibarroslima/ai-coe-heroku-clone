@@ -2208,6 +2208,20 @@
                     </div>
                   </td>
                 </tr>
+                <tr>
+                  <td>
+                    <div class="bookmark-resource-cell-name">
+                      <span id="bookmarkAgentforceIcon" class="bookmark-resource-icon ai-icon" aria-hidden="true">🤖</span>
+                      <span id="bookmarkAgentforceTitle">Agentforce Catalogue</span>
+                    </div>
+                  </td>
+                  <td id="bookmarkAgentforceDesc">Estimaciones de Implementacion Agentforce. Guia de Casos de Uso y Tiempo Real.</td>
+                  <td><span id="bookmarkAgentforceStatus" class="bookmark-status-pill">VERIFICADO</span></td>
+                  <td id="bookmarkAgentforceDate">24/08/26</td>
+                  <td>
+                    <a id="bookmarkAgentforceClickBox" class="bookmark-action-btn" href="https://ps-latam-bsa-9eba136812c1.holly-virginia.herokuapp.com/bsa/reusable-assets" target="_blank" rel="noopener noreferrer">EXPLORAR</a>
+                  </td>
+                </tr>
               </tbody>
             </table>
           </article>
@@ -2904,6 +2918,7 @@
     let bookmarkQuickCards = [];
     let bookmarkQuickEditingIndex = -1;
     let bookmarkResourceEditing = null;
+    let bookmarkStateStore = {};
 
     const AUTHORS_STORAGE_KEY = "ai_coe_authors_v1";
     const AUTHOR_PHOTOS_STORAGE_KEY = "ai_coe_author_photos_v1";
@@ -2918,6 +2933,16 @@
     const BOOKMARK_QUICK_CARDS_KEY = "bookmark_quick_cards_v1";
     const BOOKMARK_KEY_RESOURCES_KEY = "bookmark_key_resources_v1";
     const BOOKMARK_FIXED_RESOURCES_OVERRIDES_KEY = "bookmark_fixed_resources_overrides_v1";
+    const BOOKMARK_STATE_KEYS = new Set([
+      BOOKMARK_CUSTOM_LINKS_KEY,
+      BOOKMARK_GROUPS_KEY,
+      BOOKMARK_LINK_OVERRIDES_KEY,
+      BOOKMARK_LINK_DELETES_KEY,
+      BOOKMARK_GROUP_ORDER_KEY,
+      BOOKMARK_QUICK_CARDS_KEY,
+      BOOKMARK_KEY_RESOURCES_KEY,
+      BOOKMARK_FIXED_RESOURCES_OVERRIDES_KEY,
+    ]);
     const BOOKMARK_BASE_GROUP_TITLE_KEYS = {
       1: "bookmarkGroup1Title",
       2: "bookmarkGroup2Title",
@@ -3050,6 +3075,9 @@
         bookmarkMcaDesc: "Catalogo de ativos digitais reutilizaveis.",
         bookmarkMcaGitAction: "GIT",
         bookmarkMcaAwsAction: "AWS",
+        bookmarkAgentforceTitle: "Agentforce Catalogue",
+        bookmarkAgentforceDesc: "Estimaciones de Implementacion Agentforce. Guia de Casos de Uso y Tiempo Real.",
+        bookmarkAgentforceAction: "EXPLORAR",
         bookmarkScopezillaTitle: "Scopezilla",
         bookmarkScopezillaDesc: "IA integrada a Claude Code que transforma las notas de descubrimiento en epicos, estimaciones, planes de trabajo y entregables completos para los proyectos.",
         bookmarkScopezillaAction: "EXPLORAR",
@@ -3231,6 +3259,9 @@
         bookmarkMcaDesc: "Catalogo de activos digitales reutilizables.",
         bookmarkMcaGitAction: "GIT",
         bookmarkMcaAwsAction: "AWS",
+        bookmarkAgentforceTitle: "Agentforce Catalogue",
+        bookmarkAgentforceDesc: "Estimaciones de Implementacion Agentforce. Guia de Casos de Uso y Tiempo Real.",
+        bookmarkAgentforceAction: "EXPLORAR",
         bookmarkScopezillaTitle: "Scopezilla",
         bookmarkScopezillaDesc: "IA integrada a Claude Code que transforma las notas de descubrimiento en epicos, estimaciones, planes de trabajo y entregables completos para los proyectos.",
         bookmarkScopezillaAction: "EXPLORAR",
@@ -3412,6 +3443,9 @@
         bookmarkMcaDesc: "Catalog of reusable digital assets.",
         bookmarkMcaGitAction: "GIT",
         bookmarkMcaAwsAction: "AWS",
+        bookmarkAgentforceTitle: "Agentforce Catalogue",
+        bookmarkAgentforceDesc: "Agentforce Implementation Estimates. Use Case Guide and Real-Time Timing.",
+        bookmarkAgentforceAction: "EXPLORE",
         bookmarkScopezillaTitle: "Scopezilla",
         bookmarkScopezillaDesc: "AI integrated with Claude Code that transforms discovery notes into epics, estimates, work plans, and complete project deliverables.",
         bookmarkScopezillaAction: "EXPLORE",
@@ -4013,9 +4047,12 @@
       document.getElementById("bookmarkPrimaryResourceStatus").textContent = x.bookmarkPrimaryResourceStatus;
       document.getElementById("bookmarkCortexStatus").textContent = x.bookmarkPrimaryResourceStatus;
       document.getElementById("bookmarkMcaStatus").textContent = x.bookmarkPrimaryResourceStatus;
+      document.getElementById("bookmarkAgentforceStatus").textContent = x.bookmarkPrimaryResourceStatus;
       document.getElementById("bookmarkScopezillaStatus").textContent = x.bookmarkPrimaryResourceStatus;
       document.getElementById("bookmarkCortexDesc").textContent = x.bookmarkCortexDesc;
       document.getElementById("bookmarkMcaDesc").textContent = x.bookmarkMcaDesc;
+      document.getElementById("bookmarkAgentforceTitle").textContent = x.bookmarkAgentforceTitle;
+      document.getElementById("bookmarkAgentforceDesc").textContent = x.bookmarkAgentforceDesc;
       document.getElementById("bookmarkScopezillaTitle").textContent = x.bookmarkScopezillaTitle;
       document.getElementById("bookmarkScopezillaDesc").textContent = x.bookmarkScopezillaDesc;
       document.getElementById("bookmarkAddResourceTitle").textContent = x.bookmarkAddResourceTitle;
@@ -4032,6 +4069,7 @@
       bookmarkClickBox.textContent = x.bookmarkPortalAction;
       bookmarkCortexClickBox.textContent = x.bookmarkCortexAction;
       document.getElementById("bookmarkScopezillaClickBox").textContent = x.bookmarkScopezillaAction;
+      document.getElementById("bookmarkAgentforceClickBox").textContent = x.bookmarkAgentforceAction;
       bookmarkMcaGitClickBox.textContent = x.bookmarkMcaGitAction;
       bookmarkMcaAwsClickBox.textContent = x.bookmarkMcaAwsAction;
       document.getElementById("bookmarkExp1Title").textContent = x.bookmarkExp1Title;
@@ -4087,7 +4125,7 @@
       bookmarkAddResourceSaveBtn.textContent = i.saveCase;
       bookmarkEditResourceCloseBtn.textContent = i.close;
       document.querySelectorAll(".contacts-label").forEach((el) => { el.textContent = x.contactsLabel; });
-      if (!localStorage.getItem(BOOKMARK_QUICK_CARDS_KEY)) {
+      if (!loadJsonArray(BOOKMARK_QUICK_CARDS_KEY).length) {
         bookmarkQuickCards = defaultQuickCards(currentLang);
         renderQuickCarousel();
       }
@@ -4699,7 +4737,68 @@
       return /^https?:\/\//i.test(value) ? value : `https://${value}`;
     }
 
+    function isGlobalBookmarkStateKey(storageKey) {
+      return BOOKMARK_STATE_KEYS.has(String(storageKey || ""));
+    }
+
+    async function loadBookmarkStateFromServer() {
+      try {
+        const data = await request("/api/bookmark-state");
+        bookmarkStateStore = data && typeof data.state === "object" && data.state ? data.state : {};
+      } catch (_error) {
+        bookmarkStateStore = {};
+      }
+    }
+
+    function persistBookmarkState(storageKey, value) {
+      if (!isGlobalBookmarkStateKey(storageKey)) return;
+      if (!isAuthenticated) return;
+      request(`/api/bookmark-state/${encodeURIComponent(storageKey)}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ value }),
+      }).catch(() => {});
+    }
+
+    function readLegacyLocalState(storageKey) {
+      try {
+        const raw = localStorage.getItem(storageKey);
+        if (raw == null) return undefined;
+        if (storageKey === BOOKMARK_LINK_OVERRIDES_KEY || storageKey === BOOKMARK_FIXED_RESOURCES_OVERRIDES_KEY) {
+          const parsed = JSON.parse(raw || "{}");
+          return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
+        }
+        const parsed = JSON.parse(raw || "[]");
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (_error) {
+        return undefined;
+      }
+    }
+
+    async function migrateLegacyLocalBookmarkStateIfNeeded() {
+      if (!isAuthenticated) return;
+      const updates = [];
+      BOOKMARK_STATE_KEYS.forEach((key) => {
+        if (typeof bookmarkStateStore[key] !== "undefined") return;
+        const legacyValue = readLegacyLocalState(key);
+        if (typeof legacyValue === "undefined") return;
+        bookmarkStateStore[key] = legacyValue;
+        updates.push(
+          request(`/api/bookmark-state/${encodeURIComponent(key)}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ value: legacyValue }),
+          }).catch(() => {})
+        );
+      });
+      if (updates.length) await Promise.all(updates);
+    }
+
     function loadJsonArray(storageKey) {
+      if (isGlobalBookmarkStateKey(storageKey)) {
+        const data = bookmarkStateStore[storageKey];
+        return Array.isArray(data) ? data : [];
+      }
       try {
         const data = JSON.parse(localStorage.getItem(storageKey) || "[]");
         return Array.isArray(data) ? data : [];
@@ -4709,10 +4808,19 @@
     }
 
     function saveJsonArray(storageKey, items) {
+      if (isGlobalBookmarkStateKey(storageKey)) {
+        bookmarkStateStore[storageKey] = Array.isArray(items) ? items : [];
+        persistBookmarkState(storageKey, bookmarkStateStore[storageKey]);
+        return;
+      }
       localStorage.setItem(storageKey, JSON.stringify(items));
     }
 
     function loadJsonObject(storageKey) {
+      if (isGlobalBookmarkStateKey(storageKey)) {
+        const data = bookmarkStateStore[storageKey];
+        return data && typeof data === "object" && !Array.isArray(data) ? data : {};
+      }
       try {
         const data = JSON.parse(localStorage.getItem(storageKey) || "{}");
         return data && typeof data === "object" && !Array.isArray(data) ? data : {};
@@ -4722,6 +4830,11 @@
     }
 
     function saveJsonObject(storageKey, value) {
+      if (isGlobalBookmarkStateKey(storageKey)) {
+        bookmarkStateStore[storageKey] = value && typeof value === "object" && !Array.isArray(value) ? value : {};
+        persistBookmarkState(storageKey, bookmarkStateStore[storageKey]);
+        return;
+      }
       localStorage.setItem(storageKey, JSON.stringify(value || {}));
     }
 
@@ -4810,6 +4923,17 @@
           iconId: "bookmarkMcaIcon",
           defaultEmojiKey: "assets",
           defaultIconClass: "box-icon",
+        },
+        {
+          key: "agentforce",
+          rowSelector: "#bookmarkResourceTableBody tr:nth-child(5)",
+          nameId: "bookmarkAgentforceTitle",
+          descId: "bookmarkAgentforceDesc",
+          dateId: "bookmarkAgentforceDate",
+          statusId: "bookmarkAgentforceStatus",
+          iconId: "bookmarkAgentforceIcon",
+          defaultEmojiKey: "agentforce",
+          defaultIconClass: "ai-icon",
         },
       ];
     }
@@ -4955,7 +5079,16 @@
     function renderKeyResources() {
       bookmarkResourceTableBodyEl.querySelectorAll(".bookmark-custom-resource-row").forEach((row) => row.remove());
       const resources = loadKeyResources();
+      const fixedUrls = new Set([
+        normalizeUrl(document.getElementById("bookmarkClickBox")?.getAttribute("href") || ""),
+        normalizeUrl(document.getElementById("bookmarkCortexClickBox")?.getAttribute("href") || ""),
+        normalizeUrl(document.getElementById("bookmarkMcaGitClickBox")?.getAttribute("href") || ""),
+        normalizeUrl(document.getElementById("bookmarkMcaAwsClickBox")?.getAttribute("href") || ""),
+        normalizeUrl(document.getElementById("bookmarkScopezillaClickBox")?.getAttribute("href") || ""),
+        normalizeUrl(document.getElementById("bookmarkAgentforceClickBox")?.getAttribute("href") || ""),
+      ]);
       resources.forEach((item) => {
+        if (fixedUrls.has(normalizeUrl(item.url || ""))) return;
         const preset = getResourceEmojiPreset(item.emojiKey);
         const tr = document.createElement("tr");
         tr.className = "bookmark-custom-resource-row";
@@ -5975,6 +6108,7 @@
     (async function bootstrap() {
       loadAuthors();
       loadAuthorPhotos();
+      await loadBookmarkStateFromServer();
       buildAuthorOptions();
       renderManageUsersList();
       setSelectedAuthor("");
@@ -5998,6 +6132,12 @@
         sharedOpenedEarly = await openSharedCaseFromUrl(queryCaseId);
       }
       await authPromise;
+      await migrateLegacyLocalBookmarkStateIfNeeded();
+      bookmarkQuickCards = loadQuickCards();
+      renderQuickCarousel();
+      renderKeyResources();
+      initializeBookmarkLibraryData();
+      renderBookmarkLibrary();
       await loadCases();
       if (queryCaseId) {
         if (!sharedOpenedEarly) {

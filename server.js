@@ -250,6 +250,13 @@ async function ensureSchema() {
       PRIMARY KEY (use_case_id, client_id)
     )
   `);
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS app_state (
+      state_key TEXT PRIMARY KEY,
+      state_value JSONB NOT NULL DEFAULT 'null'::jsonb,
+      updated_at TIMESTAMPTZ DEFAULT NOW()
+    )
+  `);
 }
 
 function toTrimmedText(value) {
@@ -942,6 +949,53 @@ app.post("/api/auth/logout", (req, res) => {
     res.clearCookie("connect.sid");
     res.json({ ok: true });
   });
+
+const BOOKMARK_STATE_KEYS = new Set([
+  "bookmark_custom_links_v1",
+  "bookmark_groups_v1",
+  "bookmark_link_overrides_v1",
+  "bookmark_link_deletes_v1",
+  "bookmark_group_order_v1",
+  "bookmark_quick_cards_v1",
+  "bookmark_key_resources_v1",
+  "bookmark_fixed_resources_overrides_v1",
+]);
+
+app.get("/api/bookmark-state", async (_req, res) => {
+  if (!hasDatabase) return res.json({ state: {} });
+  try {
+    const { rows } = await pool.query(
+      "SELECT state_key, state_value FROM app_state WHERE state_key = ANY($1::text[])",
+      [Array.from(BOOKMARK_STATE_KEYS)]
+    );
+    const state = {};
+    for (const row of rows) state[row.state_key] = row.state_value;
+    return res.json({ state });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
+app.put("/api/bookmark-state/:key", requireAuth, async (req, res) => {
+  const key = String(req.params.key || "").trim();
+  if (!BOOKMARK_STATE_KEYS.has(key)) {
+    return res.status(400).json({ error: "Chave de estado nao permitida." });
+  }
+  const value = req.body?.value;
+  if (!hasDatabase) return res.status(503).json({ error: "Banco indisponivel para persistencia global." });
+  try {
+    await pool.query(
+      `INSERT INTO app_state (state_key, state_value, updated_at)
+       VALUES ($1, $2::jsonb, NOW())
+       ON CONFLICT (state_key)
+       DO UPDATE SET state_value = EXCLUDED.state_value, updated_at = NOW()`,
+      [key, JSON.stringify(value ?? null)]
+    );
+    return res.json({ ok: true });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
 });
 
 app.get("/api/use-cases", async (req, res) => {
