@@ -949,6 +949,7 @@ app.post("/api/auth/logout", (req, res) => {
     res.clearCookie("connect.sid");
     res.json({ ok: true });
   });
+});
 
 const BOOKMARK_STATE_KEYS = new Set([
   "bookmark_custom_links_v1",
@@ -1000,7 +1001,6 @@ app.put("/api/bookmark-state/:key", async (req, res) => {
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
-});
 });
 
 app.get("/api/use-cases", async (req, res) => {
