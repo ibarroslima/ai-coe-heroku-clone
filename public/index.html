@@ -4742,6 +4742,10 @@
       return BOOKMARK_STATE_KEYS.has(String(storageKey || ""));
     }
 
+    function canWriteBookmarkStateKey(storageKey) {
+      return isAuthenticated || String(storageKey || "") === BOOKMARK_CUSTOM_LINKS_KEY;
+    }
+
     async function loadBookmarkStateFromServer() {
       try {
         const data = await request("/api/bookmark-state");
@@ -4753,7 +4757,7 @@
 
     function persistBookmarkState(storageKey, value) {
       if (!isGlobalBookmarkStateKey(storageKey)) return;
-      if (!isAuthenticated) return;
+      if (!canWriteBookmarkStateKey(storageKey)) return;
       return request(`/api/bookmark-state/${encodeURIComponent(storageKey)}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -5765,7 +5769,6 @@
       openBookmarkLibraryBoard();
     });
     bookmarkLibraryAddBtn.addEventListener("click", () => {
-      if (!ensureAdminOrPrompt()) return;
       openAddLinkModal(null);
     });
     bookmarkLibraryGroupBtn.addEventListener("click", () => {
@@ -5863,7 +5866,6 @@
       if (event.target === bookmarkAddGroupModal) closeAddGroupModal();
     });
     bookmarkAddLinkSaveBtn.addEventListener("click", async () => {
-      if (!ensureAdminOrPrompt()) return;
       const group = Number(bookmarkLinkGroupEl.value || "1");
       const title = String(bookmarkLinkTitleEl.value || "").trim();
       const normalizedUrl = normalizeUrl(bookmarkLinkUrlEl.value || "");

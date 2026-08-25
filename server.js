@@ -976,10 +976,15 @@ app.get("/api/bookmark-state", async (_req, res) => {
   }
 });
 
-app.put("/api/bookmark-state/:key", requireAuth, async (req, res) => {
+app.put("/api/bookmark-state/:key", async (req, res) => {
   const key = String(req.params.key || "").trim();
   if (!BOOKMARK_STATE_KEYS.has(key)) {
     return res.status(400).json({ error: "Chave de estado nao permitida." });
+  }
+  const isAdmin = Boolean(req.session && req.session.isAuthenticated);
+  const isPublicWritable = key === "bookmark_custom_links_v1";
+  if (!isAdmin && !isPublicWritable) {
+    return res.status(401).json({ error: "Nao autorizado." });
   }
   const value = req.body?.value;
   if (!hasDatabase) return res.status(503).json({ error: "Banco indisponivel para persistencia global." });
