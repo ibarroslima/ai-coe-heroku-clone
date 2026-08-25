@@ -5450,12 +5450,26 @@
         const listEl = card.querySelector(".bookmark-links-list");
         if (!h3 || !listEl) return;
         const parsed = parseGroupHeader(h3.textContent);
-        if (!parsed) return;
-        const group = parsed.group;
+        const groupFromCard = Number(card.dataset.group);
+        const listIdMatch = String(listEl.id || "").match(/^bookmarkGroupList(\d+)$/);
+        const groupFromList = listIdMatch ? Number(listIdMatch[1]) : NaN;
+        const group = Number.isFinite(groupFromCard)
+          ? groupFromCard
+          : Number.isFinite(groupFromList)
+          ? groupFromList
+          : parsed
+          ? parsed.group
+          : NaN;
+        if (!Number.isFinite(group)) return;
+        const title = parsed
+          ? parsed.title
+          : String(h3.textContent || "")
+              .replace(/^\d+\)\s*/, "")
+              .trim();
         card.dataset.group = String(group);
         const defaultEmoji = emojiEl ? String(emojiEl.textContent || "").trim() : "📁";
         if (!seenGroups.has(group)) {
-          bookmarkBaseGroups.push({ group, title: parsed.title, emoji: defaultEmoji || "📁" });
+          bookmarkBaseGroups.push({ group, title: title || `Grupo ${group}`, emoji: defaultEmoji || "📁" });
           seenGroups.add(group);
         }
         const anchors = Array.from(listEl.querySelectorAll("li > a"));
