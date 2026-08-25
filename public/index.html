@@ -2919,6 +2919,7 @@
     let bookmarkQuickEditingIndex = -1;
     let bookmarkResourceEditing = null;
     let bookmarkStateStore = {};
+    const bookmarkStateSync = {};
 
     const AUTHORS_STORAGE_KEY = "ai_coe_authors_v1";
     const AUTHOR_PHOTOS_STORAGE_KEY = "ai_coe_author_photos_v1";
@@ -4753,11 +4754,11 @@
     function persistBookmarkState(storageKey, value) {
       if (!isGlobalBookmarkStateKey(storageKey)) return;
       if (!isAuthenticated) return;
-      request(`/api/bookmark-state/${encodeURIComponent(storageKey)}`, {
+      return request(`/api/bookmark-state/${encodeURIComponent(storageKey)}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ value }),
-      }).catch(() => {});
+      });
     }
 
     function readLegacyLocalState(storageKey) {
@@ -4810,10 +4811,11 @@
     function saveJsonArray(storageKey, items) {
       if (isGlobalBookmarkStateKey(storageKey)) {
         bookmarkStateStore[storageKey] = Array.isArray(items) ? items : [];
-        persistBookmarkState(storageKey, bookmarkStateStore[storageKey]);
-        return;
+        bookmarkStateSync[storageKey] = persistBookmarkState(storageKey, bookmarkStateStore[storageKey]) || Promise.resolve();
+        return bookmarkStateSync[storageKey];
       }
       localStorage.setItem(storageKey, JSON.stringify(items));
+      return Promise.resolve();
     }
 
     function loadJsonObject(storageKey) {
@@ -4832,10 +4834,19 @@
     function saveJsonObject(storageKey, value) {
       if (isGlobalBookmarkStateKey(storageKey)) {
         bookmarkStateStore[storageKey] = value && typeof value === "object" && !Array.isArray(value) ? value : {};
-        persistBookmarkState(storageKey, bookmarkStateStore[storageKey]);
-        return;
+        bookmarkStateSync[storageKey] = persistBookmarkState(storageKey, bookmarkStateStore[storageKey]) || Promise.resolve();
+        return bookmarkStateSync[storageKey];
       }
       localStorage.setItem(storageKey, JSON.stringify(value || {}));
+      return Promise.resolve();
+    }
+
+    async function ensureBookmarkStateSaved(keys) {
+      const queue = (Array.isArray(keys) ? keys : [keys])
+        .map((key) => bookmarkStateSync[key])
+        .filter(Boolean);
+      if (!queue.length) return;
+      await Promise.all(queue);
     }
 
     function formatResourceDate(dateValue) {
@@ -5311,7 +5322,7 @@
     }
 
     function saveCustomBookmarkLinks(items) {
-      saveJsonArray(BOOKMARK_CUSTOM_LINKS_KEY, items);
+      return saveJsonArray(BOOKMARK_CUSTOM_LINKS_KEY, items);
     }
 
     function loadBookmarkGroups() {
@@ -5329,7 +5340,7 @@
     }
 
     function saveBookmarkGroups(groups) {
-      saveJsonArray(BOOKMARK_GROUPS_KEY, groups);
+      return saveJsonArray(BOOKMARK_GROUPS_KEY, groups);
     }
 
     function normalizeGroupTitle(value) {
@@ -5390,7 +5401,7 @@
     }
 
     function saveDeletedBookmarkLinkIds(idsSet) {
-      saveJsonArray(BOOKMARK_LINK_DELETES_KEY, Array.from(idsSet));
+      return saveJsonArray(BOOKMARK_LINK_DELETES_KEY, Array.from(idsSet));
     }
 
     function loadBookmarkLinkOverrides() {
@@ -5398,7 +5409,7 @@
     }
 
     function saveBookmarkLinkOverrides(overrides) {
-      saveJsonObject(BOOKMARK_LINK_OVERRIDES_KEY, overrides);
+      return saveJsonObject(BOOKMARK_LINK_OVERRIDES_KEY, overrides);
     }
 
     function updateBookmarkGroupSelectOptions() {
@@ -5746,7 +5757,10 @@
       event.preventDefault();
       openBookmarkLibraryBoard();
     });
-    bookmarkLibraryAddBtn.addEventListener("click", () => openAddLinkModal(null));
+    bookmarkLibraryAddBtn.addEventListener("click", () => {
+      if (!isAuthenticated) return;
+      openAddLinkModal(null);
+    });
     bookmarkLibraryGroupBtn.addEventListener("click", () => {
       if (!isAuthenticated) return;
       openAddGroupModal();
@@ -5803,7 +5817,7 @@
       bookmarkDraggingGroupId = "";
       bookmarkLinksGroupsEl.querySelectorAll(".bookmark-links-group.drag-over").forEach((el) => el.classList.remove("drag-over"));
     });
-    bookmarkLinksGroupsEl.addEventListener("click", (event) => {
+    bookmarkLinksGroupsEl.addEventListener("click", async (event) => {
       const target = event.target;
       if (!(target instanceof HTMLElement) || !isAuthenticated) return;
       const editBtn = target.closest(".bookmark-link-mini-btn.edit");
@@ -5823,12 +5837,13 @@
         const custom = loadCustomBookmarkLinks();
         const filteredCustom = custom.filter((item) => String(item.id || "") !== linkId);
         if (filteredCustom.length !== custom.length) {
-          saveCustomBookmarkLinks(filteredCustom);
+          await saveCustomBookmarkLinks(filteredCustom);
         } else {
           const deleted = loadDeletedBookmarkLinkIds();
           deleted.add(linkId);
-          saveDeletedBookmarkLinkIds(deleted);
+          await saveDeletedBookmarkLinkIds(deleted);
         }
+        await ensureBookmarkStateSaved([BOOKMARK_CUSTOM_LINKS_KEY, BOOKMARK_LINK_DELETES_KEY]);
         renderBookmarkLibrary();
       }
     });
@@ -5840,7 +5855,11 @@
     bookmarkAddGroupModal.addEventListener("click", (event) => {
       if (event.target === bookmarkAddGroupModal) closeAddGroupModal();
     });
-    bookmarkAddLinkSaveBtn.addEventListener("click", () => {
+    bookmarkAddLinkSaveBtn.addEventListener("click", async () => {
+      if (!isAuthenticated) {
+        alert("Apenas ADMIN pode adicionar/editar links.");
+        return;
+      }
       const group = Number(bookmarkLinkGroupEl.value || "1");
       const title = String(bookmarkLinkTitleEl.value || "").trim();
       const normalizedUrl = normalizeUrl(bookmarkLinkUrlEl.value || "");
@@ -5853,26 +5872,31 @@
         const customIndex = custom.findIndex((item) => String(item.id || "") === bookmarkEditingLinkId);
         if (customIndex >= 0) {
           custom[customIndex] = { ...custom[customIndex], group, title, url: normalizedUrl };
-          saveCustomBookmarkLinks(custom);
+          await saveCustomBookmarkLinks(custom);
         } else {
           const overrides = loadBookmarkLinkOverrides();
           overrides[bookmarkEditingLinkId] = { group, title, url: normalizedUrl };
-          saveBookmarkLinkOverrides(overrides);
+          await saveBookmarkLinkOverrides(overrides);
           const deleted = loadDeletedBookmarkLinkIds();
           if (deleted.has(bookmarkEditingLinkId)) {
             deleted.delete(bookmarkEditingLinkId);
-            saveDeletedBookmarkLinkIds(deleted);
+            await saveDeletedBookmarkLinkIds(deleted);
           }
         }
       } else {
         const items = loadCustomBookmarkLinks();
         items.push({ id: `c-${Date.now()}-${Math.random().toString(16).slice(2, 8)}`, group, title, url: normalizedUrl });
-        saveCustomBookmarkLinks(items);
+        await saveCustomBookmarkLinks(items);
       }
+      await ensureBookmarkStateSaved([
+        BOOKMARK_CUSTOM_LINKS_KEY,
+        BOOKMARK_LINK_OVERRIDES_KEY,
+        BOOKMARK_LINK_DELETES_KEY,
+      ]);
       renderBookmarkLibrary();
       closeAddLinkModal();
     });
-    bookmarkAddGroupSaveBtn.addEventListener("click", () => {
+    bookmarkAddGroupSaveBtn.addEventListener("click", async () => {
       if (!isAuthenticated) return;
       const title = String(bookmarkGroupTitleEl.value || "").trim();
       const emoji = String(bookmarkGroupEmojiEl.value || "").trim() || "📁";
@@ -5883,7 +5907,8 @@
       const groups = loadBookmarkGroups();
       const group = groups.reduce((max, item) => Math.max(max, Number(item.group) || 0), 0) + 1;
       groups.push({ group, title, emoji });
-      saveBookmarkGroups(groups);
+      await saveBookmarkGroups(groups);
+      await ensureBookmarkStateSaved(BOOKMARK_GROUPS_KEY);
       renderBookmarkLibrary();
       closeAddGroupModal();
     });
