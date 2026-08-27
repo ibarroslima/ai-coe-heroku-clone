@@ -2466,6 +2466,8 @@
             <input id="bookmarkResourceDate" class="input" type="date" />
             <label id="bookmarkResourceActionLabel" for="bookmarkResourceAction">Acao (link)</label>
             <input id="bookmarkResourceAction" class="input" placeholder="https://..." />
+            <label id="bookmarkResourceActionTextLabel" for="bookmarkResourceActionText">Texto do botao</label>
+            <input id="bookmarkResourceActionText" class="input" placeholder="Ex.: Acessar recurso" />
           </div>
           <div class="bookmark-add-link-actions">
             <button id="bookmarkAddResourceCancelBtn" type="button" class="pill-btn">Cancelar</button>
@@ -2827,6 +2829,7 @@
     const bookmarkResourceEmojiPreviewEl = document.getElementById("bookmarkResourceEmojiPreview");
     const bookmarkResourceDateEl = document.getElementById("bookmarkResourceDate");
     const bookmarkResourceActionEl = document.getElementById("bookmarkResourceAction");
+    const bookmarkResourceActionTextEl = document.getElementById("bookmarkResourceActionText");
     const bookmarkAddResourceCancelBtn = document.getElementById("bookmarkAddResourceCancelBtn");
     const bookmarkAddResourceSaveBtn = document.getElementById("bookmarkAddResourceSaveBtn");
     const bookmarkLibraryBoardEl = document.getElementById("bookmarkLibraryBoard");
@@ -3095,6 +3098,7 @@
         bookmarkResourceEmojiPreviewLabel: "Preview",
         bookmarkResourceDateLabel: "Data de atualizacao",
         bookmarkResourceActionLabel: "Acao (link)",
+        bookmarkResourceActionTextLabel: "Texto do botao",
         bookmarkCustomActionBtn: "ABRIR",
         bookmarkResourceRequiredAlert: "Preencha recurso e link do recurso.",
         bookmarkExp1Title: "Biblioteca de links",
@@ -3279,6 +3283,7 @@
         bookmarkResourceEmojiPreviewLabel: "Vista previa",
         bookmarkResourceDateLabel: "Fecha de actualizacion",
         bookmarkResourceActionLabel: "Accion (link)",
+        bookmarkResourceActionTextLabel: "Texto del boton",
         bookmarkCustomActionBtn: "ABRIR",
         bookmarkResourceRequiredAlert: "Completa recurso y link del recurso.",
         bookmarkExp1Title: "Biblioteca de enlaces",
@@ -3463,6 +3468,7 @@
         bookmarkResourceEmojiPreviewLabel: "Preview",
         bookmarkResourceDateLabel: "Updated at",
         bookmarkResourceActionLabel: "Action (link)",
+        bookmarkResourceActionTextLabel: "Button text",
         bookmarkCustomActionBtn: "OPEN",
         bookmarkResourceRequiredAlert: "Please fill resource and resource link.",
         bookmarkExp1Title: "Link library",
@@ -4064,6 +4070,7 @@
       document.getElementById("bookmarkResourceEmojiPreviewLabel").textContent = x.bookmarkResourceEmojiPreviewLabel;
       document.getElementById("bookmarkResourceDateLabel").textContent = x.bookmarkResourceDateLabel;
       document.getElementById("bookmarkResourceActionLabel").textContent = x.bookmarkResourceActionLabel;
+      document.getElementById("bookmarkResourceActionTextLabel").textContent = x.bookmarkResourceActionTextLabel || "Button text";
       bookmarkAddResourceBtn.textContent = x.bookmarkAddResourceBtn;
       bookmarkEditResourceBtn.textContent = x.bookmarkEditResourceBtn;
       document.getElementById("bookmarkEditResourceTitle").textContent = x.bookmarkEditResourceTitle;
@@ -4877,6 +4884,7 @@
           date: String(item.date || "").trim(),
           emojiKey: String(item.emojiKey || "framework").trim() || "framework",
           url: normalizeUrl(item.url || ""),
+          actionLabel: String(item.actionLabel || "").trim(),
         }))
         .filter((item) => item.name && item.url);
     }
@@ -5071,8 +5079,10 @@
         const row = document.createElement("div");
         row.className = "bookmark-quick-admin-item";
         row.innerHTML = `
-          <b>${item.name}</b>
+          <b>${index + 1}. ${item.name}</b>
           <span class="bookmark-quick-admin-actions">
+            <button type="button" class="bookmark-quick-admin-btn up" data-kind="custom" data-index="${index}">${x.quickMoveUp}</button>
+            <button type="button" class="bookmark-quick-admin-btn down" data-kind="custom" data-index="${index}">${x.quickMoveDown}</button>
             <button type="button" class="bookmark-quick-admin-btn edit" data-kind="custom" data-index="${index}">${x.bookmarkEditResourceAction}</button>
           </span>
         `;
@@ -5126,7 +5136,7 @@
         applyStatusForDate(statusEl, tr.children[3].textContent, item.status);
         const link = tr.querySelector(".bookmark-action-btn");
         link.href = item.url;
-        link.textContent = tx().bookmarkCustomActionBtn;
+        link.textContent = item.actionLabel || tx().bookmarkCustomActionBtn;
         bookmarkResourceTableBodyEl.appendChild(tr);
       });
       applyFixedResourceOverrides();
@@ -5143,6 +5153,7 @@
       updateResourceEmojiPreview();
       bookmarkResourceDateEl.value = payload?.date || today;
       bookmarkResourceActionEl.value = payload?.url || "";
+      bookmarkResourceActionTextEl.value = payload?.actionLabel || tx().bookmarkCustomActionBtn || "ABRIR";
       bookmarkAddResourceModal.classList.add("show");
       document.getElementById("bookmarkAddResourceTitle").textContent = payload ? tx().bookmarkEditResourceTitle : tx().bookmarkAddResourceTitle;
       bookmarkResourceNameEl.focus();
@@ -5662,8 +5673,32 @@
     bookmarkEditResourceList.addEventListener("click", (event) => {
       const target = event.target;
       if (!(target instanceof HTMLElement)) return;
-      if (!target.classList.contains("edit")) return;
       const kind = String(target.dataset.kind || "");
+      if (kind === "custom" && target.classList.contains("up")) {
+        const customIndex = Number(target.dataset.index);
+        const current = loadKeyResources();
+        if (!Number.isFinite(customIndex) || customIndex <= 0 || !current[customIndex]) return;
+        const tmp = current[customIndex - 1];
+        current[customIndex - 1] = current[customIndex];
+        current[customIndex] = tmp;
+        saveKeyResources(current);
+        renderKeyResources();
+        openEditResourceListModal();
+        return;
+      }
+      if (kind === "custom" && target.classList.contains("down")) {
+        const customIndex = Number(target.dataset.index);
+        const current = loadKeyResources();
+        if (!Number.isFinite(customIndex) || customIndex >= current.length - 1 || !current[customIndex]) return;
+        const tmp = current[customIndex + 1];
+        current[customIndex + 1] = current[customIndex];
+        current[customIndex] = tmp;
+        saveKeyResources(current);
+        renderKeyResources();
+        openEditResourceListModal();
+        return;
+      }
+      if (!target.classList.contains("edit")) return;
       if (kind === "fixed") {
         const def = fixedResourceDefs().find((item) => item.key === target.dataset.key);
         if (!def) return;
@@ -5706,6 +5741,7 @@
         emojiKey: String(bookmarkResourceEmojiEl.value || "framework").trim() || "framework",
         date: String(bookmarkResourceDateEl.value || "").trim(),
         url: normalizeUrl(bookmarkResourceActionEl.value || ""),
+        actionLabel: String(bookmarkResourceActionTextEl.value || tx().bookmarkCustomActionBtn || "ABRIR").trim() || (tx().bookmarkCustomActionBtn || "ABRIR"),
       };
       if (!item.name || (!bookmarkResourceEditing || bookmarkResourceEditing.kind === "custom") && !item.url) {
         alert(tx().bookmarkResourceRequiredAlert);
