@@ -2937,6 +2937,7 @@
     const BOOKMARK_QUICK_CARDS_KEY = "bookmark_quick_cards_v1";
     const BOOKMARK_KEY_RESOURCES_KEY = "bookmark_key_resources_v1";
     const BOOKMARK_FIXED_RESOURCES_OVERRIDES_KEY = "bookmark_fixed_resources_overrides_v1";
+    const BOOKMARK_RESOURCES_ORDER_KEY = "bookmark_resources_order_v1";
     const BOOKMARK_STATE_KEYS = new Set([
       BOOKMARK_CUSTOM_LINKS_KEY,
       BOOKMARK_GROUPS_KEY,
@@ -2946,6 +2947,7 @@
       BOOKMARK_QUICK_CARDS_KEY,
       BOOKMARK_KEY_RESOURCES_KEY,
       BOOKMARK_FIXED_RESOURCES_OVERRIDES_KEY,
+      BOOKMARK_RESOURCES_ORDER_KEY,
     ]);
     const BOOKMARK_BASE_GROUP_TITLE_KEYS = {
       1: "bookmarkGroup1Title",
@@ -4877,7 +4879,8 @@
 
     function loadKeyResources() {
       return loadJsonArray(BOOKMARK_KEY_RESOURCES_KEY)
-        .map((item) => ({
+        .map((item, index) => ({
+          id: String(item.id || `custom-${index + 1}`),
           name: String(item.name || "").trim(),
           desc: String(item.desc || "").trim(),
           status: String(item.status || "VERIFICADO").trim() || "VERIFICADO",
@@ -4891,6 +4894,14 @@
 
     function saveKeyResources(items) {
       saveJsonArray(BOOKMARK_KEY_RESOURCES_KEY, items);
+    }
+
+    function loadResourcesOrder() {
+      return loadJsonArray(BOOKMARK_RESOURCES_ORDER_KEY).map((item) => String(item || "").trim()).filter(Boolean);
+    }
+
+    function saveResourcesOrder(order) {
+      saveJsonArray(BOOKMARK_RESOURCES_ORDER_KEY, order.map((item) => String(item || "").trim()).filter(Boolean));
     }
 
     function loadFixedResourceOverrides() {
@@ -4959,6 +4970,43 @@
           defaultIconClass: "ai-icon",
         },
       ];
+    }
+
+    function getFixedResourceRows() {
+      return [
+        { id: "fixed:primary", key: "primary", row: document.getElementById("bookmarkClickBox")?.closest("tr") },
+        { id: "fixed:cortex", key: "cortex", row: document.getElementById("bookmarkCortexClickBox")?.closest("tr") },
+        { id: "fixed:scopezilla", key: "scopezilla", row: document.getElementById("bookmarkScopezillaClickBox")?.closest("tr") },
+        { id: "fixed:mca", key: "mca", row: document.getElementById("bookmarkMcaGitClickBox")?.closest("tr") },
+        { id: "fixed:agentforce", key: "agentforce", row: document.getElementById("bookmarkAgentforceClickBox")?.closest("tr") },
+      ].filter((item) => item.row);
+    }
+
+    function getNormalizedResourceOrderIds(currentIds) {
+      const existing = new Set(currentIds);
+      const order = loadResourcesOrder().filter((id) => existing.has(id));
+      currentIds.forEach((id) => {
+        if (!order.includes(id)) order.push(id);
+      });
+      return order;
+    }
+
+    function moveResourceOrderEntry(entryId, delta) {
+      const ids = getNormalizedResourceOrderIds(getCurrentResourceOrderIds());
+      const from = ids.indexOf(entryId);
+      if (from === -1) return;
+      const to = from + delta;
+      if (to < 0 || to >= ids.length) return;
+      const temp = ids[to];
+      ids[to] = ids[from];
+      ids[from] = temp;
+      saveResourcesOrder(ids);
+    }
+
+    function getCurrentResourceOrderIds() {
+      const fixedIds = getFixedResourceRows().map((item) => item.id);
+      const customIds = loadKeyResources().map((item) => `custom:${item.id}`);
+      return [...fixedIds, ...customIds];
     }
 
     const RESOURCE_EMOJI_PRESETS = [
@@ -5063,27 +5111,38 @@
       if (!isAuthenticated) return;
       const x = tx();
       bookmarkEditResourceList.innerHTML = "";
-      fixedResourceDefs().forEach((def) => {
-        const name = document.getElementById(def.nameId)?.textContent || def.key;
+      const customResources = loadKeyResources();
+      const fixedById = new Map(
+        fixedResourceDefs().map((def) => [
+          `fixed:${def.key}`,
+          {
+            id: `fixed:${def.key}`,
+            kind: "fixed",
+            key: def.key,
+            name: document.getElementById(def.nameId)?.textContent || def.key,
+          },
+        ])
+      );
+      const customById = new Map(
+        customResources.map((item, index) => [
+          `custom:${item.id}`,
+          { id: `custom:${item.id}`, kind: "custom", index, name: item.name },
+        ])
+      );
+      const merged = new Map([...fixedById, ...customById]);
+      const orderedIds = getNormalizedResourceOrderIds(Array.from(merged.keys()));
+      saveResourcesOrder(orderedIds);
+      orderedIds.forEach((entryId, index) => {
+        const entry = merged.get(entryId);
+        if (!entry) return;
         const row = document.createElement("div");
         row.className = "bookmark-quick-admin-item";
         row.innerHTML = `
-          <b>${name}</b>
+          <b>${index + 1}. ${entry.name}</b>
           <span class="bookmark-quick-admin-actions">
-            <button type="button" class="bookmark-quick-admin-btn edit" data-kind="fixed" data-key="${def.key}">${x.bookmarkEditResourceAction}</button>
-          </span>
-        `;
-        bookmarkEditResourceList.appendChild(row);
-      });
-      loadKeyResources().forEach((item, index) => {
-        const row = document.createElement("div");
-        row.className = "bookmark-quick-admin-item";
-        row.innerHTML = `
-          <b>${index + 1}. ${item.name}</b>
-          <span class="bookmark-quick-admin-actions">
-            <button type="button" class="bookmark-quick-admin-btn up" data-kind="custom" data-index="${index}">${x.quickMoveUp}</button>
-            <button type="button" class="bookmark-quick-admin-btn down" data-kind="custom" data-index="${index}">${x.quickMoveDown}</button>
-            <button type="button" class="bookmark-quick-admin-btn edit" data-kind="custom" data-index="${index}">${x.bookmarkEditResourceAction}</button>
+            <button type="button" class="bookmark-quick-admin-btn up" data-kind="${entry.kind}" data-entry-id="${entry.id}">${x.quickMoveUp}</button>
+            <button type="button" class="bookmark-quick-admin-btn down" data-kind="${entry.kind}" data-entry-id="${entry.id}">${x.quickMoveDown}</button>
+            <button type="button" class="bookmark-quick-admin-btn edit" data-kind="${entry.kind}" ${entry.kind === "fixed" ? `data-key="${entry.key}"` : `data-resource-id="${entry.id}"`}>${x.bookmarkEditResourceAction}</button>
           </span>
         `;
         bookmarkEditResourceList.appendChild(row);
@@ -5117,6 +5176,7 @@
         const preset = getResourceEmojiPreset(item.emojiKey);
         const tr = document.createElement("tr");
         tr.className = "bookmark-custom-resource-row";
+        tr.dataset.resourceId = `custom:${item.id}`;
         tr.innerHTML = `
           <td>
             <div class="bookmark-resource-cell-name">
@@ -5140,6 +5200,19 @@
         bookmarkResourceTableBodyEl.appendChild(tr);
       });
       applyFixedResourceOverrides();
+      const fixedRows = getFixedResourceRows();
+      fixedRows.forEach((entry) => {
+        entry.row.dataset.resourceId = entry.id;
+      });
+      const allRows = [...fixedRows.map((entry) => entry.row), ...Array.from(bookmarkResourceTableBodyEl.querySelectorAll(".bookmark-custom-resource-row"))];
+      const currentIds = allRows.map((row) => String(row.dataset.resourceId || "")).filter(Boolean);
+      const orderedIds = getNormalizedResourceOrderIds(currentIds);
+      saveResourcesOrder(orderedIds);
+      const rowById = new Map(allRows.map((row) => [String(row.dataset.resourceId || ""), row]));
+      orderedIds.forEach((id) => {
+        const row = rowById.get(id);
+        if (row) bookmarkResourceTableBodyEl.appendChild(row);
+      });
       updateKeyResourcesLabel();
     }
 
@@ -5674,26 +5747,10 @@
       const target = event.target;
       if (!(target instanceof HTMLElement)) return;
       const kind = String(target.dataset.kind || "");
-      if (kind === "custom" && target.classList.contains("up")) {
-        const customIndex = Number(target.dataset.index);
-        const current = loadKeyResources();
-        if (!Number.isFinite(customIndex) || customIndex <= 0 || !current[customIndex]) return;
-        const tmp = current[customIndex - 1];
-        current[customIndex - 1] = current[customIndex];
-        current[customIndex] = tmp;
-        saveKeyResources(current);
-        renderKeyResources();
-        openEditResourceListModal();
-        return;
-      }
-      if (kind === "custom" && target.classList.contains("down")) {
-        const customIndex = Number(target.dataset.index);
-        const current = loadKeyResources();
-        if (!Number.isFinite(customIndex) || customIndex >= current.length - 1 || !current[customIndex]) return;
-        const tmp = current[customIndex + 1];
-        current[customIndex + 1] = current[customIndex];
-        current[customIndex] = tmp;
-        saveKeyResources(current);
+      if (target.classList.contains("up") || target.classList.contains("down")) {
+        const entryId = String(target.dataset.entryId || "").trim();
+        if (!entryId) return;
+        moveResourceOrderEntry(entryId, target.classList.contains("up") ? -1 : 1);
         renderKeyResources();
         openEditResourceListModal();
         return;
@@ -5717,9 +5774,11 @@
         openAddResourceModal(payload);
         return;
       }
-      const customIndex = Number(target.dataset.index);
-      const custom = loadKeyResources()[customIndex];
-      if (!Number.isFinite(customIndex) || !custom) return;
+      const resourceId = String(target.dataset.resourceId || "").replace(/^custom:/, "");
+      const currentResources = loadKeyResources();
+      const customIndex = currentResources.findIndex((item) => item.id === resourceId);
+      const custom = customIndex >= 0 ? currentResources[customIndex] : null;
+      if (!custom) return;
       closeEditResourceListModal();
       openAddResourceModal({ kind: "custom", index: customIndex, ...custom });
     });
@@ -5735,6 +5794,7 @@
     bookmarkAddResourceSaveBtn.addEventListener("click", () => {
       if (!isAuthenticated) return;
       const item = {
+        id: String(bookmarkResourceEditing?.id || `custom-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`),
         name: String(bookmarkResourceNameEl.value || "").trim(),
         desc: String(bookmarkResourceDescEl.value || "").trim(),
         status: String(bookmarkResourceStatusEl.value || tx().bookmarkPrimaryResourceStatus || "VERIFICADO").trim(),
@@ -5763,6 +5823,9 @@
           current[Number(bookmarkResourceEditing.index)] = item;
         } else {
           current.push(item);
+          const currentOrder = getNormalizedResourceOrderIds(getCurrentResourceOrderIds());
+          currentOrder.push(`custom:${item.id}`);
+          saveResourcesOrder(currentOrder);
         }
         saveKeyResources(current);
       }
