@@ -4893,7 +4893,7 @@
     }
 
     function saveKeyResources(items) {
-      saveJsonArray(BOOKMARK_KEY_RESOURCES_KEY, items);
+      return saveJsonArray(BOOKMARK_KEY_RESOURCES_KEY, items);
     }
 
     function loadResourcesOrder() {
@@ -4901,7 +4901,7 @@
     }
 
     function saveResourcesOrder(order) {
-      saveJsonArray(BOOKMARK_RESOURCES_ORDER_KEY, order.map((item) => String(item || "").trim()).filter(Boolean));
+      return saveJsonArray(BOOKMARK_RESOURCES_ORDER_KEY, order.map((item) => String(item || "").trim()).filter(Boolean));
     }
 
     function loadFixedResourceOverrides() {
@@ -4909,7 +4909,7 @@
     }
 
     function saveFixedResourceOverrides(value) {
-      saveJsonObject(BOOKMARK_FIXED_RESOURCES_OVERRIDES_KEY, value);
+      return saveJsonObject(BOOKMARK_FIXED_RESOURCES_OVERRIDES_KEY, value);
     }
 
     function fixedResourceDefs() {
@@ -5743,7 +5743,7 @@
     bookmarkEditResourceModal.addEventListener("click", (event) => {
       if (event.target === bookmarkEditResourceModal) closeEditResourceListModal();
     });
-    bookmarkEditResourceList.addEventListener("click", (event) => {
+    bookmarkEditResourceList.addEventListener("click", async (event) => {
       const target = event.target;
       if (!(target instanceof HTMLElement)) return;
       const kind = String(target.dataset.kind || "");
@@ -5751,6 +5751,12 @@
         const entryId = String(target.dataset.entryId || "").trim();
         if (!entryId) return;
         moveResourceOrderEntry(entryId, target.classList.contains("up") ? -1 : 1);
+        try {
+          await ensureBookmarkStateSaved(BOOKMARK_RESOURCES_ORDER_KEY);
+        } catch (_error) {
+          alert("Nao foi possivel salvar a nova ordem globalmente. Tente novamente.");
+          return;
+        }
         renderKeyResources();
         openEditResourceListModal();
         return;
@@ -5791,7 +5797,7 @@
       if (event.target === bookmarkAddResourceModal) closeAddResourceModal();
     });
     bookmarkResourceEmojiEl.addEventListener("change", updateResourceEmojiPreview);
-    bookmarkAddResourceSaveBtn.addEventListener("click", () => {
+    bookmarkAddResourceSaveBtn.addEventListener("click", async () => {
       if (!isAuthenticated) return;
       const item = {
         id: String(bookmarkResourceEditing?.id || `custom-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`),
@@ -5817,8 +5823,15 @@
           date: item.date,
         };
         saveFixedResourceOverrides(overrides);
+        try {
+          await ensureBookmarkStateSaved(BOOKMARK_FIXED_RESOURCES_OVERRIDES_KEY);
+        } catch (_error) {
+          alert("Nao foi possivel salvar esse recurso globalmente. Tente novamente.");
+          return;
+        }
       } else {
         const current = loadKeyResources();
+        let shouldPersistOrder = false;
         if (bookmarkResourceEditing && bookmarkResourceEditing.kind === "custom" && Number.isFinite(Number(bookmarkResourceEditing.index))) {
           current[Number(bookmarkResourceEditing.index)] = item;
         } else {
@@ -5826,8 +5839,18 @@
           const currentOrder = getNormalizedResourceOrderIds(getCurrentResourceOrderIds());
           currentOrder.push(`custom:${item.id}`);
           saveResourcesOrder(currentOrder);
+          shouldPersistOrder = true;
         }
         saveKeyResources(current);
+        try {
+          const keys = shouldPersistOrder
+            ? [BOOKMARK_KEY_RESOURCES_KEY, BOOKMARK_RESOURCES_ORDER_KEY]
+            : BOOKMARK_KEY_RESOURCES_KEY;
+          await ensureBookmarkStateSaved(keys);
+        } catch (_error) {
+          alert("Nao foi possivel salvar esse recurso globalmente. Tente novamente.");
+          return;
+        }
       }
       renderKeyResources();
       closeAddResourceModal();
