@@ -960,6 +960,7 @@ const BOOKMARK_STATE_KEYS = new Set([
   "bookmark_quick_cards_v1",
   "bookmark_key_resources_v1",
   "bookmark_fixed_resources_overrides_v1",
+  "bookmark_resources_order_v1",
 ]);
 
 app.get("/api/bookmark-state", async (_req, res) => {
