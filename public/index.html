@@ -151,10 +151,10 @@
     .portal-grid {
       display: grid;
       gap: 18px;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       align-items: start;
       justify-items: center;
-      max-width: 980px;
+      max-width: 1240px;
       margin: 0 auto;
     }
     .portal-option {
@@ -162,7 +162,7 @@
       display: grid;
       justify-items: center;
       gap: 10px;
-      width: min(360px, 36vw);
+      width: min(320px, 28vw);
       padding-bottom: 195px;
     }
     .portal-mascot {
@@ -178,13 +178,20 @@
       user-select: none;
       pointer-events: none;
     }
-    .portal-mascot.catalog { left: -230px; bottom: 36px; transform: none; }
+    .portal-mascot.catalog { left: -86px; bottom: 22px; transform: none; }
     .portal-mascot.bookmark {
-      right: -284px;
-      width: min(325px, 30vw);
+      right: auto;
+      left: 50%;
+      width: min(250px, 22vw);
       mix-blend-mode: normal;
-      transform: scaleX(-1);
-      bottom: 20px;
+      transform: translateX(-50%) scaleX(-1);
+      bottom: 8px;
+    }
+    .portal-mascot.learning {
+      left: 50%;
+      width: min(210px, 20vw);
+      transform: translateX(-50%);
+      bottom: 12px;
     }
     body.dark .portal-mascot { mix-blend-mode: normal; }
     .portal-circle {
@@ -1857,11 +1864,18 @@
       .portal-mascot { width: min(230px, 50vw); }
       .portal-mascot.catalog { left: -178px; bottom: 34px; }
       .portal-mascot.bookmark {
-        right: -226px;
+        right: auto;
+        left: 50%;
         width: min(278px, 56vw);
         mix-blend-mode: normal;
-        transform: scaleX(-1);
+        transform: translateX(-50%) scaleX(-1);
         bottom: 20px;
+      }
+      .portal-mascot.learning {
+        left: 50%;
+        width: min(220px, 50vw);
+        transform: translateX(-50%);
+        bottom: 18px;
       }
       .portal-circle { width: 100%; }
       .filter-row { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -1873,11 +1887,18 @@
       .portal-mascot { width: min(200px, 55vw); }
       .portal-mascot.catalog { left: -138px; bottom: 32px; }
       .portal-mascot.bookmark {
-        right: -184px;
+        right: auto;
+        left: 50%;
         width: min(240px, 60vw);
         mix-blend-mode: normal;
-        transform: scaleX(-1);
+        transform: translateX(-50%) scaleX(-1);
         bottom: 20px;
+      }
+      .portal-mascot.learning {
+        left: 50%;
+        width: min(200px, 52vw);
+        transform: translateX(-50%);
+        bottom: 16px;
       }
       .portal-circle { padding: 28px; }
       .brand-text { font-size: 26px; }
@@ -1972,6 +1993,15 @@
             <button id="portalGoBookmarkBtn" class="pill-btn primary" type="button">Entrar em Bookmark Central</button>
           </div>
           <img class="portal-mascot bookmark" src="/assets/agent-astro-portal-fixed.png" alt="Agent Astro mascot pointing to Bookmark Central" />
+        </article>
+        <article class="portal-option">
+          <div class="portal-circle">
+            <div class="kicker" id="portalLearningKicker">SEÇÃO 3</div>
+            <h2 id="portalLearningTitle">Presales Learning Series</h2>
+            <p id="portalLearningDesc">Série de capacitação e materiais de aprendizado para o time de Pre-sales LATAM.</p>
+            <button id="portalGoLearningBtn" class="pill-btn primary" type="button">Entrar em Presales Learning Series</button>
+          </div>
+          <img class="portal-mascot learning" src="/assets/astrobot.png" alt="Astrobot mascot pointing to Presales Learning Series" />
         </article>
       </section>
     </div>
@@ -2075,6 +2105,43 @@
           <div class="principle-item"><span class="principle-dot">5</span><span id="aboutP5">Melhor pequeno, real e compartilhado do que grande, perfeito e secreto.</span></div>
         </div>
       </section>
+    </div>
+    <div id="learningView" class="container hidden">
+      <section class="hero-banner">
+        <div class="hero-layout">
+          <div class="hero-content">
+            <span id="learningBadge" class="hero-badge">• Presales Learning Series • LATAM GTM</span>
+            <h2 id="learningMainTitle" class="hero-main-title">Presales Learning Series</h2>
+            <p id="learningMainDesc" class="hero-main-desc">Capacitação contínua para o time de Pre-sales LATAM, com sessões, materiais e referências em um só lugar.</p>
+            <p id="learningDesc" class="sub">Primeira versão da nova área. Em breve com trilhas, sessões gravadas e materiais de apoio.</p>
+          </div>
+        </div>
+      </section>
+      <section class="bookmark-preview-grid">
+        <article class="explainer">
+          <div class="explainer-icon">🎓</div>
+          <h3 id="learningExp1Title">Trilhas de aprendizado</h3>
+          <p id="learningExp1Text">Organize sessões e conteúdos por tema para acelerar o onboarding e a evolução do time.</p>
+        </article>
+        <article class="explainer">
+          <div class="explainer-icon">🎥</div>
+          <h3 id="learningExp2Title">Sessões e gravações</h3>
+          <p id="learningExp2Text">Acesse as edições da Learning Series, com contexto, agenda e materiais de cada encontro.</p>
+        </article>
+        <article class="explainer">
+          <div class="explainer-icon">📚</div>
+          <h3 id="learningExp3Title">Materiais de apoio</h3>
+          <p id="learningExp3Text">Reúna decks, guias e referências usadas nas sessões para consulta rápida no dia a dia.</p>
+        </article>
+      </section>
+      <div class="bookmark-links-footer">
+        <strong class="contacts-label">Contatos:</strong>
+        <a href="https://slack.com/archives/G01GC2HUZV4" target="_blank" rel="noopener noreferrer">#csg-proservices-latam-em-team</a>
+        ·
+        <a href="https://salesforce.enterprise.slack.com/team/U0AKUR9AU9W" target="_blank" rel="noopener noreferrer">@Igor Barros Lima</a>
+        ·
+        <a href="https://salesforce.enterprise.slack.com/team/U0239T1SVB2" target="_blank" rel="noopener noreferrer">@Emmanuel Moreno</a>
+      </div>
     </div>
     <div id="bookmarkView" class="container hidden">
       <section class="hero-banner">
@@ -2810,6 +2877,8 @@
     const heroAddCaseBtn = document.getElementById("heroAddCaseBtn");
     const portalGoCatalogBtn = document.getElementById("portalGoCatalogBtn");
     const portalGoBookmarkBtn = document.getElementById("portalGoBookmarkBtn");
+    const portalGoLearningBtn = document.getElementById("portalGoLearningBtn");
+    const learningViewEl = document.getElementById("learningView");
     const bookmarkClickBox = document.getElementById("bookmarkClickBox");
     const bookmarkEditResourceBtn = document.getElementById("bookmarkEditResourceBtn");
     const bookmarkAddResourceBtn = document.getElementById("bookmarkAddResourceBtn");
@@ -3054,7 +3123,21 @@
         portalBookmarkTitle: "LATAM Bookmark Central",
         portalBookmarkDesc: "Central unica para organizar links, assets e referencias relevantes para o time LATAM.",
         portalBookmarkCta: "Entrar em Bookmark Central",
+        portalLearningKicker: "SECAO 3",
+        portalLearningTitle: "Presales Learning Series",
+        portalLearningDesc: "Serie de capacitacao e materiais de aprendizado para o time de Pre-sales LATAM.",
+        portalLearningCta: "Entrar em Presales Learning Series",
         portalBackBtn: "Voltar ao portal",
+        learningBadge: "• Presales Learning Series • LATAM GTM",
+        learningMainTitle: "Presales Learning Series",
+        learningMainDesc: "Capacitacao continua para o time de Pre-sales LATAM, com sessoes, materiais e referencias em um so lugar.",
+        learningDesc: "Primeira versao da nova area. Em breve com trilhas, sessoes gravadas e materiais de apoio.",
+        learningExp1Title: "Trilhas de aprendizado",
+        learningExp1Text: "Organize sessoes e conteudos por tema para acelerar o onboarding e a evolucao do time.",
+        learningExp2Title: "Sessoes e gravacoes",
+        learningExp2Text: "Acesse as edicoes da Learning Series, com contexto, agenda e materiais de cada encontro.",
+        learningExp3Title: "Materiais de apoio",
+        learningExp3Text: "Reuna decks, guias e referencias usadas nas sessoes para consulta rapida no dia a dia.",
         bookmarkBadge: "• LATAM Bookmark Central • Preview",
         bookmarkMainTitle: "Organize e compartilhe referencias da regiao LATAM",
         bookmarkMainDesc: "Nova secao em construcao com base no AI Catalogue para acelerar curadoria e reutilizacao de links importantes.",
@@ -3239,7 +3322,21 @@
         portalBookmarkTitle: "LATAM Bookmark Central",
         portalBookmarkDesc: "Centro unico para organizar enlaces, assets y referencias relevantes para el equipo LATAM.",
         portalBookmarkCta: "Entrar a Bookmark Central",
+        portalLearningKicker: "SECCION 3",
+        portalLearningTitle: "Presales Learning Series",
+        portalLearningDesc: "Serie de capacitacion y materiales de aprendizaje para el equipo de Pre-sales LATAM.",
+        portalLearningCta: "Entrar a Presales Learning Series",
         portalBackBtn: "Volver al portal",
+        learningBadge: "• Presales Learning Series • LATAM GTM",
+        learningMainTitle: "Presales Learning Series",
+        learningMainDesc: "Capacitacion continua para el equipo de Pre-sales LATAM, con sesiones, materiales y referencias en un solo lugar.",
+        learningDesc: "Primera version del nuevo espacio. Pronto con rutas, sesiones grabadas y materiales de apoyo.",
+        learningExp1Title: "Rutas de aprendizaje",
+        learningExp1Text: "Organiza sesiones y contenidos por tema para acelerar el onboarding y la evolucion del equipo.",
+        learningExp2Title: "Sesiones y grabaciones",
+        learningExp2Text: "Accede a las ediciones de Learning Series, con contexto, agenda y materiales de cada encuentro.",
+        learningExp3Title: "Materiales de apoyo",
+        learningExp3Text: "Reune decks, guias y referencias usadas en las sesiones para consulta rapida en el dia a dia.",
         bookmarkBadge: "• LATAM Bookmark Central • Preview",
         bookmarkMainTitle: "Organiza y comparte referencias de la region LATAM",
         bookmarkMainDesc: "Nueva seccion en construccion basada en AI Catalogue para acelerar curaduria y reutilizacion de enlaces importantes.",
@@ -3424,7 +3521,21 @@
         portalBookmarkTitle: "LATAM Bookmark Central",
         portalBookmarkDesc: "Single hub to organize links, assets, and key references for the LATAM team.",
         portalBookmarkCta: "Open Bookmark Central",
+        portalLearningKicker: "SECTION 3",
+        portalLearningTitle: "Presales Learning Series",
+        portalLearningDesc: "Enablement series and learning materials for the LATAM Pre-sales team.",
+        portalLearningCta: "Open Presales Learning Series",
         portalBackBtn: "Back to portal",
+        learningBadge: "• Presales Learning Series • LATAM GTM",
+        learningMainTitle: "Presales Learning Series",
+        learningMainDesc: "Ongoing enablement for the LATAM Pre-sales team, with sessions, materials, and references in one place.",
+        learningDesc: "First version of the new area. Learning paths, recorded sessions, and support materials are coming soon.",
+        learningExp1Title: "Learning paths",
+        learningExp1Text: "Organize sessions and content by theme to speed up onboarding and team growth.",
+        learningExp2Title: "Sessions and recordings",
+        learningExp2Text: "Access Learning Series editions, with context, agenda, and materials for each session.",
+        learningExp3Title: "Support materials",
+        learningExp3Text: "Bring together decks, guides, and references used in the sessions for quick day-to-day access.",
         bookmarkBadge: "• LATAM Bookmark Central • Preview",
         bookmarkMainTitle: "Organize and share LATAM regional references",
         bookmarkMainDesc: "New section in progress based on AI Catalogue to speed up curation and reuse of key links.",
@@ -4033,7 +4144,21 @@
       document.getElementById("portalBookmarkTitle").textContent = x.portalBookmarkTitle;
       document.getElementById("portalBookmarkDesc").textContent = x.portalBookmarkDesc;
       portalGoBookmarkBtn.textContent = x.portalBookmarkCta;
+      document.getElementById("portalLearningKicker").textContent = x.portalLearningKicker;
+      document.getElementById("portalLearningTitle").textContent = x.portalLearningTitle;
+      document.getElementById("portalLearningDesc").textContent = x.portalLearningDesc;
+      portalGoLearningBtn.textContent = x.portalLearningCta;
       goPortalBtn.textContent = x.portalBackBtn;
+      document.getElementById("learningBadge").textContent = x.learningBadge;
+      document.getElementById("learningMainTitle").textContent = x.learningMainTitle;
+      document.getElementById("learningMainDesc").textContent = x.learningMainDesc;
+      document.getElementById("learningDesc").textContent = x.learningDesc;
+      document.getElementById("learningExp1Title").textContent = x.learningExp1Title;
+      document.getElementById("learningExp1Text").textContent = x.learningExp1Text;
+      document.getElementById("learningExp2Title").textContent = x.learningExp2Title;
+      document.getElementById("learningExp2Text").textContent = x.learningExp2Text;
+      document.getElementById("learningExp3Title").textContent = x.learningExp3Title;
+      document.getElementById("learningExp3Text").textContent = x.learningExp3Text;
       document.getElementById("bookmarkBadge").textContent = x.bookmarkBadge;
       document.getElementById("bookmarkMainTitle").textContent = x.bookmarkMainTitle;
       document.getElementById("bookmarkMainDesc").textContent = x.bookmarkMainDesc;
@@ -4654,6 +4779,7 @@
       topTabsEl.classList.toggle("hidden", !isCatalogSection);
       portalViewEl.classList.toggle("hidden", section !== "portal");
       bookmarkViewEl.classList.toggle("hidden", section !== "bookmark");
+      learningViewEl.classList.toggle("hidden", section !== "learning");
       openModalBtn.classList.toggle("hidden", !isCatalogSection);
       aiGuideFab.classList.toggle("hidden", !isCatalogSection);
       goPortalBtn.classList.toggle("hidden", section === "portal");
@@ -5722,6 +5848,9 @@
     });
     portalGoBookmarkBtn.addEventListener("click", () => {
       switchSection("bookmark");
+    });
+    portalGoLearningBtn.addEventListener("click", () => {
+      switchSection("learning");
     });
     bookmarkQuickPrevBtn.addEventListener("click", () => {
       const firstCard = bookmarkQuickTrackEl.querySelector(".bookmark-quick-card");
