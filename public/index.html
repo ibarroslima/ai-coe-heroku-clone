@@ -178,20 +178,26 @@
       user-select: none;
       pointer-events: none;
     }
-    .portal-mascot.catalog { left: -86px; bottom: 22px; transform: none; }
+    .portal-mascot.catalog {
+      left: -138px;
+      bottom: 6px;
+      width: min(195px, 17vw);
+      transform: none;
+    }
     .portal-mascot.bookmark {
       right: auto;
       left: 50%;
-      width: min(250px, 22vw);
+      width: min(185px, 16vw);
       mix-blend-mode: normal;
-      transform: translateX(-50%) scaleX(-1);
-      bottom: 8px;
+      transform: translateX(-50%);
+      bottom: -22px;
     }
     .portal-mascot.learning {
-      left: 50%;
-      width: min(210px, 20vw);
-      transform: translateX(-50%);
-      bottom: 12px;
+      left: auto;
+      right: -118px;
+      width: min(220px, 19vw);
+      transform: none;
+      bottom: -20px;
     }
     body.dark .portal-mascot { mix-blend-mode: normal; }
     .portal-circle {
@@ -1856,26 +1862,57 @@
       background: #182652;
       border-color: #31467f;
     }
+    .learning-shell {
+      max-width: none;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    #learningFrame {
+      display: block;
+      width: 100%;
+      height: calc(100vh - 76px);
+      border: 0;
+      background: #001E5B;
+    }
+    body.learning-mode {
+      background: #001E5B;
+      overflow: hidden;
+    }
+    body.learning-mode .topbar {
+      display: none !important;
+    }
+    body.learning-mode main {
+      padding: 0;
+    }
+    body.learning-mode #learningFrame {
+      height: 100vh;
+    }
     .hidden { display: none !important; }
     @media (max-width: 1100px) {
       .cards, .home-grid, .explainers, .recent-cards, .bookmark-preview-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .portal-grid { grid-template-columns: 1fr; }
       .portal-option { width: min(390px, 84vw); padding-bottom: 178px; }
       .portal-mascot { width: min(230px, 50vw); }
-      .portal-mascot.catalog { left: -178px; bottom: 34px; }
+      .portal-mascot.catalog {
+        left: -170px;
+        bottom: 12px;
+        width: min(180px, 38vw);
+      }
       .portal-mascot.bookmark {
         right: auto;
         left: 50%;
-        width: min(278px, 56vw);
+        width: min(200px, 40vw);
         mix-blend-mode: normal;
-        transform: translateX(-50%) scaleX(-1);
-        bottom: 20px;
+        transform: translateX(-50%);
+        bottom: -16px;
       }
       .portal-mascot.learning {
         left: 50%;
-        width: min(220px, 50vw);
+        right: auto;
+        width: min(200px, 44vw);
         transform: translateX(-50%);
-        bottom: 18px;
+        bottom: -12px;
       }
       .portal-circle { width: 100%; }
       .filter-row { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -1885,20 +1922,25 @@
       .cards, .grid, .filter-row, .tabs, .home-grid, .explainers, .recent-cards, .bookmark-preview-grid { grid-template-columns: 1fr; }
       .portal-option { width: min(360px, 94vw); padding-bottom: 158px; }
       .portal-mascot { width: min(200px, 55vw); }
-      .portal-mascot.catalog { left: -138px; bottom: 32px; }
+      .portal-mascot.catalog {
+        left: -140px;
+        bottom: 10px;
+        width: min(160px, 40vw);
+      }
       .portal-mascot.bookmark {
         right: auto;
         left: 50%;
-        width: min(240px, 60vw);
+        width: min(175px, 44vw);
         mix-blend-mode: normal;
-        transform: translateX(-50%) scaleX(-1);
-        bottom: 20px;
+        transform: translateX(-50%);
+        bottom: -12px;
       }
       .portal-mascot.learning {
         left: 50%;
-        width: min(200px, 52vw);
+        right: auto;
+        width: min(175px, 46vw);
         transform: translateX(-50%);
-        bottom: 16px;
+        bottom: -10px;
       }
       .portal-circle { padding: 28px; }
       .brand-text { font-size: 26px; }
@@ -1983,7 +2025,7 @@
             <p id="portalCatalogDesc">Catálogo de casos de uso de IA já implementados, com busca, filtros, favoritos e compartilhamento.</p>
             <button id="portalGoCatalogBtn" class="pill-btn primary" type="button">Entrar em AI Catalogue</button>
           </div>
-          <img class="portal-mascot catalog" src="/assets/astro-portal-catalog.png" alt="Astro mascot pointing to AI Catalogue" />
+          <img class="portal-mascot catalog" src="/assets/astro-portal-catalog.png" alt="Astro" />
         </article>
         <article class="portal-option">
           <div class="portal-circle">
@@ -1992,16 +2034,16 @@
             <p id="portalBookmarkDesc">Central única para organizar links, assets e referências relevantes para o time LATAM.</p>
             <button id="portalGoBookmarkBtn" class="pill-btn primary" type="button">Entrar em Bookmark Central</button>
           </div>
-          <img class="portal-mascot bookmark" src="/assets/agent-astro-portal-fixed.png" alt="Agent Astro mascot pointing to Bookmark Central" />
+          <img class="portal-mascot bookmark" src="/assets/trailblazer-goat.png" alt="Trailblazer goat mascot pointing to Bookmark Central" />
         </article>
         <article class="portal-option">
           <div class="portal-circle">
             <div class="kicker" id="portalLearningKicker">SEÇÃO 3</div>
             <h2 id="portalLearningTitle">Presales Learning Series</h2>
-            <p id="portalLearningDesc">Série de capacitação e materiais de aprendizado para o time de Pre-sales LATAM.</p>
+            <p id="portalLearningDesc">Série de capacitação e materiais de aprendizado em vídeos.</p>
             <button id="portalGoLearningBtn" class="pill-btn primary" type="button">Entrar em Presales Learning Series</button>
           </div>
-          <img class="portal-mascot learning" src="/assets/astrobot.png" alt="Astrobot mascot pointing to Presales Learning Series" />
+          <img class="portal-mascot learning" src="/assets/max-donkey.png" alt="Max" />
         </article>
       </section>
     </div>
@@ -2106,42 +2148,8 @@
         </div>
       </section>
     </div>
-    <div id="learningView" class="container hidden">
-      <section class="hero-banner">
-        <div class="hero-layout">
-          <div class="hero-content">
-            <span id="learningBadge" class="hero-badge">• Presales Learning Series • LATAM GTM</span>
-            <h2 id="learningMainTitle" class="hero-main-title">Presales Learning Series</h2>
-            <p id="learningMainDesc" class="hero-main-desc">Capacitação contínua para o time de Pre-sales LATAM, com sessões, materiais e referências em um só lugar.</p>
-            <p id="learningDesc" class="sub">Primeira versão da nova área. Em breve com trilhas, sessões gravadas e materiais de apoio.</p>
-          </div>
-        </div>
-      </section>
-      <section class="bookmark-preview-grid">
-        <article class="explainer">
-          <div class="explainer-icon">🎓</div>
-          <h3 id="learningExp1Title">Trilhas de aprendizado</h3>
-          <p id="learningExp1Text">Organize sessões e conteúdos por tema para acelerar o onboarding e a evolução do time.</p>
-        </article>
-        <article class="explainer">
-          <div class="explainer-icon">🎥</div>
-          <h3 id="learningExp2Title">Sessões e gravações</h3>
-          <p id="learningExp2Text">Acesse as edições da Learning Series, com contexto, agenda e materiais de cada encontro.</p>
-        </article>
-        <article class="explainer">
-          <div class="explainer-icon">📚</div>
-          <h3 id="learningExp3Title">Materiais de apoio</h3>
-          <p id="learningExp3Text">Reúna decks, guias e referências usadas nas sessões para consulta rápida no dia a dia.</p>
-        </article>
-      </section>
-      <div class="bookmark-links-footer">
-        <strong class="contacts-label">Contatos:</strong>
-        <a href="https://slack.com/archives/G01GC2HUZV4" target="_blank" rel="noopener noreferrer">#csg-proservices-latam-em-team</a>
-        ·
-        <a href="https://salesforce.enterprise.slack.com/team/U0AKUR9AU9W" target="_blank" rel="noopener noreferrer">@Igor Barros Lima</a>
-        ·
-        <a href="https://salesforce.enterprise.slack.com/team/U0239T1SVB2" target="_blank" rel="noopener noreferrer">@Emmanuel Moreno</a>
-      </div>
+    <div id="learningView" class="learning-shell hidden">
+      <iframe id="learningFrame" src="/presales-learning/" title="Presales Learning Series"></iframe>
     </div>
     <div id="bookmarkView" class="container hidden">
       <section class="hero-banner">
@@ -2971,6 +2979,7 @@
     let currentSection = "portal";
     let currentTab = "home";
     let currentLang = "es";
+    window.__larkLang = currentLang;
     let currentEditingAttachments = [];
     let lastAutoCreatedByFromAuthor = "";
     let pendingDeleteId = "";
@@ -3084,7 +3093,7 @@
       return generated;
     })();
 
-    function t() { return I18N[currentLang]; }
+    function t() { window.__larkLang = currentLang; return I18N[currentLang]; }
     function tx() { return EXTRA_COPY[currentLang] || EXTRA_COPY.pt; }
 
     const EXTRA_COPY = {
@@ -3125,7 +3134,7 @@
         portalBookmarkCta: "Entrar em Bookmark Central",
         portalLearningKicker: "SECAO 3",
         portalLearningTitle: "Presales Learning Series",
-        portalLearningDesc: "Serie de capacitacao e materiais de aprendizado para o time de Pre-sales LATAM.",
+        portalLearningDesc: "Serie de capacitacao e materiais de aprendizado em videos.",
         portalLearningCta: "Entrar em Presales Learning Series",
         portalBackBtn: "Voltar ao portal",
         learningBadge: "• Presales Learning Series • LATAM GTM",
@@ -3324,7 +3333,7 @@
         portalBookmarkCta: "Entrar a Bookmark Central",
         portalLearningKicker: "SECCION 3",
         portalLearningTitle: "Presales Learning Series",
-        portalLearningDesc: "Serie de capacitacion y materiales de aprendizaje para el equipo de Pre-sales LATAM.",
+        portalLearningDesc: "Serie de capacitacion y materiales de aprendizaje en videos.",
         portalLearningCta: "Entrar a Presales Learning Series",
         portalBackBtn: "Volver al portal",
         learningBadge: "• Presales Learning Series • LATAM GTM",
@@ -3523,7 +3532,7 @@
         portalBookmarkCta: "Open Bookmark Central",
         portalLearningKicker: "SECTION 3",
         portalLearningTitle: "Presales Learning Series",
-        portalLearningDesc: "Enablement series and learning materials for the LATAM Pre-sales team.",
+        portalLearningDesc: "Enablement series and learning materials in videos.",
         portalLearningCta: "Open Presales Learning Series",
         portalBackBtn: "Back to portal",
         learningBadge: "• Presales Learning Series • LATAM GTM",
@@ -4149,16 +4158,6 @@
       document.getElementById("portalLearningDesc").textContent = x.portalLearningDesc;
       portalGoLearningBtn.textContent = x.portalLearningCta;
       goPortalBtn.textContent = x.portalBackBtn;
-      document.getElementById("learningBadge").textContent = x.learningBadge;
-      document.getElementById("learningMainTitle").textContent = x.learningMainTitle;
-      document.getElementById("learningMainDesc").textContent = x.learningMainDesc;
-      document.getElementById("learningDesc").textContent = x.learningDesc;
-      document.getElementById("learningExp1Title").textContent = x.learningExp1Title;
-      document.getElementById("learningExp1Text").textContent = x.learningExp1Text;
-      document.getElementById("learningExp2Title").textContent = x.learningExp2Title;
-      document.getElementById("learningExp2Text").textContent = x.learningExp2Text;
-      document.getElementById("learningExp3Title").textContent = x.learningExp3Title;
-      document.getElementById("learningExp3Text").textContent = x.learningExp3Text;
       document.getElementById("bookmarkBadge").textContent = x.bookmarkBadge;
       document.getElementById("bookmarkMainTitle").textContent = x.bookmarkMainTitle;
       document.getElementById("bookmarkMainDesc").textContent = x.bookmarkMainDesc;
@@ -4772,10 +4771,20 @@
       render(result);
     }
 
+    function notifyLearningLang() {
+      window.__larkLang = currentLang;
+      const frame = document.getElementById("learningFrame");
+      if (!frame || !frame.contentWindow) return;
+      try {
+        frame.contentWindow.postMessage({ type: "lark-set-lang", lang: currentLang }, window.location.origin);
+      } catch (e) {}
+    }
+
     function switchSection(section) {
       currentSection = section;
       bookmarkLibraryBoardEl.classList.remove("show");
       const isCatalogSection = section === "catalog";
+      document.body.classList.toggle("learning-mode", section === "learning");
       topTabsEl.classList.toggle("hidden", !isCatalogSection);
       portalViewEl.classList.toggle("hidden", section !== "portal");
       bookmarkViewEl.classList.toggle("hidden", section !== "bookmark");
@@ -4783,6 +4792,7 @@
       openModalBtn.classList.toggle("hidden", !isCatalogSection);
       aiGuideFab.classList.toggle("hidden", !isCatalogSection);
       goPortalBtn.classList.toggle("hidden", section === "portal");
+      if (section === "learning") notifyLearningLang();
       if (isCatalogSection) {
         switchTab(currentTab || "home");
       } else {
@@ -5852,6 +5862,9 @@
     portalGoLearningBtn.addEventListener("click", () => {
       switchSection("learning");
     });
+    document.getElementById("learningFrame").addEventListener("load", () => {
+      if (currentSection === "learning") notifyLearningLang();
+    });
     bookmarkQuickPrevBtn.addEventListener("click", () => {
       const firstCard = bookmarkQuickTrackEl.querySelector(".bookmark-quick-card");
       const step = firstCard ? firstCard.getBoundingClientRect().width + 20 : 280;
@@ -6194,6 +6207,10 @@
     goPortalBtn.addEventListener("click", () => {
       switchSection("portal");
     });
+    window.addEventListener("message", (event) => {
+      if (event.origin !== window.location.origin) return;
+      if (event.data && event.data.type === "lark-go-portal") switchSection("portal");
+    });
     heroViewCatalogBtn.addEventListener("click", () => switchTab("catalog"));
     heroAddCaseBtn.addEventListener("click", () => {
       currentEditingAttachments = [];
@@ -6284,8 +6301,10 @@
     langBtn.addEventListener("click", () => { langMenu.style.display = langMenu.style.display === "block" ? "none" : "block"; });
     langItems.forEach((item) => item.addEventListener("click", () => {
       currentLang = item.dataset.lang;
+      window.__larkLang = currentLang;
       langMenu.style.display = "none";
       updateStaticTranslations();
+      notifyLearningLang();
       if (currentSection === "catalog") {
         switchTab(currentTab);
       } else {
