@@ -1,6 +1,9 @@
 node_modules
 .env
 npm-debug.log*
+data/pls-sessions.json
+public/presales-learning/media/**
+!public/presales-learning/media/.gitkeep
 
 # Local backup artifacts (keep local, do not commit)
 backups/**

@@ -59,6 +59,89 @@ nav.solid { background: var(--e15); box-shadow: 0 2px 18px rgba(0, 0, 0, .35); }
 }
 .pls-portal-btn.show { display: inline-flex; align-items: center; }
 .pls-portal-btn:hover { background: var(--c95); transform: scale(1.04); }
+.pls-admin-btn {
+  display: none;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(234, 245, 254, .16);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.pls-admin-btn.show { display: inline-flex; align-items: center; }
+.pls-admin-btn.primary { background: var(--e50); }
+.pls-admin-btn.primary:hover { background: var(--c68); }
+.row-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+.row-head h2 { margin: 0; flex: 1; }
+.carousel { position: relative; }
+.rail { display: flex; gap: 18px; overflow-x: auto; padding: 22px 8px 36px; margin: -18px 0 -28px; scrollbar-width: none; scroll-snap-type: x mandatory; }
+.rail::-webkit-scrollbar { display: none; }
+.rail .card { flex: 0 0 min(520px, 72vw); scroll-snap-align: start; }
+.rail .card.soon { flex: 0 0 min(260px, 38vw); }
+.carousel-btn {
+  position: absolute; top: 42%; z-index: 6; width: 42px; height: 42px; border-radius: 50%;
+  background: rgba(234, 245, 254, .92); color: var(--e15); font-size: 22px; font-weight: 800;
+  display: grid; place-items: center; box-shadow: 0 8px 20px rgba(0, 0, 0, .28);
+}
+.carousel-btn:hover { transform: scale(1.06); }
+.carousel-btn.prev { left: -8px; }
+.carousel-btn.next { right: -8px; }
+.card-admin {
+  display: none; position: absolute; top: 10px; right: 10px; z-index: 6; gap: 6px;
+}
+body.is-admin .card-admin { display: flex; }
+.card-admin .mini-admin {
+  background: rgba(0, 30, 91, .9);
+  color: #fff;
+  font-size: 11px;
+}
+.row-admin { display: none; gap: 8px; }
+body.is-admin .row-admin { display: inline-flex; }
+.mini-admin {
+  padding: 6px 10px; border-radius: 999px; background: rgba(234, 245, 254, .16);
+  color: var(--text); font-size: 12px; font-weight: 700;
+}
+.mini-admin.danger { background: rgba(255, 83, 138, .2); color: #FFD0DC; }
+.editor, .auth-overlay {
+  position: fixed; inset: 0; z-index: 110; display: none;
+  align-items: flex-start; justify-content: center;
+  background: rgba(0, 10, 35, .88); padding: 6vh 4vw; overflow: auto;
+}
+.editor.open, .auth-overlay.open { display: flex; }
+.editor-box, .auth-box {
+  width: min(860px, 100%); background: #00153f; color: var(--text);
+  border: 1px solid rgba(144, 208, 254, .25); border-radius: 16px; padding: 24px;
+}
+.auth-box { width: min(420px, 100%); }
+.editor-box h3, .auth-box h3 { font-size: 22px; margin-bottom: 8px; }
+.editor-help { font-size: 13px; color: var(--dim); margin-bottom: 18px; line-height: 1.45; }
+.editor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+.field.span2 { grid-column: 1 / -1; }
+.field label { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--c80); }
+.field input, .field textarea {
+  width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid rgba(144, 208, 254, .3);
+  background: rgba(234, 245, 254, .08); color: var(--text); font: inherit;
+}
+.field textarea { min-height: 72px; resize: vertical; }
+.editor-tabs { display: flex; gap: 8px; margin: 8px 0 14px; }
+.editor-tabs button {
+  padding: 8px 14px; border-radius: 999px; background: rgba(234, 245, 254, .1); color: var(--text); font-weight: 700;
+}
+.editor-tabs button.on { background: var(--e50); }
+.lang-pane { display: none; }
+.lang-pane.on { display: block; }
+.editor-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px; }
+.file-hint { font-size: 12px; color: var(--dim); }
+.empty-lang {
+  aspect-ratio: 16/9; border-radius: 8px; display: grid; place-items: center; text-align: center;
+  background: rgba(234, 245, 254, .06); border: 1px dashed rgba(144, 208, 254, .3); color: var(--dim); padding: 20px;
+}
+@media (max-width: 760px) {
+  .editor-grid { grid-template-columns: 1fr; }
+  .field.span2 { grid-column: auto; }
+}
 
 /* Hero */
 .hero { position: relative; height: 88vh; min-height: 560px; max-height: 860px; display: flex; align-items: flex-end; padding: 0 4vw 14vh; }
@@ -87,22 +170,47 @@ nav.solid { background: var(--e15); box-shadow: 0 2px 18px rgba(0, 0, 0, .35); }
 .btn-ghost { background: rgba(234, 245, 254, .18); color: var(--text); backdrop-filter: blur(6px); }
 .btn-ghost:hover { background: rgba(234, 245, 254, .3); }
 .btn svg { width: 22px; height: 22px; }
-.also { display: none; }
+.also {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 22px;
+  max-width: 640px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: linear-gradient(90deg, rgba(4, 225, 203, .95), rgba(0, 179, 255, .92));
+  color: var(--e15);
+  box-shadow: 0 10px 28px rgba(4, 225, 203, .28);
+  animation: langPulse 1.8s ease-in-out infinite;
+}
+.also-text { font-size: 14px; font-weight: 800; line-height: 1.35; }
+@keyframes langPulse {
+  0%, 100% { transform: translateY(0) translateX(0); box-shadow: 0 10px 28px rgba(4, 225, 203, .28); }
+  50% { transform: translateY(-7px) translateX(6px); box-shadow: 0 18px 36px rgba(4, 225, 203, .48); }
+}
+.lang { position: relative; }
+.lang::after {
+  content: '';
+  position: absolute;
+  inset: -6px -8px;
+  border-radius: 999px;
+  border: 1px solid rgba(4, 225, 203, .55);
+  pointer-events: none;
+  animation: langRing 2.4s ease-in-out infinite;
+}
+@keyframes langRing {
+  0%, 100% { opacity: .35; }
+  50% { opacity: 1; }
+}
 
 /* Rows */
 main { position: relative; z-index: 2; margin-top: -9vh; padding-bottom: 40px; }
 .row { padding: 0 4vw; margin-bottom: 46px; }
 .row h2 { font-size: 22px; margin-bottom: 14px; display: flex; align-items: baseline; gap: 12px; }
 .row h2 small { font-family: 'Salesforce Sans', 'Segoe UI', system-ui, sans-serif; font-size: 14px; font-weight: 400; color: var(--dim); }
-.rail { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(280px, 1fr); gap: 14px; overflow-x: auto; padding: 18px 0 28px; margin: -18px 0 -28px; scrollbar-width: none; }
-.rail::-webkit-scrollbar { display: none; }
-.rail.single {
-  grid-auto-flow: unset;
-  grid-template-columns: minmax(280px, 1.45fr) minmax(220px, .7fr);
-  max-width: 920px;
-}
 @media (max-width: 760px) {
-  .rail.single { grid-template-columns: 1fr; }
+  .rail .card { flex-basis: min(520px, 86vw); }
+  .rail .card.soon { flex-basis: min(200px, 48vw); }
+  .carousel-btn { display: none; }
 }
 
 .card { position: relative; border-radius: 8px; transition: transform .28s ease, box-shadow .28s ease; cursor: pointer; outline: none; }
@@ -116,16 +224,16 @@ main { position: relative; z-index: 2; margin-top: -9vh; padding-bottom: 40px; }
 .dur { position: absolute; bottom: 10px; right: 10px; padding: 3px 8px; border-radius: 4px; font-size: 12px; background: rgba(0, 30, 91, .85); }
 .progress { position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: rgba(234, 245, 254, .25); }
 .progress i { display: block; height: 100%; background: var(--p60); }
-.info { padding: 12px 4px 0; }
-.info h3 { font-size: 16px; margin-bottom: 4px; }
-.info p { font-size: 13px; color: var(--dim); }
+.info { padding: 14px 4px 0; }
+.info h3 { font-size: 18px; margin-bottom: 4px; }
+.info p { font-size: 14px; color: var(--dim); }
 
 .soon .thumb {
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
   background: linear-gradient(135deg, var(--e30), var(--e15)); border: 1px dashed rgba(144, 208, 254, .35);
 }
-.soon .thumb strong { font-family: 'Avant Garde Demi SFDC', 'Salesforce Sans', system-ui, sans-serif; font-size: 22px; }
-.soon .thumb span { font-size: 13px; color: var(--c80); }
+.soon .thumb strong { font-family: 'Avant Garde Demi SFDC', 'Salesforce Sans', system-ui, sans-serif; font-size: 18px; }
+.soon .thumb span { font-size: 12px; color: var(--c80); }
 .soon { cursor: default; }
 .soon:hover { transform: none; box-shadow: none; }
 
@@ -205,6 +313,8 @@ footer b { color: var(--text); }
 <nav id="nav">
   <a class="brand" href="#top"><img src="img/logo.png" alt="Salesforce">Presales Learning Series <span>FY27 · PS LATAM</span></a>
   <button type="button" id="plsPortalBtn" class="pls-portal-btn">Volver al portal</button>
+  <button type="button" id="plsAddBtn" class="pls-admin-btn primary">+ Nova sessão</button>
+  <button type="button" id="plsAuthBtn" class="pls-admin-btn show">Ingresar</button>
   <div class="links">
     <a id="navHome" href="#top">Home</a>
     <a id="navSessions" href="#sessions">Sessions</a>
@@ -262,6 +372,50 @@ footer b { color: var(--text); }
 </div>
 <div class="toast" id="toast"></div>
 
+<div class="auth-overlay" id="plsAuthOverlay">
+  <div class="auth-box">
+    <h3 id="plsAuthTitle">Login administrador</h3>
+    <p class="editor-help" id="plsAuthHelp">Use a mesma senha de ADMIN das outras seções.</p>
+    <form id="plsAuthForm">
+      <div class="field">
+        <label id="plsAuthLabel" for="plsAdminPassword">Senha</label>
+        <input id="plsAdminPassword" type="password" required>
+      </div>
+      <div class="editor-actions">
+        <button type="button" class="pls-admin-btn show" id="plsAuthCancel">Cancelar</button>
+        <button type="submit" class="pls-admin-btn primary show" id="plsAuthSubmit">Entrar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="editor" id="plsEditor">
+  <form class="editor-box" id="plsEditorForm">
+    <h3 id="plsEditorTitle">Nova sessão</h3>
+    <p class="editor-help" id="plsEditorHelp">Uma sessão reúne o vídeo e o guia nos 3 idiomas. Troque as abas ES / PT / EN para completar cada versão.</p>
+    <input type="hidden" id="plsEditId">
+    <div class="editor-grid">
+      <div class="field"><label id="plsLabelTitle">Título</label><input id="plsTitle" required></div>
+      <div class="field"><label id="plsLabelVersion">Versão</label><input id="plsVersion" placeholder="v1.0"></div>
+      <div class="field span2">
+        <label id="plsLabelHero">Imagem de capa</label>
+        <input id="plsHero" type="file" accept="image/*">
+        <span class="file-hint" id="plsHeroHint"></span>
+      </div>
+    </div>
+    <div class="editor-tabs" id="plsEditorTabs">
+      <button type="button" class="on" data-pane="es">ES</button>
+      <button type="button" data-pane="pt">PT</button>
+      <button type="button" data-pane="en">EN</button>
+    </div>
+    <div id="plsPanes"></div>
+    <div class="editor-actions">
+      <button type="button" class="pls-admin-btn show" id="plsEditorCancel">Cancelar</button>
+      <button type="submit" class="pls-admin-btn primary show" id="plsEditorSave">Salvar sessão</button>
+    </div>
+  </form>
+</div>
+
 <script>
 // Para sumar una sesión: agrega un objeto a SESSIONS (la más reciente va primero y ocupa el hero)
 const LANGS = {
@@ -281,6 +435,7 @@ const UI = {
     playIn: 'Reproducir en',
     fullGuide: 'Guía completa',
     alsoIn: 'También en ',
+    langBanner: 'Videos y guías también están en otros idiomas. Cambia ES / PT / EN arriba a la derecha.',
     and: ' y ',
     new: 'Nuevo',
     yourLanguage: 'Tu idioma',
@@ -303,6 +458,37 @@ const UI = {
     footerBuilt: 'Hecho con Claude Code',
     footerInternal: 'Uso interno · Los datos de demostración en los videos son 100% ficticios',
     playerAria: 'Reproductor de video',
+    authIn: 'Ingresar',
+    authOut: 'Salir',
+    addSession: '+ Nueva sesión',
+    editSession: 'Editar',
+    deleteSession: 'Eliminar',
+    newSessionTitle: 'Nueva sesión',
+    editSessionTitle: 'Editar sesión',
+    editorHelp: 'Una sesión junta el video y la guía en los 3 idiomas. Completa ES, PT y EN en las pestañas.',
+    authTitle: 'Login administrador',
+    authHelp: 'Usa la misma contraseña de ADMIN de las otras secciones.',
+    cancel: 'Cancelar',
+    save: 'Guardar sesión',
+    password: 'Contraseña',
+    enter: 'Entrar',
+    labelTitle: 'Título',
+    labelVersion: 'Versión',
+    labelHero: 'Imagen de portada',
+    videoFile: 'Video',
+    thumbFile: 'Miniatura',
+    tagline: 'Frase corta',
+    desc: 'Descripción',
+    guideDesc: 'Texto de la guía',
+    inside: 'Contenido del canvas (un ítem por línea)',
+    canvasUrl: 'Link del Slack Canvas',
+    canvasTitle: 'Título del canvas',
+    canvasCallout: 'Aviso',
+    canvasSections: 'Secciones (una por línea)',
+    missingVideo: 'Aún no hay video en este idioma.',
+    confirmDelete: '¿Eliminar esta sesión y sus guías?',
+    saving: 'Guardando…',
+    keepFile: 'Archivo actual se mantiene si no eliges otro.',
   },
   pt: {
     portalBack: 'Voltar ao portal',
@@ -315,6 +501,7 @@ const UI = {
     playIn: 'Reproduzir em',
     fullGuide: 'Guia completo',
     alsoIn: 'Também em ',
+    langBanner: 'Vídeos e guias também estão em outros idiomas. Troque ES / PT / EN no topo à direita.',
     and: ' e ',
     new: 'Novo',
     yourLanguage: 'Seu idioma',
@@ -337,6 +524,37 @@ const UI = {
     footerBuilt: 'Feito com Claude Code',
     footerInternal: 'Uso interno · Os dados de demonstração nos vídeos são 100% fictícios',
     playerAria: 'Player de vídeo',
+    authIn: 'Entrar/ADM',
+    authOut: 'Sair/ADM',
+    addSession: '+ Nova sessão',
+    editSession: 'Editar',
+    deleteSession: 'Excluir',
+    newSessionTitle: 'Nova sessão',
+    editSessionTitle: 'Editar sessão',
+    editorHelp: 'Uma sessão reúne o vídeo e o guia nos 3 idiomas. Complete ES, PT e EN nas abas.',
+    authTitle: 'Login administrador',
+    authHelp: 'Use a mesma senha de ADMIN das outras seções.',
+    cancel: 'Cancelar',
+    save: 'Salvar sessão',
+    password: 'Senha',
+    enter: 'Entrar',
+    labelTitle: 'Título',
+    labelVersion: 'Versão',
+    labelHero: 'Imagem de capa',
+    videoFile: 'Vídeo',
+    thumbFile: 'Miniatura',
+    tagline: 'Frase curta',
+    desc: 'Descrição',
+    guideDesc: 'Texto do guia',
+    inside: 'Conteúdo do canvas (um item por linha)',
+    canvasUrl: 'Link do Slack Canvas',
+    canvasTitle: 'Título do canvas',
+    canvasCallout: 'Aviso',
+    canvasSections: 'Seções (uma por linha)',
+    missingVideo: 'Ainda não há vídeo neste idioma.',
+    confirmDelete: 'Excluir esta sessão e os guias?',
+    saving: 'Salvando…',
+    keepFile: 'O arquivo atual permanece se você não escolher outro.',
   },
   en: {
     portalBack: 'Back to portal',
@@ -349,6 +567,7 @@ const UI = {
     playIn: 'Play in',
     fullGuide: 'Full guide',
     alsoIn: 'Also in ',
+    langBanner: 'Videos and guides are also available in other languages. Switch ES / PT / EN at the top right.',
     and: ' and ',
     new: 'New',
     yourLanguage: 'Your language',
@@ -371,12 +590,44 @@ const UI = {
     footerBuilt: 'Built with Claude Code',
     footerInternal: 'Internal use only · Demo data in the videos is 100% fictional',
     playerAria: 'Video player',
+    authIn: 'Sign in',
+    authOut: 'Sign out',
+    addSession: '+ New session',
+    editSession: 'Edit',
+    deleteSession: 'Delete',
+    newSessionTitle: 'New session',
+    editSessionTitle: 'Edit session',
+    editorHelp: 'A session groups the video and the guide in all 3 languages. Fill ES, PT and EN in the tabs.',
+    authTitle: 'Admin login',
+    authHelp: 'Use the same ADMIN password as the other sections.',
+    cancel: 'Cancel',
+    save: 'Save session',
+    password: 'Password',
+    enter: 'Sign in',
+    labelTitle: 'Title',
+    labelVersion: 'Version',
+    labelHero: 'Cover image',
+    videoFile: 'Video',
+    thumbFile: 'Thumbnail',
+    tagline: 'Short line',
+    desc: 'Description',
+    guideDesc: 'Guide text',
+    inside: 'Canvas contents (one item per line)',
+    canvasUrl: 'Slack Canvas link',
+    canvasTitle: 'Canvas title',
+    canvasCallout: 'Callout',
+    canvasSections: 'Sections (one per line)',
+    missingVideo: 'No video in this language yet.',
+    confirmDelete: 'Delete this session and its guides?',
+    saving: 'Saving…',
+    keepFile: 'The current file stays if you do not pick another.',
   },
 };
 const CANVAS = id => `https://salesforce.enterprise.slack.com/docs/T01G0063H29/${id}`;
 
-const SESSIONS = [
+const FALLBACK_SESSIONS = [
   {
+    id: 's1',
     num: 1,
     title: 'SPW to Estimate',
     version: 'v2.5',
@@ -429,6 +680,8 @@ const SESSIONS = [
     },
   },
 ];
+let SESSIONS = FALLBACK_SESSIONS.map((item) => JSON.parse(JSON.stringify(item)));
+let isAdmin = false;
 
 const $ = id => document.getElementById(id);
 const store = {
@@ -501,6 +754,26 @@ function applyChrome() {
     portalBtn.textContent = t.portalBack;
     portalBtn.classList.toggle('show', inLarkPortal());
   }
+  document.body.classList.toggle('is-admin', isAdmin);
+  $('plsAuthBtn').textContent = isAdmin ? t.authOut : t.authIn;
+  $('plsAuthBtn').classList.add('show');
+  $('plsAddBtn').textContent = t.addSession;
+  $('plsAddBtn').classList.toggle('show', isAdmin);
+  $('plsAuthTitle').textContent = t.authTitle;
+  $('plsAuthHelp').textContent = t.authHelp;
+  $('plsAuthLabel').textContent = t.password;
+  $('plsAuthSubmit').textContent = t.enter;
+  $('plsAuthCancel').textContent = t.cancel;
+  $('plsEditorHelp').textContent = t.editorHelp;
+  $('plsLabelTitle').textContent = t.labelTitle;
+  $('plsLabelVersion').textContent = t.labelVersion;
+  $('plsLabelHero').textContent = t.labelHero;
+  $('plsEditorCancel').textContent = t.cancel;
+  $('plsEditorSave').textContent = t.save;
+  if (!$('plsEditor').classList.contains('open')) {
+    $('plsPanes').dataset.ready = '';
+    ensurePanes();
+  }
 }
 
 function render() {
@@ -511,42 +784,84 @@ function render() {
   renderGuides();
 }
 
+function currentVideo(s, l) {
+  return (s.videos && s.videos[l]) || {};
+}
+
 function renderHero() {
   const s = SESSIONS[0];
-  const c = sessionCopy(s);
   const t = ui();
-  $('heroBg').style.backgroundImage = `url('${s.hero}')`;
+  if (!s) {
+    $('heroBg').style.backgroundImage = '';
+    $('heroNum').textContent = '';
+    $('heroTitle').textContent = 'Presales Learning Series';
+    $('heroMeta').innerHTML = '';
+    $('heroDesc').textContent = t.missingVideo;
+    $('heroPlay').onclick = null;
+    renderLangBanner();
+    return;
+  }
+  const c = sessionCopy(s);
+  const v = currentVideo(s, lang);
+  $('heroBg').style.backgroundImage = s.hero ? `url('${s.hero}')` : '';
   $('heroNum').textContent = s.num;
   $('heroTitle').textContent = s.title;
   $('heroMeta').innerHTML =
-    `<span class="new">${t.new}</span><span>${s.version}</span><span>${s.videos[lang].dur}</span><span>${LANGS[lang].tag}</span>`;
+    `<span class="new">${t.new}</span><span>${s.version || ''}</span><span>${v.dur || ''}</span><span>${LANGS[lang].tag}</span>`;
   $('heroDesc').textContent = c.desc || '';
-  $('heroPlay').onclick = () => openPlayer(s, lang);
-  $('heroAlso').innerHTML = '';
+  $('heroPlay').onclick = v.src ? () => openPlayer(s, lang) : null;
+  renderLangBanner();
+}
+
+function renderLangBanner() {
+  $('heroAlso').innerHTML = `<span class="also-text">${ui().langBanner}</span>`;
+}
+
+function bindCardAdmin(card, s) {
+  const editBtn = card.querySelector('[data-edit]');
+  const delBtn = card.querySelector('[data-del]');
+  if (editBtn) editBtn.onclick = (e) => { e.stopPropagation(); openEditor(s); };
+  if (delBtn) delBtn.onclick = (e) => { e.stopPropagation(); deleteSession(s); };
+}
+
+function adminButtons(t) {
+  if (!isAdmin) return '';
+  return `<div class="card-admin">
+    <button type="button" class="mini-admin" data-edit>${t.editSession}</button>
+    <button type="button" class="mini-admin danger" data-del>${t.deleteSession}</button>
+  </div>`;
 }
 
 function videoCard(s, l) {
-  const v = s.videos[l];
+  const v = currentVideo(s, l);
   const c = sessionCopy(s);
   const t = ui();
   const card = document.createElement('div');
   card.className = 'card';
+  if (!v.src) {
+    card.innerHTML = `${adminButtons(t)}<div class="empty-lang">${t.missingVideo}</div>
+      <div class="info"><h3>${s.title}</h3><p>${t.session} ${s.num} · ${c.tagline || ''}</p></div>`;
+    bindCardAdmin(card, s);
+    return card;
+  }
   card.tabIndex = 0;
   card.setAttribute('role', 'button');
   card.setAttribute('aria-label', `${t.playIn} ${s.title} · ${LANGS[l].label}`);
   const prog = store.get(progressKey(s.num, l), 0);
   card.innerHTML = `
+    ${adminButtons(t)}
     <div class="thumb">
-      <img src="${v.thumb}" alt="" loading="lazy">
+      <img src="${v.thumb || s.hero || ''}" alt="" loading="lazy">
       <video muted playsinline preload="none"></video>
       <span class="badge">${LANGS[l].tag} · ${LANGS[l].label}</span>
-      <span class="dur">${v.dur}</span>
+      <span class="dur">${v.dur || ''}</span>
       ${prog > 0.02 ? `<span class="progress"><i style="width:${Math.min(prog, 1) * 100}%"></i></span>` : ''}
     </div>
     <div class="info">
       <h3>${s.title}</h3>
       <p>${t.session} ${s.num} · ${c.tagline || ''}</p>
     </div>`;
+  bindCardAdmin(card, s);
   card.onclick = () => openPlayer(s, l);
   card.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openPlayer(s, l); } };
 
@@ -572,25 +887,38 @@ function renderRows() {
   const root = $('sessions');
   const t = ui();
   root.innerHTML = '';
-  SESSIONS.forEach(s => {
-    const row = document.createElement('section');
-    row.className = 'row';
-    row.innerHTML = `<h2>${t.session} ${s.num} · ${s.title} <small>${t.watchingIn} ${LANGS[lang].label}</small></h2><div class="rail single"></div>`;
-    const rail = row.querySelector('.rail');
-    rail.appendChild(videoCard(s, lang));
-    const soon = document.createElement('div');
-    soon.className = 'card soon';
-    soon.innerHTML = `<div class="thumb"><strong>${t.session} ${s.num + 1}</strong><span>${t.comingSoon}</span></div>
-      <div class="info"><h3>${t.nextSession}</h3><p>Presales Learning Series FY27</p></div>`;
-    rail.appendChild(soon);
-    root.appendChild(row);
-  });
+  const nextNum = SESSIONS.reduce((max, item) => Math.max(max, Number(item.num) || 0), 0) + 1;
+  const row = document.createElement('section');
+  row.className = 'row';
+  row.innerHTML = `<div class="row-head">
+      <h2>${t.navSessions} <small>${t.watchingIn} ${LANGS[lang].label}</small></h2>
+    </div>
+    <div class="carousel">
+      <button type="button" class="carousel-btn prev" aria-label="Prev">‹</button>
+      <div class="rail"></div>
+      <button type="button" class="carousel-btn next" aria-label="Next">›</button>
+    </div>`;
+  const rail = row.querySelector('.rail');
+  SESSIONS.forEach((s) => rail.appendChild(videoCard(s, lang)));
+  const soon = document.createElement('div');
+  soon.className = 'card soon';
+  soon.innerHTML = `<div class="thumb"><strong>${t.session} ${nextNum}</strong><span>${t.comingSoon}</span></div>
+    <div class="info"><h3>${t.nextSession}</h3><p>Presales Learning Series FY27</p></div>`;
+  rail.appendChild(soon);
+  const step = () => {
+    const card = rail.querySelector('.card');
+    return card ? card.getBoundingClientRect().width + 14 : 300;
+  };
+  row.querySelector('.carousel-btn.prev').onclick = () => rail.scrollBy({ left: -step(), behavior: 'smooth' });
+  row.querySelector('.carousel-btn.next').onclick = () => rail.scrollBy({ left: step(), behavior: 'smooth' });
+  root.appendChild(row);
 }
 
 const SLACK_MARK = document.querySelector('.guides-head .slack').outerHTML;
 
 function canvasCard(s, l) {
-  const c = s.canvases[l];
+  const c = s.canvases && s.canvases[l];
+  if (!c || !c.url) return null;
   const t = ui();
   const a = document.createElement('a');
   a.className = 'canvas-card' + (l === lang ? ' primary' : '');
@@ -603,7 +931,7 @@ function canvasCard(s, l) {
     <div class="cv-page">
       <div class="cv-title">${c.title}</div>
       <div class="cv-callout">⚠ ${c.callout}</div>
-      ${c.sections.map((h, i) => `<div class="cv-h">${h}</div><div class="cv-line"></div><div class="cv-line" style="width:${[82, 64, 74, 58][i % 4]}%"></div>`).join('')}
+      ${(c.sections || []).map((h, i) => `<div class="cv-h">${h}</div><div class="cv-line"></div><div class="cv-line" style="width:${[82, 64, 74, 58][i % 4]}%"></div>`).join('')}
     </div>
     <div class="cv-foot">
       <span class="open">${t.openInSlack}</span>
@@ -631,7 +959,8 @@ function renderGuides() {
         </div>
       </div>`;
     const grid = set.querySelector('.guide-grid');
-    if (s.canvases[lang]) grid.appendChild(canvasCard(s, lang));
+    const card = canvasCard(s, lang);
+    if (card) grid.appendChild(card);
     list.appendChild(set);
   });
 }
@@ -641,10 +970,12 @@ let playing = null;
 const video = $('video');
 
 function openPlayer(s, l, keepTime) {
+  const v = currentVideo(s, l);
+  if (!v.src) return;
   const t = keepTime ? video.currentTime : null;
   playing = { s, l };
-  video.src = s.videos[l].src;
-  video.poster = s.videos[l].thumb;
+  video.src = v.src;
+  video.poster = v.thumb || s.hero || '';
   $('playerTitle').textContent = `${ui().session} ${s.num} · ${s.title} · ${LANGS[l].label}`;
   $('player').classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -690,27 +1021,236 @@ function toast(msg) {
   toastTimer = setTimeout(() => t.classList.remove('show'), 1800);
 }
 
+function notifyParentAuth() {
+  try { window.parent.postMessage({ type: 'lark-auth-changed' }, window.location.origin); } catch (e) {}
+}
+
+async function loadSessions() {
+  const res = await fetch('/api/pls/sessions', { credentials: 'same-origin' });
+  const data = await res.json();
+  if (Array.isArray(data.sessions)) SESSIONS = data.sessions;
+  isAdmin = Boolean(data.authenticated);
+}
+
+function paneFields(code) {
+  return `
+    <div class="lang-pane${code === 'es' ? ' on' : ''}" data-pane="${code}">
+      <div class="editor-grid">
+        <div class="field span2"><label>${ui().videoFile} ${LANGS[code].label}</label><input id="plsVideo_${code}" type="file" accept="video/mp4,video/*"><span class="file-hint" id="plsVideoHint_${code}"></span></div>
+        <div class="field"><label>${ui().thumbFile}</label><input id="plsThumb_${code}" type="file" accept="image/*"></div>
+        <div class="field"><label>${ui().tagline}</label><input id="plsTagline_${code}"></div>
+        <div class="field span2"><label>${ui().desc}</label><textarea id="plsDesc_${code}"></textarea></div>
+        <div class="field span2"><label>${ui().guideDesc}</label><textarea id="plsGuideDesc_${code}"></textarea></div>
+        <div class="field span2"><label>${ui().inside}</label><textarea id="plsInside_${code}"></textarea></div>
+        <div class="field span2"><label>${ui().canvasUrl}</label><input id="plsCanvasUrl_${code}" placeholder="https://salesforce.enterprise.slack.com/docs/..."></div>
+        <div class="field"><label>${ui().canvasTitle}</label><input id="plsCanvasTitle_${code}"></div>
+        <div class="field"><label>${ui().canvasCallout}</label><input id="plsCanvasCallout_${code}"></div>
+        <div class="field span2"><label>${ui().canvasSections}</label><textarea id="plsCanvasSections_${code}"></textarea></div>
+      </div>
+    </div>`;
+}
+
+function ensurePanes() {
+  const root = $('plsPanes');
+  if (root.dataset.ready) return;
+  root.innerHTML = Object.keys(LANGS).map(paneFields).join('');
+  root.dataset.ready = '1';
+}
+
+function lines(value) {
+  return String(value || '').split('\n').map((item) => item.trim()).filter(Boolean);
+}
+
+function fillEditor(s) {
+  ensurePanes();
+  const t = ui();
+  $('plsEditId').value = s?.id || '';
+  $('plsEditorTitle').textContent = s ? t.editSessionTitle : t.newSessionTitle;
+  $('plsTitle').value = s?.title || '';
+  $('plsVersion').value = s?.version || '';
+  $('plsHero').value = '';
+  $('plsHeroHint').textContent = s?.hero ? t.keepFile : '';
+  Object.keys(LANGS).forEach((code) => {
+    const copy = (s?.copy && s.copy[code]) || {};
+    const video = currentVideo(s || {}, code);
+    const canvas = (s?.canvases && s.canvases[code]) || {};
+    $(`plsVideo_${code}`).value = '';
+    $(`plsThumb_${code}`).value = '';
+    $(`plsVideoHint_${code}`).textContent = video.src ? t.keepFile : '';
+    $(`plsTagline_${code}`).value = copy.tagline || '';
+    $(`plsDesc_${code}`).value = copy.desc || '';
+    $(`plsGuideDesc_${code}`).value = copy.guideDesc || '';
+    $(`plsInside_${code}`).value = (copy.inside || []).join('\n');
+    $(`plsCanvasUrl_${code}`).value = canvas.url || '';
+    $(`plsCanvasTitle_${code}`).value = canvas.title || '';
+    $(`plsCanvasCallout_${code}`).value = canvas.callout || '';
+    $(`plsCanvasSections_${code}`).value = (canvas.sections || []).join('\n');
+  });
+}
+
+function openEditor(s) {
+  fillEditor(s || null);
+  $('plsEditor').classList.add('open');
+}
+
+function closeEditor() {
+  $('plsEditor').classList.remove('open');
+}
+
+function readDuration(file) {
+  if (!file) return Promise.resolve('');
+  return new Promise((resolve) => {
+    const el = document.createElement('video');
+    el.preload = 'metadata';
+    el.onloadedmetadata = () => {
+      const total = Math.round(el.duration || 0);
+      URL.revokeObjectURL(el.src);
+      resolve(`${Math.floor(total / 60)}:${String(total % 60).padStart(2, '0')}`);
+    };
+    el.onerror = () => resolve('');
+    el.src = URL.createObjectURL(file);
+  });
+}
+
+async function saveEditor(event) {
+  event.preventDefault();
+  const t = ui();
+  $('plsEditorSave').textContent = t.saving;
+  const payload = {
+    title: $('plsTitle').value,
+    version: $('plsVersion').value,
+    copy: {},
+    videos: {},
+    canvases: {},
+  };
+  const form = new FormData();
+  const hero = $('plsHero').files[0];
+  if (hero) form.append('hero', hero);
+  for (const code of Object.keys(LANGS)) {
+    payload.copy[code] = {
+      tagline: $(`plsTagline_${code}`).value,
+      desc: $(`plsDesc_${code}`).value,
+      guideDesc: $(`plsGuideDesc_${code}`).value,
+      inside: lines($(`plsInside_${code}`).value),
+    };
+    const videoFile = $(`plsVideo_${code}`).files[0];
+    const thumbFile = $(`plsThumb_${code}`).files[0];
+    const existing = SESSIONS.find((item) => item.id === $('plsEditId').value);
+    const current = currentVideo(existing || {}, code);
+    payload.videos[code] = {
+      src: current.src || '',
+      thumb: current.thumb || '',
+      dur: videoFile ? await readDuration(videoFile) : (current.dur || ''),
+    };
+    if (videoFile) form.append(`video_${code}`, videoFile);
+    if (thumbFile) form.append(`thumb_${code}`, thumbFile);
+    payload.canvases[code] = {
+      url: $(`plsCanvasUrl_${code}`).value,
+      title: $(`plsCanvasTitle_${code}`).value,
+      callout: $(`plsCanvasCallout_${code}`).value,
+      sections: lines($(`plsCanvasSections_${code}`).value),
+    };
+  }
+  form.append('payload', JSON.stringify(payload));
+  const id = $('plsEditId').value;
+  const res = await fetch(id ? `/api/pls/sessions/${id}` : '/api/pls/sessions', {
+    method: id ? 'PUT' : 'POST',
+    credentials: 'same-origin',
+    body: form,
+  });
+  const data = await res.json().catch(() => ({}));
+  $('plsEditorSave').textContent = t.save;
+  if (!res.ok) {
+    alert(data.error || 'Error');
+    return;
+  }
+  SESSIONS = data.sessions || SESSIONS;
+  closeEditor();
+  render();
+  toast(t.save);
+}
+
+async function deleteSession(s) {
+  if (!s?.id || !confirm(ui().confirmDelete)) return;
+  const res = await fetch(`/api/pls/sessions/${s.id}`, { method: 'DELETE', credentials: 'same-origin' });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    alert(data.error || 'Error');
+    return;
+  }
+  SESSIONS = data.sessions || SESSIONS.filter((item) => item.id !== s.id);
+  render();
+}
+
+async function toggleAuth() {
+  if (isAdmin) {
+    await fetch('/api/auth/logout', { method: 'POST', credentials: 'same-origin' });
+    isAdmin = false;
+    notifyParentAuth();
+    render();
+    return;
+  }
+  $('plsAuthOverlay').classList.add('open');
+  $('plsAdminPassword').focus();
+}
+
 addEventListener('scroll', () => $('nav').classList.toggle('solid', scrollY > 40), { passive: true });
 $('plsPortalBtn').onclick = () => {
   try { window.parent.postMessage({ type: 'lark-go-portal' }, window.location.origin); } catch (e) {}
+};
+$('plsAuthBtn').onclick = toggleAuth;
+$('plsAuthCancel').onclick = () => $('plsAuthOverlay').classList.remove('open');
+$('plsAddBtn').onclick = () => openEditor(null);
+$('plsEditorCancel').onclick = closeEditor;
+$('plsEditorForm').onsubmit = saveEditor;
+$('plsAuthForm').onsubmit = async (event) => {
+  event.preventDefault();
+  const res = await fetch('/api/auth/login', {
+    method: 'POST',
+    credentials: 'same-origin',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password: $('plsAdminPassword').value }),
+  });
+  if (!res.ok) {
+    alert(ui().password);
+    return;
+  }
+  $('plsAuthOverlay').classList.remove('open');
+  $('plsAuthForm').reset();
+  isAdmin = true;
+  notifyParentAuth();
+  render();
+};
+$('plsEditorTabs').onclick = (event) => {
+  const btn = event.target.closest('button[data-pane]');
+  if (!btn) return;
+  $('plsEditorTabs').querySelectorAll('button').forEach((item) => item.classList.toggle('on', item === btn));
+  $('plsPanes').querySelectorAll('.lang-pane').forEach((pane) => pane.classList.toggle('on', pane.dataset.pane === btn.dataset.pane));
 };
 window.addEventListener('message', (event) => {
   if (event.origin !== window.location.origin) return;
   if (event.data && event.data.type === 'lark-set-lang' && LANGS[event.data.lang]) {
     setLang(event.data.lang, true);
   }
+  if (event.data && event.data.type === 'lark-auth-changed') {
+    loadSessions().then(() => render()).catch(() => {});
+  }
 });
-render();
 
-// Link directo a un video: #play-s1-en
-const deep = location.hash.match(/^#play-s(\d+)-(es|pt|en)$/);
-if (deep) {
-  const s = SESSIONS.find(x => x.num === Number(deep[1]));
-  if (s) {
-    setLang(deep[2], true);
-    openPlayer(s, deep[2]);
+async function boot() {
+  try { await loadSessions(); } catch (e) {}
+  ensurePanes();
+  render();
+  const deep = location.hash.match(/^#play-s(\d+)-(es|pt|en)$/);
+  if (deep) {
+    const s = SESSIONS.find(x => x.num === Number(deep[1]));
+    if (s) {
+      setLang(deep[2], true);
+      openPlayer(s, deep[2]);
+    }
   }
 }
+boot();
 </script>
 </body>
 </html>

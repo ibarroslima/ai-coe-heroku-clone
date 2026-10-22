@@ -2,12 +2,14 @@ const path = require("path");
 const https = require("https");
 const express = require("express");
 const session = require("express-session");
+const multer = require("multer");
 const { Pool } = require("pg");
+const plsStore = require("./pls-store");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const isProduction = process.env.NODE_ENV === "production";
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || (isProduction ? "" : "admin123");
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || (isProduction ? "" : "Deme@20261234567");
 const SESSION_SECRET = process.env.SESSION_SECRET || (isProduction ? "" : "change-me");
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY || "";
 const OPENAI_MODEL = process.env.OPENAI_MODEL || "gpt-4o-mini";
@@ -124,139 +126,6 @@ app.use(
     },
   })
 );
-
-const PLS_PREFIX = "/presales-learning";
-const PLS_PASSWORD = process.env.PLS_PASSWORD || "LATAM2026";
-const PLS_PUBLIC_PATHS = new Set([
-  `${PLS_PREFIX}/img/logo.png`,
-]);
-
-function sendPlsLogin(res, { error = false, nextPath = `${PLS_PREFIX}/` } = {}) {
-  const safeNext =
-    typeof nextPath === "string" && nextPath.startsWith(PLS_PREFIX)
-      ? nextPath
-      : `${PLS_PREFIX}/`;
-  res.status(error ? 401 : 200).type("html").send(`<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="robots" content="noindex, nofollow">
-<title>Acceso | PS LATAM</title>
-<style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body {
-  font-family: 'Salesforce Sans', 'Segoe UI', system-ui, sans-serif;
-  min-height: 100vh;
-  display: flex; align-items: center; justify-content: center;
-  background: linear-gradient(135deg, #001E5B 0%, #022AC0 60%, #066AFE 100%);
-}
-.box {
-  width: 90%; max-width: 420px; background: #FFFFFF; border-radius: 16px;
-  padding: 48px 40px; text-align: center; box-shadow: 0 20px 60px rgba(0, 30, 91, 0.35);
-}
-.box img { height: 56px; margin-bottom: 24px; }
-h1 { font-size: 20px; color: #001E5B; margin-bottom: 8px; }
-p { font-size: 14px; color: #001E5B; opacity: 0.75; margin-bottom: 28px; line-height: 1.5; }
-input {
-  width: 100%; padding: 14px 18px; border: 1px solid #90D0FE; border-radius: 10px;
-  font-size: 16px; text-align: center; letter-spacing: 2px; outline: none; color: #001E5B;
-}
-input:focus { border-color: #066AFE; box-shadow: 0 0 0 4px #EAF5FE; }
-button[type="submit"] {
-  width: 100%; margin-top: 16px; padding: 14px; border: none; border-radius: 10px;
-  background: #066AFE; color: #FFFFFF; font-size: 16px; font-weight: 600; cursor: pointer;
-}
-button[type="submit"]:hover { background: #022AC0; }
-.error { margin-top: 16px; font-size: 14px; color: #860554; }
-.lang { display: flex; justify-content: center; gap: 8px; margin-bottom: 22px; }
-.lang button {
-  padding: 6px 12px; border: 1px solid #90D0FE; border-radius: 999px; background: #EAF5FE;
-  color: #001E5B; font-size: 13px; font-weight: 700; cursor: pointer;
-}
-.lang button.on { background: #066AFE; color: #fff; border-color: #066AFE; }
-</style>
-</head>
-<body>
-<main class="box">
-  <img src="${PLS_PREFIX}/img/logo.png" alt="Salesforce">
-  <div class="lang" id="langBtns">
-    <button type="button" data-lang="es">ES</button>
-    <button type="button" data-lang="pt">PT</button>
-    <button type="button" data-lang="en">EN</button>
-  </div>
-  <h1>Professional Services LATAM</h1>
-  <p id="loginLead">Contenido de uso interno. Ingresa la contraseña para continuar.</p>
-  <form method="POST" action="${PLS_PREFIX}/login">
-    <input type="hidden" name="next" value="${safeNext}">
-    <label for="password" id="loginLabel" style="position:absolute;left:-9999px">Contraseña</label>
-    <input type="password" id="password" name="password" placeholder="Contraseña" autocomplete="current-password" required autofocus>
-    <button type="submit" id="loginSubmit">Ingresar</button>
-    ${error ? '<p class="error" id="loginError">Contraseña incorrecta. Inténtalo de nuevo.</p>' : ""}
-  </form>
-</main>
-<script>
-const COPY = {
-  es: { title: "Acceso | PS LATAM", lead: "Contenido de uso interno. Ingresa la contraseña para continuar.", label: "Contraseña", placeholder: "Contraseña", submit: "Ingresar", error: "Contraseña incorrecta. Inténtalo de nuevo." },
-  pt: { title: "Acesso | PS LATAM", lead: "Conteúdo de uso interno. Digite a senha para continuar.", label: "Senha", placeholder: "Senha", submit: "Entrar", error: "Senha incorreta. Tente novamente." },
-  en: { title: "Access | PS LATAM", lead: "Internal use only. Enter the password to continue.", label: "Password", placeholder: "Password", submit: "Enter", error: "Incorrect password. Try again." }
-};
-function pickLang() {
-  try {
-    const parentLang = window.parent && window.parent.__larkLang;
-    if (COPY[parentLang]) return parentLang;
-  } catch (e) {}
-  try {
-    const stored = JSON.parse(localStorage.getItem("pls_lang"));
-    if (COPY[stored]) return stored;
-  } catch (e) {}
-  const n = (navigator.language || "es").slice(0, 2).toLowerCase();
-  return COPY[n] ? n : "es";
-}
-function apply(code) {
-  const t = COPY[code] || COPY.es;
-  document.documentElement.lang = code;
-  document.title = t.title;
-  document.getElementById("loginLead").textContent = t.lead;
-  document.getElementById("loginLabel").textContent = t.label;
-  document.getElementById("password").placeholder = t.placeholder;
-  document.getElementById("loginSubmit").textContent = t.submit;
-  const err = document.getElementById("loginError");
-  if (err) err.textContent = t.error;
-  document.querySelectorAll("#langBtns button").forEach((b) => b.classList.toggle("on", b.dataset.lang === code));
-  try { localStorage.setItem("pls_lang", JSON.stringify(code)); } catch (e) {}
-}
-let lang = pickLang();
-apply(lang);
-document.querySelectorAll("#langBtns button").forEach((b) => {
-  b.addEventListener("click", () => { lang = b.dataset.lang; apply(lang); });
-});
-</script>
-</body>
-</html>`);
-}
-
-app.post(`${PLS_PREFIX}/login`, (req, res) => {
-  const nextPath = String(req.body?.next || `${PLS_PREFIX}/`);
-  if (String(req.body?.password || "") === PLS_PASSWORD) {
-    req.session.plsAuthenticated = true;
-    return req.session.save(() => {
-      res.redirect(nextPath.startsWith(PLS_PREFIX) ? nextPath : `${PLS_PREFIX}/`);
-    });
-  }
-  return sendPlsLogin(res, { error: true, nextPath });
-});
-
-app.use((req, res, next) => {
-  if (!req.path.startsWith(PLS_PREFIX)) return next();
-  if (req.path === `${PLS_PREFIX}/login`) return next();
-  if (PLS_PUBLIC_PATHS.has(req.path)) return next();
-  if (req.session && req.session.plsAuthenticated) return next();
-  if (req.method === "GET" || req.method === "HEAD") {
-    return sendPlsLogin(res, { nextPath: req.originalUrl.split("?")[0] || `${PLS_PREFIX}/` });
-  }
-  return res.status(401).send("Unauthorized");
-});
 
 app.use((req, res, next) => {
   if (!ENFORCE_SF_NETWORK_ONLY) return next();
@@ -1082,6 +951,155 @@ app.post("/api/auth/logout", (req, res) => {
     res.clearCookie("connect.sid");
     res.json({ ok: true });
   });
+});
+
+plsStore.ensureDirs();
+const plsUpload = multer({
+  storage: multer.diskStorage({
+    destination: (_req, _file, cb) => cb(null, plsStore.MEDIA_DIR),
+    filename: (_req, file, cb) => {
+      const ext = path.extname(file.originalname || "").toLowerCase() || ".bin";
+      cb(null, `${Date.now()}-${Math.random().toString(36).slice(2, 8)}${ext}`);
+    },
+  }),
+  limits: { fileSize: 80 * 1024 * 1024 },
+});
+const plsUploadFields = plsUpload.fields([
+  { name: "hero", maxCount: 1 },
+  { name: "video_es", maxCount: 1 },
+  { name: "video_pt", maxCount: 1 },
+  { name: "video_en", maxCount: 1 },
+  { name: "thumb_es", maxCount: 1 },
+  { name: "thumb_pt", maxCount: 1 },
+  { name: "thumb_en", maxCount: 1 },
+]);
+
+function parsePlsPayload(raw) {
+  if (!raw) return {};
+  if (typeof raw === "object") return raw;
+  try {
+    return JSON.parse(String(raw));
+  } catch (e) {
+    return {};
+  }
+}
+
+function firstFile(files, key) {
+  return files && files[key] && files[key][0] ? files[key][0] : null;
+}
+
+function mergePlsSession(existing, payload, files) {
+  const langs = ["es", "pt", "en"];
+  const next = existing
+    ? JSON.parse(JSON.stringify(existing))
+    : {
+        id: `s-${Date.now()}`,
+        num: Number(payload.num) || 1,
+        title: "",
+        version: "",
+        hero: "",
+        preview: 8,
+        copy: { es: {}, pt: {}, en: {} },
+        videos: { es: {}, pt: {}, en: {} },
+        canvases: { es: {}, pt: {}, en: {} },
+      };
+  if (payload.title != null) next.title = toTrimmedText(payload.title);
+  if (payload.version != null) next.version = toTrimmedText(payload.version);
+  if (payload.preview != null) next.preview = Number(payload.preview) || next.preview || 8;
+  const heroFile = firstFile(files, "hero");
+  if (heroFile) next.hero = plsStore.publicPathFor(heroFile);
+  else if (payload.hero) next.hero = toTrimmedText(payload.hero);
+  langs.forEach((code) => {
+    const copy = (payload.copy && payload.copy[code]) || {};
+    next.copy[code] = {
+      tagline: copy.tagline != null ? toTrimmedText(copy.tagline) : next.copy[code]?.tagline || "",
+      desc: copy.desc != null ? toTrimmedText(copy.desc) : next.copy[code]?.desc || "",
+      guideDesc: copy.guideDesc != null ? toTrimmedText(copy.guideDesc) : next.copy[code]?.guideDesc || "",
+      inside: Array.isArray(copy.inside)
+        ? copy.inside.map((item) => toTrimmedText(item)).filter(Boolean)
+        : next.copy[code]?.inside || [],
+    };
+    const videoFile = firstFile(files, `video_${code}`);
+    const thumbFile = firstFile(files, `thumb_${code}`);
+    const incomingVideo = (payload.videos && payload.videos[code]) || {};
+    next.videos[code] = {
+      src: videoFile
+        ? plsStore.publicPathFor(videoFile)
+        : incomingVideo.src || next.videos[code]?.src || "",
+      thumb: thumbFile
+        ? plsStore.publicPathFor(thumbFile)
+        : incomingVideo.thumb || next.videos[code]?.thumb || "",
+      dur: incomingVideo.dur || next.videos[code]?.dur || "",
+    };
+    const incomingCanvas = (payload.canvases && payload.canvases[code]) || {};
+    next.canvases[code] = {
+      url: incomingCanvas.url != null ? toTrimmedText(incomingCanvas.url) : next.canvases[code]?.url || "",
+      title: incomingCanvas.title != null ? toTrimmedText(incomingCanvas.title) : next.canvases[code]?.title || "",
+      callout: incomingCanvas.callout != null ? toTrimmedText(incomingCanvas.callout) : next.canvases[code]?.callout || "",
+      sections: Array.isArray(incomingCanvas.sections)
+        ? incomingCanvas.sections.map((item) => toTrimmedText(item)).filter(Boolean)
+        : next.canvases[code]?.sections || [],
+    };
+  });
+  return next;
+}
+
+app.get("/api/pls/sessions", async (req, res) => {
+  try {
+    const sessions = await plsStore.loadSessions({ pool, hasDatabase });
+    return res.json({
+      sessions,
+      authenticated: Boolean(req.session && req.session.isAuthenticated),
+    });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
+app.post("/api/pls/sessions", requireAuth, (req, res) => {
+  plsUploadFields(req, res, async (err) => {
+    if (err) return res.status(400).json({ error: err.message || "Falha no upload." });
+    try {
+      const payload = parsePlsPayload(req.body?.payload);
+      const sessions = await plsStore.loadSessions({ pool, hasDatabase });
+      payload.num = plsStore.nextNum(sessions);
+      const created = mergePlsSession(null, payload, req.files);
+      sessions.unshift(created);
+      await plsStore.saveSessions(sessions, { pool, hasDatabase });
+      return res.json({ ok: true, session: created, sessions });
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
+  });
+});
+
+app.put("/api/pls/sessions/:id", requireAuth, (req, res) => {
+  plsUploadFields(req, res, async (err) => {
+    if (err) return res.status(400).json({ error: err.message || "Falha no upload." });
+    try {
+      const payload = parsePlsPayload(req.body?.payload);
+      const sessions = await plsStore.loadSessions({ pool, hasDatabase });
+      const idx = sessions.findIndex((item) => String(item.id) === String(req.params.id));
+      if (idx < 0) return res.status(404).json({ error: "Sessao nao encontrada." });
+      sessions[idx] = mergePlsSession(sessions[idx], payload, req.files);
+      await plsStore.saveSessions(sessions, { pool, hasDatabase });
+      return res.json({ ok: true, session: sessions[idx], sessions });
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
+  });
+});
+
+app.delete("/api/pls/sessions/:id", requireAuth, async (req, res) => {
+  try {
+    const sessions = await plsStore.loadSessions({ pool, hasDatabase });
+    const next = sessions.filter((item) => String(item.id) !== String(req.params.id));
+    if (next.length === sessions.length) return res.status(404).json({ error: "Sessao nao encontrada." });
+    await plsStore.saveSessions(next, { pool, hasDatabase });
+    return res.json({ ok: true, sessions: next });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
 });
 
 const BOOKMARK_STATE_KEYS = new Set([

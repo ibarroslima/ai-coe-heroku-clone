@@ -181,7 +181,7 @@
     .portal-mascot.catalog {
       left: -138px;
       bottom: 6px;
-      width: min(195px, 17vw);
+      width: min(180px, 15.5vw);
       transform: none;
     }
     .portal-mascot.bookmark {
@@ -194,7 +194,7 @@
     }
     .portal-mascot.learning {
       left: auto;
-      right: -118px;
+      right: -142px;
       width: min(220px, 19vw);
       transform: none;
       bottom: -20px;
@@ -4569,6 +4569,12 @@
       const data = await request("/api/auth/status");
       isAuthenticated = data.authenticated;
       updateAuthLabel();
+      try {
+        const frame = document.getElementById("learningFrame");
+        if (frame && frame.contentWindow) {
+          frame.contentWindow.postMessage({ type: "lark-auth-changed" }, window.location.origin);
+        }
+      } catch (e) {}
     }
 
     function uniqueValues(field) {
@@ -6210,6 +6216,7 @@
     window.addEventListener("message", (event) => {
       if (event.origin !== window.location.origin) return;
       if (event.data && event.data.type === "lark-go-portal") switchSection("portal");
+      if (event.data && event.data.type === "lark-auth-changed") checkAuth();
     });
     heroViewCatalogBtn.addEventListener("click", () => switchTab("catalog"));
     heroAddCaseBtn.addEventListener("click", () => {
