@@ -21,7 +21,37 @@ const ENFORCE_SF_NETWORK_ONLY = String(
 ).toLowerCase() === "true";
 const SALESFORCE_ALLOWED_CIDRS = (
   process.env.SALESFORCE_ALLOWED_CIDRS ||
-  "13.108.0.0/14,136.146.0.0/15,204.14.236.0/24"
+  [
+    // Americas (ARIN first-party / corporate)
+    "13.108.0.0/14",
+    "66.231.80.0/20",
+    "68.232.192.0/20",
+    "96.43.144.0/20",
+    "128.17.0.0/16",
+    "128.245.0.0/16",
+    "136.146.0.0/15",
+    "198.245.80.0/20",
+    "199.122.120.0/21",
+    "204.14.232.0/21",
+    // EMEA (RIPE first-party, includes vpn-emea1.corp.salesforce.com)
+    "85.222.128.0/19",
+    "159.92.128.0/17",
+    "160.8.0.0/16",
+    "161.71.0.0/17",
+    "163.76.128.0/17",
+    "163.79.128.0/17",
+    "185.79.140.0/22",
+    // APAC (APNIC first-party)
+    "101.53.160.0/19",
+    "104.161.128.0/17",
+    "161.32.64.0/18",
+    "161.32.128.0/17",
+    "161.71.128.0/17",
+    "182.50.76.0/22",
+    "202.129.242.0/23",
+    // Previously allowlisted extra corporate range
+    "66.203.115.0/24",
+  ].join(",")
 )
   .split(",")
   .map((value) => value.trim())
@@ -137,6 +167,10 @@ app.use((req, res, next) => {
   if (localBypass || isIpAllowed(clientIp, SALESFORCE_ALLOWED_CIDRS)) {
     return next();
   }
+
+  console.warn(
+    `[network-deny] ip=${clientIp || "unknown"} path=${req.path} xff=${req.headers["x-forwarded-for"] || ""}`
+  );
 
   if (req.path.startsWith("/api/")) {
     return res.status(403).json({
