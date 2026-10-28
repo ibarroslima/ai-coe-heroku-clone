@@ -627,6 +627,112 @@ const CANVAS = id => `https://salesforce.enterprise.slack.com/docs/T01G0063H29/$
 
 const FALLBACK_SESSIONS = [
   {
+    id: 's3',
+    num: 3,
+    title: 'How to use the LATAM PS Dashboard',
+    version: 'FY27',
+    hero: 'img/hero-s3.jpg',
+    preview: 50,
+    copy: {
+      es: {
+        tagline: 'Del pipeline de org62 a una decisión, en minutos',
+        desc: 'DSRs, Estimates, Resource Requests y Opportunities de org62, en una vista que se actualiza sola. Emmanuel Moreno te recorre cada pestaña del LATAM PS Pipeline Dashboard: dónde está cada deal, quién carga el trabajo, qué sigue sin asignar y qué DSRs hay que cerrar, más una rutina de tres pasos para mantener el pipeline limpio.',
+        guideDesc: 'Cada pestaña del dashboard, qué responde y cómo usarla: el encabezado y sus alertas, filtros y exportaciones, el heat score, los DSRs zombie y una rutina de tres pasos.',
+        inside: ['Qué es y para qué sirve', 'Empieza por el encabezado', 'Las pestañas, una por una', 'Comparte un deal en un clic', 'Tu rutina, en tres pasos', 'Preguntas frecuentes'],
+      },
+      pt: {
+        tagline: 'Do pipeline da org62 a uma decisão, em minutos',
+        desc: 'DSRs, Estimates, Resource Requests e Opportunities da org62, numa visão que atualiza sozinha. Emmanuel Moreno percorre cada aba do LATAM PS Pipeline Dashboard: onde está cada deal, quem carrega o trabalho, o que ainda está sem dono e quais DSRs fechar, mais uma rotina de três passos para manter o pipeline limpo.',
+        guideDesc: 'Cada aba do dashboard, o que ela responde e como usar: o cabeçalho e os alertas, filtros e exportações, o heat score, DSRs zumbi e uma rotina de três passos.',
+        inside: ['O que é e para que serve', 'Comece pelo cabeçalho', 'As abas, uma por uma', 'Compartilhe um deal em um clique', 'Sua rotina, em três passos', 'Perguntas frequentes'],
+      },
+      en: {
+        tagline: 'From the org62 pipeline to a decision, in minutes',
+        desc: 'DSRs, Estimates, Resource Requests and Opportunities from org62, in one view that refreshes on its own. Emmanuel Moreno walks you through every tab of the LATAM PS Pipeline Dashboard: where each deal stands, who carries the load, what is still unassigned and which DSRs to close, plus a three-step routine to keep your pipeline clean.',
+        guideDesc: 'Every tab of the dashboard, what each one answers and how to use it: the header and its alerts, filters and exports, the heat score, zombie DSRs and a three-step routine.',
+        inside: ["What it is and what it's for", 'Start with the header', 'The tabs, one by one', 'Share a deal in one click', 'Your routine, in three steps', 'FAQs'],
+      },
+    },
+    videos: {
+      es: { src: 'videos/s3-dashboard-howto-es.mp4', thumb: 'img/s3-es.jpg', dur: '3:24' },
+      pt: { src: 'videos/s3-dashboard-howto-pt.mp4', thumb: 'img/s3-pt.jpg', dur: '3:29' },
+      en: { src: 'videos/s3-dashboard-howto-en.mp4', thumb: 'img/s3-en.jpg', dur: '3:10' },
+    },
+    canvases: {
+      es: {
+        url: CANVAS('F0CCE6FPSSJ'),
+        title: 'Guía: Cómo usar el LATAM PS Dashboard',
+        callout: 'Del pipeline de org62 a una decisión, en minutos',
+        sections: ['Qué es y para qué sirve', 'Empieza por el encabezado', 'Las pestañas, una por una', 'Tu rutina, en tres pasos'],
+      },
+      pt: {
+        url: CANVAS('F0CCE6G44MU'),
+        title: 'Guia: Como usar o LATAM PS Dashboard',
+        callout: 'Do pipeline da org62 a uma decisão, em minutos',
+        sections: ['O que é e para que serve', 'Comece pelo cabeçalho', 'As abas, uma por uma', 'Sua rotina, em três passos'],
+      },
+      en: {
+        url: CANVAS('F0CC9TJ6RAP'),
+        title: 'Guide: How to use the LATAM PS Dashboard',
+        callout: 'From the org62 pipeline to a decision, in minutes',
+        sections: ["What it is and what it's for", 'Start with the header', 'The tabs, one by one', 'Your routine, in three steps'],
+      },
+    },
+  },
+  {
+    id: 's2',
+    num: 2,
+    title: 'From conversation to SPW',
+    version: 'v2.1',
+    hero: 'img/hero-s2.jpg',
+    preview: 60,
+    copy: {
+      es: {
+        tagline: 'Tu estimate, del deal a Google Sheets, en minutos',
+        desc: 'Pasar lo que ya estimaste a un SPW tomaba de 1 a 3 horas interpretando y tipeando celda por celda. Conoce initiate-spw: combina la conversación del deal, la validación de delivery y las salidas de Cortex, SolutionIQ y Scopezilla en una matriz de esfuerzo estandarizada, aplica las reglas de PS LATAM y arma tu SPW en Google Sheets, en la carpeta del cliente en Deals LACA.',
+        guideDesc: 'De tus fuentes a tu primer SPW: setup, cada pregunta que hace el skill, la matriz estandarizada, las reglas de PS LATAM y dónde se guarda tu SPW en Deals LACA.',
+        inside: ['Qué hay de nuevo en 2.1', 'Instálalo en 3 pasos', 'Cómo usarlo en 9 pasos', 'Reglas PS LATAM de fábrica', 'Lo que crea y lo que completas tú', 'Preguntas frecuentes'],
+      },
+      pt: {
+        tagline: 'Seu estimate, do deal ao Google Sheets, em minutos',
+        desc: 'Transformar o que você já estimou em um SPW levava de 1 a 3 horas interpretando e digitando célula por célula. Conheça o initiate-spw: ele junta a conversa do deal, a validação de delivery e as saídas de Cortex, SolutionIQ e Scopezilla numa matriz de esforço padronizada, aplica as regras de PS LATAM e monta seu SPW no Google Sheets, na pasta do cliente em Deals LACA.',
+        guideDesc: 'Das suas fontes ao primeiro SPW: setup, cada pergunta que o skill faz, a matriz padronizada, as regras de PS LATAM e onde o SPW é salvo no Deals LACA.',
+        inside: ['O que há de novo na 2.1', 'Instale em 3 passos', 'Como usar em 9 passos', 'Regras PS LATAM de fábrica', 'O que ele cria e o que você completa', 'Perguntas frequentes'],
+      },
+      en: {
+        tagline: 'Your estimate, from the deal to Google Sheets, in minutes',
+        desc: 'Turning what you already estimated into an SPW used to take 1 to 3 hours of interpreting and typing cell by cell. Meet initiate-spw: it combines the deal conversation, delivery validation and the outputs of Cortex, SolutionIQ and Scopezilla into one standardized effort matrix, applies the PS LATAM rules and builds your SPW in Google Sheets, right in the customer folder in Deals LACA.',
+        guideDesc: 'From your sources to your first SPW: setup, every question the skill asks, the standardized matrix, the PS LATAM rules and where your SPW is saved in Deals LACA.',
+        inside: ["What's new in 2.1", 'Install in 3 steps', 'How to use it in 9 steps', 'PS LATAM rules by design', 'What it creates, what you complete', 'FAQs'],
+      },
+    },
+    videos: {
+      es: { src: 'videos/s2-conversation-to-spw-es.mp4', thumb: 'img/s2-es.jpg', dur: '3:35' },
+      pt: { src: 'videos/s2-conversation-to-spw-pt.mp4', thumb: 'img/s2-pt.jpg', dur: '3:50' },
+      en: { src: 'videos/s2-conversation-to-spw-en.mp4', thumb: 'img/s2-en.jpg', dur: '3:28' },
+    },
+    canvases: {
+      es: {
+        url: CANVAS('F0CD78N2SGY'),
+        title: 'Guía: De la conversación al SPW con el skill initiate-spw v2.1 en Claude Code',
+        callout: 'Crea un SPW real en tu Google Drive',
+        sections: ['Qué es y para qué sirve', 'Qué hay de nuevo en la versión 2.1', 'Antes de empezar: qué necesitas', 'Cómo usarlo'],
+      },
+      pt: {
+        url: CANVAS('F0CCAUJ22B0'),
+        title: 'Guia: Da conversa ao SPW com o skill initiate-spw v2.1 no Claude Code',
+        callout: 'Cria um SPW real no seu Google Drive',
+        sections: ['O que é e para que serve', 'O que há de novo na versão 2.1', 'Antes de começar: o que você precisa', 'Como usar'],
+      },
+      en: {
+        url: CANVAS('F0CBXG868HM'),
+        title: 'Guide: From conversation to SPW with the initiate-spw v2.1 skill in Claude Code',
+        callout: 'Creates a real SPW in your Google Drive',
+        sections: ['What it is and what it does', "What's new in version 2.1", 'Before you start: what you need', 'How to use it'],
+      },
+    },
+  },
+  {
     id: 's1',
     num: 1,
     title: 'SPW to Estimate',
