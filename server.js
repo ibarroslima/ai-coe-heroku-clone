@@ -184,6 +184,9 @@ app.use((req, res, next) => {
     );
 });
 
+app.get("/classic", (_req, res) => {
+  res.redirect(302, "/classic/");
+});
 app.use(express.static(path.join(__dirname, "public")));
 
 function requireAuth(req, res, next) {
