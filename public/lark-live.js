@@ -133,6 +133,14 @@
   };
 
   Object.keys(T).forEach((l) => Object.assign(T[l], EXTRA[l] || {}));
+  $$("[data-t]").forEach((el) => {
+    const v = t(el.dataset.t);
+    if (typeof v === "string") el.textContent = v;
+  });
+  $$("[data-tp]").forEach((el) => {
+    const v = t(el.dataset.tp);
+    if (typeof v === "string") el.placeholder = v;
+  });
 
   const FALLBACK_GROUPS = JSON.parse(JSON.stringify(DATA.groups || []));
   const FALLBACK_KEYS = JSON.parse(JSON.stringify(DATA.keys || []));

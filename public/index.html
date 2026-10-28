@@ -29,7 +29,7 @@ h1,h2,h3{font-family:var(--head);color:var(--navy);margin:0;font-weight:600;lett
 
 /* ---------- Header ---------- */
 .top{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-.top .wrap{display:flex;align-items:center;gap:22px;height:68px}
+.top .wrap{display:flex;align-items:center;gap:14px;min-height:68px;height:auto}
 .brand{display:flex;align-items:center;gap:12px;color:var(--navy)}
 .brand:hover{text-decoration:none}
 .brand img{height:34px}
@@ -288,8 +288,10 @@ footer .sp{flex:1}
 
 /* ---------- Responsive ---------- */
 .filters-btn{display:none!important}
+@media (max-width:1480px){.kbtn .lbl{display:none}}
 @media (max-width:1360px){.brand span{display:none}}
-@media (max-width:1180px){.kbtn{min-width:0}.kbtn .lbl,.kbtn kbd{display:none}}
+@media (max-width:1180px){.kbtn{min-width:0}.kbtn kbd{display:none}}
+@media (max-width:1100px){.top .tools .btn.primary .lbl{display:none}.top .tools .btn.primary{padding:0 12px}}
 @media (max-width:920px){
   .top .wrap{flex-wrap:wrap;height:auto;padding:10px 0;gap:10px}
   nav.main{order:3;width:100%;overflow-x:auto}
@@ -327,7 +329,8 @@ body.is-admin .admin-only, .admin-only.show{display:inline-flex!important}
 .users-list li{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
 .users-list button{border:0;background:none;color:#b60554;font-weight:600}
 footer a.classic{font-weight:600}
-.top .tools{flex-wrap:wrap;justify-content:flex-end}
+.top .tools{flex-wrap:nowrap;justify-content:flex-end;flex:none;gap:8px}
+body.is-admin .top .tools{flex-wrap:wrap}
 
 </style>
 </head>
@@ -352,13 +355,12 @@ footer a.classic{font-weight:600}
       <div class="lang" role="group" aria-label="Idioma">
         <button type="button" data-lang="es">ES</button><button type="button" data-lang="pt">PT</button><button type="button" data-lang="en">EN</button>
       </div>
-
+      <button class="btn primary" type="button" data-contrib><svg class="ico"><use href="#i-plus"/></svg><span class="lbl" data-t="share"></span></button>
       <button class="btn ghost admin-only" type="button" id="exportCsvBtn" data-t="csvBtn">CSV</button>
       <button class="btn ghost admin-only" type="button" id="translateAllBtn" data-t="translateBtn">Traducir</button>
       <button class="btn ghost admin-only" type="button" id="manageUsersBtn" data-t="usersBtn">Usuarios</button>
       <a class="btn ghost admin-only" href="/presales-learning/" data-t="plsAdminBtn">Learning</a>
       <button class="btn ghost" type="button" id="authBtn" data-t="adminBtn">Admin</button>
-      <button class="btn primary" type="button" data-contrib><svg class="ico"><use href="#i-plus"/></svg><span class="lbl" data-t="share"></span></button>
     </div>
   </div>
 </header>
@@ -407,9 +409,9 @@ footer a.classic{font-weight:600}
       </div>
       <div class="fld2">
         <label class="fld"><span data-t="fStatus"></span>
-          <select name="status">
-            <option value="in_progress">WIP</option>
-            <option value="completed">OK</option>
+          <select name="status" id="fStatusSel">
+            <option value="in_progress" data-t="stWip">En progreso</option>
+            <option value="completed" data-t="stDone">Finalizado</option>
           </select>
         </label>
         <label class="fld"><span data-t="fTags"></span><input name="tags"></label>
@@ -519,8 +521,8 @@ const T = {
   catH:"Casos de IA",catP:"Activos reutilizables, setups y herramientas que el equipo ya usó en oportunidades reales.",
   catSearch:"Buscar por tema, cliente, tecnología o autor",sortNew:"Más recientes",sortOld:"Más antiguos",sortAZ:"A a Z",
   results:(n)=>`<b>${n}</b> ${n===1?"caso":"casos"}`,clear:"Limpiar filtros",filters:"Filtros",
-  fType:"Tipo",fTechF:"Tecnología",fPhase:"Fase",fTheme:"Tema",fAuthor:"Autor",fStatus:"Estado",fFav:"Solo mis favoritos",more:(n)=>`Ver ${n} más`,less:"Ver menos",
-  stDone:"Completado",stWip:"En progreso",
+  fType:"Tipo",fTechF:"Tecnología",fPhase:"Fase",fTheme:"Tema",fAuthor:"Autor",fCreated:"Creado por",fStatus:"Estado",fTags:"Tags",fFav:"Solo mis favoritos",more:(n)=>`Ver ${n} más`,less:"Ver menos",
+  stDone:"Finalizado",stWip:"En progreso",
   emptyH:"No hay casos con esos filtros",emptyP:"Quita algún filtro o prueba otra palabra. Si nadie lo ha documentado aún, puedes ser el primero.",
   types:{asset:"Activo reutilizable",setup:"Setup inicial",tool:"Herramienta",value:"Estrategia y valor"},
   open:"Abrir",copyLink:"Copiar link",copied:"Link copiado",fav:"Agregar a favoritos",unfav:"Quitar de favoritos",edit:"Editar",
@@ -557,8 +559,8 @@ const T = {
   catH:"Casos de IA",catP:"Ativos reutilizáveis, setups e ferramentas que o time já usou em oportunidades reais.",
   catSearch:"Buscar por tema, cliente, tecnologia ou autor",sortNew:"Mais recentes",sortOld:"Mais antigos",sortAZ:"A a Z",
   results:(n)=>`<b>${n}</b> ${n===1?"caso":"casos"}`,clear:"Limpar filtros",filters:"Filtros",
-  fType:"Tipo",fTechF:"Tecnologia",fPhase:"Fase",fTheme:"Tema",fAuthor:"Autor",fStatus:"Status",fFav:"Só meus favoritos",more:(n)=>`Ver mais ${n}`,less:"Ver menos",
-  stDone:"Concluído",stWip:"Em andamento",
+  fType:"Tipo",fTechF:"Tecnologia",fPhase:"Fase",fTheme:"Tema",fAuthor:"Autor",fCreated:"Criado por",fStatus:"Estado",fTags:"Tags",fFav:"Só meus favoritos",more:(n)=>`Ver mais ${n}`,less:"Ver menos",
+  stDone:"Finalizado",stWip:"Em progresso",
   emptyH:"Nenhum caso com esses filtros",emptyP:"Remova algum filtro ou tente outra palavra. Se ninguém documentou ainda, você pode ser o primeiro.",
   types:{asset:"Ativo reutilizável",setup:"Configuração inicial",tool:"Ferramenta",value:"Estratégia e valor"},
   open:"Abrir",copyLink:"Copiar link",copied:"Link copiado",fav:"Adicionar aos favoritos",unfav:"Remover dos favoritos",edit:"Editar",
@@ -595,7 +597,7 @@ const T = {
   catH:"AI cases",catP:"Reusable assets, setups and tools the team has already used on real opportunities.",
   catSearch:"Search by topic, customer, technology or author",sortNew:"Newest",sortOld:"Oldest",sortAZ:"A to Z",
   results:(n)=>`<b>${n}</b> ${n===1?"case":"cases"}`,clear:"Clear filters",filters:"Filters",
-  fType:"Type",fTechF:"Technology",fPhase:"Phase",fTheme:"Theme",fAuthor:"Author",fStatus:"Status",fFav:"Only my favorites",more:(n)=>`Show ${n} more`,less:"Show less",
+  fType:"Type",fTechF:"Technology",fPhase:"Phase",fTheme:"Theme",fAuthor:"Author",fCreated:"Created by",fStatus:"Status",fTags:"Tags",fFav:"Only my favorites",more:(n)=>`Show ${n} more`,less:"Show less",
   stDone:"Completed",stWip:"In progress",
   emptyH:"No cases match those filters",emptyP:"Remove a filter or try another word. If nobody has documented it yet, you can be the first.",
   types:{asset:"Reusable asset",setup:"Getting set up",tool:"Tool",value:"Strategy & value"},

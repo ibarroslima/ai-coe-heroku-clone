@@ -19,7 +19,11 @@ body.is-admin .admin-only, .admin-only.show{display:inline-flex!important}
 .users-list li{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
 .users-list button{border:0;background:none;color:#b60554;font-weight:600}
 footer a.classic{font-weight:600}
-.top .tools{flex-wrap:wrap;justify-content:flex-end}
+.top .wrap{gap:14px;min-height:68px;height:auto}
+.top .tools{flex-wrap:nowrap;justify-content:flex-end;flex:none;gap:8px}
+body.is-admin .top .tools{flex-wrap:wrap}
+@media (max-width:1480px){.kbtn .lbl{display:none}}
+@media (max-width:1100px){.top .tools .btn.primary .lbl{display:none}.top .tools .btn.primary{padding:0 12px}}
 """
 
 ADMIN_BTNS = """
@@ -41,9 +45,9 @@ EXTRA_FIELDS = """
       </div>
       <div class="fld2">
         <label class="fld"><span data-t="fStatus"></span>
-          <select name="status">
-            <option value="in_progress">WIP</option>
-            <option value="completed">OK</option>
+          <select name="status" id="fStatusSel">
+            <option value="in_progress" data-t="stWip">En progreso</option>
+            <option value="completed" data-t="stDone">Finalizado</option>
           </select>
         </label>
         <label class="fld"><span data-t="fTags"></span><input name="tags"></label>
@@ -138,8 +142,8 @@ def main():
     text = replace_once(
         text,
         '      <button class="btn primary" type="button" data-contrib><svg class="ico"><use href="#i-plus"/></svg><span class="lbl" data-t="share"></span></button>',
-        ADMIN_BTNS
-        + '      <button class="btn primary" type="button" data-contrib><svg class="ico"><use href="#i-plus"/></svg><span class="lbl" data-t="share"></span></button>',
+        '      <button class="btn primary" type="button" data-contrib><svg class="ico"><use href="#i-plus"/></svg><span class="lbl" data-t="share"></span></button>\n'
+        + ADMIN_BTNS,
         "admin buttons",
     )
 
@@ -177,6 +181,36 @@ def main():
         'proto:"Proposal mockup with real data"',
         'proto:"LARK · PS LATAM"',
         "proto en",
+    )
+    text = replace_once(
+        text,
+        'fAuthor:"Autor",fStatus:"Estado"',
+        'fAuthor:"Autor",fCreated:"Creado por",fStatus:"Estado",fTags:"Tags"',
+        "form labels es",
+    )
+    text = replace_once(
+        text,
+        'stDone:"Completado",stWip:"En progreso"',
+        'stDone:"Finalizado",stWip:"En progreso"',
+        "status es",
+    )
+    text = replace_once(
+        text,
+        'fAuthor:"Autor",fStatus:"Status"',
+        'fAuthor:"Autor",fCreated:"Criado por",fStatus:"Estado",fTags:"Tags"',
+        "form labels pt",
+    )
+    text = replace_once(
+        text,
+        'stDone:"Concluído",stWip:"Em andamento"',
+        'stDone:"Finalizado",stWip:"Em progresso"',
+        "status pt",
+    )
+    text = replace_once(
+        text,
+        'fAuthor:"Author",fStatus:"Status"',
+        'fAuthor:"Author",fCreated:"Created by",fStatus:"Status",fTags:"Tags"',
+        "form labels en",
     )
 
     text = replace_once(
