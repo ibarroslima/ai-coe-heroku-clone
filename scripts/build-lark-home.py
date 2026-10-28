@@ -134,7 +134,7 @@ def main():
     text = replace_once(
         text,
         '.hero .bot{width:100%;max-width:440px;justify-self:end;filter:drop-shadow(0 30px 40px rgba(0,0,0,.35));transform:rotate(-6deg)}',
-        '.hero .bot{width:min(380px,100%);height:auto;justify-self:end;object-fit:contain;background:transparent;filter:drop-shadow(0 24px 36px rgba(0,0,0,.35));transform:none}',
+        '.hero .bot{width:min(380px,100%);height:auto;justify-self:end;object-fit:contain;background:transparent;filter:drop-shadow(0 24px 36px rgba(0,0,0,.35));transform:scaleX(-1)}',
         "bot css",
     )
     text = replace_once(
