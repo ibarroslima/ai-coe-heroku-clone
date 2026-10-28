@@ -134,13 +134,13 @@ def main():
     text = replace_once(
         text,
         '.hero .bot{width:100%;max-width:440px;justify-self:end;filter:drop-shadow(0 30px 40px rgba(0,0,0,.35));transform:rotate(-6deg)}',
-        '.hero .bot{width:min(340px,100%);height:auto;justify-self:end;object-fit:contain;filter:drop-shadow(0 24px 36px rgba(0,0,0,.35));transform:none}',
+        '.hero .bot{width:min(380px,100%);height:auto;justify-self:end;object-fit:contain;background:transparent;filter:drop-shadow(0 24px 36px rgba(0,0,0,.35));transform:none}',
         "bot css",
     )
     text = replace_once(
         text,
         '<img class="bot" src="${IMG.bot}" alt="" width="440" height="245">',
-        '<img class="bot" src="/assets/agent-astro.png" alt="Astrobot" width="340" height="370">',
+        '<img class="bot" src="/assets/agent-astro-portal-fixed.png" alt="Astrobot" width="380" height="380">',
         "bot src",
     )
 
