@@ -196,6 +196,24 @@ def main():
     )
     text = replace_once(
         text,
+        'heroH:"Lo que el equipo LATAM ya resolvió con IA, a una búsqueda de distancia."',
+        'heroH:"Lo que el equipo PS LATAM ya resolvió con IA, a una búsqueda de distancia."',
+        "hero es",
+    )
+    text = replace_once(
+        text,
+        'heroH:"O que o time LATAM já resolveu com IA, a uma busca de distância."',
+        'heroH:"O que o time PS LATAM já resolveu com IA, a uma busca de distância."',
+        "hero pt",
+    )
+    text = replace_once(
+        text,
+        'heroH:"What the LATAM team already solved with AI, one search away."',
+        'heroH:"What the PS LATAM team already solved with AI, one search away."',
+        "hero en",
+    )
+    text = replace_once(
+        text,
         'fAuthor:"Autor",fStatus:"Estado"',
         'fAuthor:"Autor",fCreated:"Creado por",fStatus:"Estado",fTags:"Tags"',
         "form labels es",
