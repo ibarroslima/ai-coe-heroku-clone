@@ -201,11 +201,12 @@
   }
 
   function inferType(row) {
-    const raw = String(row.category || row.theme || "").trim().toLowerCase();
+    const raw = String(row.category || "").trim().toLowerCase();
     if (["asset", "setup", "tool", "value"].includes(raw)) return raw;
-    if (/setup|config/.test(raw)) return "setup";
+    if (/reusable asset|activo reutilizable|ativo reutil/.test(raw)) return "asset";
+    if (/initial setting|setup|config/.test(raw)) return "setup";
     if (/tool|herramienta|ferramenta/.test(raw)) return "tool";
-    if (/value|valor|business/.test(raw)) return "value";
+    if (/value|valor|pricing|strategy|business/.test(raw)) return "value";
     return "asset";
   }
 
