@@ -131,6 +131,18 @@ def main():
     text = MOCKUP.read_text(encoding="utf-8")
 
     text = replace_once(text, "</style>", CSS + "\n</style>", "css")
+    text = replace_once(
+        text,
+        '.hero .bot{width:100%;max-width:440px;justify-self:end;filter:drop-shadow(0 30px 40px rgba(0,0,0,.35));transform:rotate(-6deg)}',
+        '.hero .bot{width:min(340px,100%);height:auto;justify-self:end;object-fit:contain;filter:drop-shadow(0 24px 36px rgba(0,0,0,.35));transform:none}',
+        "bot css",
+    )
+    text = replace_once(
+        text,
+        '<img class="bot" src="${IMG.bot}" alt="" width="440" height="245">',
+        '<img class="bot" src="/assets/agent-astro.png" alt="Astrobot" width="340" height="370">',
+        "bot src",
+    )
 
     text = replace_once(
         text,
