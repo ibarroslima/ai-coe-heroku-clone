@@ -184,8 +184,8 @@ app.use((req, res, next) => {
     );
 });
 
-app.get("/classic", (_req, res) => {
-  res.redirect(302, "/classic/");
+app.get(["/classic", "/classic/"], (_req, res) => {
+  res.sendFile(path.join(__dirname, "public", "classic", "index.html"));
 });
 app.use(express.static(path.join(__dirname, "public")));
 
