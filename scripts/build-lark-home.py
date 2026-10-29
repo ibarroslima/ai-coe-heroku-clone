@@ -317,6 +317,20 @@ function viewHome(){
 
     text = replace_once(
         text,
+        '["Igor Barros Lima","Emmanuel Moreno"]',
+        '["Igor Barros Lima","Emmanuel Moreno","Luis Mauricio Pacheco"]',
+        "contacts",
+    )
+
+    text = replace_once(
+        text,
+        '["Igor Barros Lima","Emmanuel Moreno"]',
+        '["Igor Barros Lima","Emmanuel Moreno","Luis Mauricio Pacheco"]',
+        "contacts",
+    )
+
+    text = replace_once(
+        text,
         "setLang(lang);\n</script>",
         'setLang(lang);\n</script>\n<script src="/lark-live.js"></script>',
         "live script",
